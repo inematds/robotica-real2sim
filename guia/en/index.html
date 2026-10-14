@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>robotica-real2sim — from a photo of the table to a robot proven in simulation</title>
+<meta name="description" content="Open replica of the Real2Sim robotics from Gemini 4 Argon: a photo of the table becomes a MuJoCo twin, generates labeled training data and proves the plan before the real robot. With research and the questions it raises.">
+<link rel="alternate" hreflang="pt-BR" href="https://inematds.github.io/robotica-real2sim/guia/">
+<link rel="alternate" hreflang="en" href="https://inematds.github.io/robotica-real2sim/guia/en/">
+<link rel="alternate" hreflang="es" href="https://inematds.github.io/robotica-real2sim/guia/es/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0c10; --bg2:#14141b; --card:#16161e; --line:#272730;
+    --txt:#e9e9ee; --mut:#9a9aa6; --amb:#FACC15; --amb2:#f0c070; --sky:#38bdf8; --pro:#cbd5e1;
+    color-scheme:dark;
+  }
+  body.light{
+    --bg:#f6f7f9; --bg2:#eceef2; --card:#ffffff; --line:#e1e3ea;
+    --txt:#1a1a22; --mut:#5b5b68; --amb:#a16207; --amb2:#a16207; --sky:#0369a1; --pro:#b45309;
+    color-scheme:light;
+  }
+  body.light .hero .glow{opacity:.5}
+  body.light pre{background:#0e0e14;color:#d6d6e0}
+  body.light pre .c{color:#8a8a98}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.65 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:Sora,sans-serif;line-height:1.15;margin:0}
+  a{color:var(--amb);text-decoration:none}
+  code,pre{font-family:"JetBrains Mono",monospace}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+  .mut{color:var(--mut)} .amb{color:var(--amb)}
+  .chip{display:inline-block;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amb);font-weight:600;font-family:Sora}
+  nav{position:sticky;top:0;z-index:30;backdrop-filter:blur(12px);background:rgba(12,12,16,.78);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;gap:22px;height:60px}
+  nav .brand{display:flex;align-items:center;gap:8px;font-family:Sora;font-weight:800;letter-spacing:-.02em;color:var(--amb)}
+  nav .brand .emoji{font-size:1.25rem}
+  nav .sep{color:var(--mut);opacity:.45}
+  nav .inema{color:var(--sky);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .inema:hover{filter:brightness(1.15)}
+  nav .pro{color:var(--pro);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .pro:hover{filter:brightness(1.15)}
+  nav .clubpro{display:inline-flex;align-items:center;gap:6px}
+  nav .links{margin-left:auto;display:flex;align-items:center;gap:20px;font-size:.92rem}
+  nav .links a.sec{color:var(--mut)} nav .links a.sec:hover{color:var(--txt)}
+  .lang{display:inline-flex;gap:2px;font-family:Sora;font-size:.78rem}
+  .lang a{color:var(--mut);padding:.2em .45em;border-radius:6px} .lang a.on{color:var(--amb);background:rgba(250,204,21,.12)}
+  .tgl{background:var(--bg2);border:1px solid var(--line);color:var(--txt);width:38px;height:38px;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:1.05rem}
+  .tgl:hover{border-color:var(--amb)}
+  .btn{display:inline-block;background:var(--amb);color:#1a1206;font-weight:600;padding:.6em 1.05em;border-radius:10px;font-family:Sora}
+  .btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+  @media(max-width:1100px){nav .links a.sec{display:none}}
+  @media(max-width:520px){nav .wrap{gap:8px;padding:8px 14px;height:auto;flex-wrap:wrap} nav .links{gap:8px;margin-left:0;width:100%;justify-content:space-between} nav .btn{padding:.45em .7em;font-size:.82rem} .tgl{width:34px;height:34px}}
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+  .hero .glow{position:absolute;inset:-40% -20% auto auto;width:70%;height:600px;background:radial-gradient(closest-side,rgba(250,204,21,.22),transparent 70%);pointer-events:none}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:74px 22px}
+  .hero h1{font-size:clamp(2.2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.025em}
+  .hero p.lead{font-size:1.18rem;color:var(--mut);margin:1.1em 0 1.6em;max-width:34ch}
+  .hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .hero figure{margin:0;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -30px #000}
+  .hero figure img{width:100%;display:block}
+  .resumo{padding:38px 0 34px;border-bottom:1px solid var(--line)}
+  .resumo p{font-size:1.12rem;line-height:1.7;max-width:74ch;margin:.55em 0 0}
+  @media(max-width:780px){.hero .wrap{grid-template-columns:1fr;padding:48px 22px}}
+  section{padding:62px 0;border-bottom:1px solid var(--line)}
+  section h2{font-size:clamp(1.5rem,3.4vw,2.1rem);font-weight:800;letter-spacing:-.02em}
+  section .sub{color:var(--mut);margin:.6em 0 2em;max-width:62ch}
+  .grid{display:grid;gap:16px}
+  .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:820px){.g3,.g4{grid-template-columns:1fr 1fr}}
+  @media(max-width:540px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card h3{font-size:1.05rem;margin-bottom:.4em}
+  .card p{color:var(--mut);font-size:.92rem;margin:0}
+  .num{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:8px;background:rgba(250,204,21,.14);color:var(--amb);font-family:Sora;font-weight:800;font-size:.9rem;margin-bottom:.7em}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+  .flow span{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:.45em .9em;font-size:.85rem;font-family:Sora;font-weight:600}
+  .flow .arr{color:var(--amb);border:none;background:none;padding:0 .1em}
+  pre{background:#0a0a0e;border:1px solid var(--line);border-radius:12px;padding:16px 18px;overflow:auto;font-size:.86rem;line-height:1.6;color:#d6d6e0}
+  pre .c{color:#6f6f7c} pre .k{color:var(--amb2)} pre .s{color:#9ece6a}
+  .step{display:grid;grid-template-columns:46px minmax(0,1fr);gap:16px;margin-bottom:26px}
+  .step>div,.card{min-width:0}
+  p code,li code,td code{overflow-wrap:anywhere}
+  .step .b{width:46px;height:46px;border-radius:12px;background:var(--amb);color:#1a1206;font-family:Sora;font-weight:800;font-size:1.25rem;display:flex;align-items:center;justify-content:center}
+  .step h3{font-size:1.12rem;margin-bottom:.3em}
+  .step p{color:var(--mut);margin:.2em 0 .7em}
+  .ex{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:680px){.ex{grid-template-columns:1fr}}
+  .ex figure{margin:0;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+  .ex figure img{width:100%;display:block}
+  .ex figcaption{padding:12px 14px;font-size:.88rem;color:var(--mut);background:var(--card)}
+  .phase{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .phase:last-child{border:none}
+  .phase .tag{flex:0 0 92px;font-family:Sora;font-weight:800;color:var(--amb)}
+  .phase .d strong{display:block;margin-bottom:.2em}
+  .phase .d span{color:var(--mut);font-size:.92rem}
+  footer{padding:46px 0;text-align:center;color:var(--mut);font-size:.9rem}
+  .pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:.3em .8em;font-size:.78rem;color:var(--mut);margin:0 4px}
+</style>
+<style>
+  table.t{width:100%;border-collapse:collapse;font-size:.92rem;margin-top:8px}
+  table.t th,table.t td{border-bottom:1px solid var(--line);padding:10px 8px;text-align:left;vertical-align:top}
+  table.t th{font-family:Sora;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+  table.t td strong{color:var(--amb)}
+  .tw{overflow-x:auto}
+  .ex video{width:100%;display:block;background:#000}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+  .q h3{font-size:1.02rem;margin-bottom:.45em}
+  .q p{color:var(--mut);font-size:.93rem;margin:.35em 0 0}
+  .aviso{border-left:3px solid var(--amb);background:var(--bg2);padding:14px 18px;border-radius:0 12px 12px 0;margin:0 0 26px;color:var(--txt)}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a class="brand" href="#top"><span class="emoji">🦾</span> robotica-real2sim</a>
+  <span class="sep">|</span>
+  <span class="clubpro">
+    <a class="inema" href="https://inema.club" target="_blank" rel="noopener">INEMA.CLUB</a>
+    <span class="sep">-</span>
+    <a class="pro" href="https://inema.pro" target="_blank" rel="noopener">PRO</a>
+  </span>
+  <div class="links">
+    <a class="sec" href="#oque">What it is</a>
+    <a class="sec" href="#argon">Argon</a>
+    <a class="sec" href="#guia">User guide</a>
+    <a class="sec" href="#exemplos">Results</a>
+    <a class="sec" href="#perguntas">Questions</a>
+    <span class="lang"><a href="../">PT</a><a class="on" href="./">EN</a><a href="../es/">ES</a></span>
+    <button class="tgl" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">🌙</button>
+    <a class="btn" href="https://github.com/inematds/robotica-real2sim" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</div></nav>
+
+<header class="hero" id="top">
+  <div class="glow"></div>
+  <div class="wrap">
+    <div>
+      <span class="chip">Robotics with AI · Real2Sim</span>
+      <h1>From a photo of the table to a <span class="amb">robot</span> that trained before it moved</h1>
+      <p class="lead">A photo becomes a simulation twin, the twin generates labeled training data, and the plan only goes to the real robot after it passes the physics.</p>
+      <div class="cta">
+        <a class="btn" href="#guia">Start the guide</a>
+        <a class="btn ghost" href="https://github.com/inematds/robotica-real2sim" target="_blank" rel="noopener">View on GitHub</a>
+      </div>
+    </div>
+    <figure><img src="../assets/banner-en.jpg" alt="From photo to robot: a robotic arm over the table and the simulation twin beside it"></figure>
+  </div>
+</header>
+
+<section id="resumo" class="resumo"><div class="wrap">
+  <span class="chip">In short</span>
+  <p>robotica-real2sim is an open project that reproduces on your computer the idea Google showed in the robotics part of Gemini 4 Argon: take a photo of a table and turn it into a physical simulation where a robotic arm trains. It is for anyone who wants to understand and test robotics with AI without owning a robot. It builds the "twin" of the table, generates dozens of labeled attempts for training, and tests each plan in the simulation before sending it to a real robot. It needs Python, MuJoCo (a free simulator) and, to read the photo, Codex.</p>
+</div></section>
+
+<section id="oque"><div class="wrap">
+  <span class="chip">What it is</span>
+  <h2>Three pieces that change how a robot is trained</h2>
+  <p class="sub">The bottleneck in robotics has always been data: people in VR headsets guiding the arm for hours. Here the data comes from simulation, and the simulation comes from a photo.</p>
+  <figure style="margin:0 0 26px;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -30px #000"><img src="../assets/banner-grade-en.jpg" alt="Six steps: photo of the table, MuJoCo twin, closed loop, 100 episodes, proof in the physics, open questions" loading="lazy" style="width:100%;display:block"></figure>
+  <div class="grid g3">
+    <div class="card"><h3>📷 Photo → twin</h3><p>A vision model reads the photo, measures the objects using an A4 sheet as a ruler and builds the scene in MuJoCo with the Franka Panda arm.</p></div>
+    <div class="card"><h3>🔁 Data that labels itself</h3><p>A closed-loop motion generator picks up and drops each object with variations; every attempt comes out with 4-level annotation and a quality stamp.</p></div>
+    <div class="card"><h3>✅ Proof before the real thing</h3><p>The plan written by the AI runs 20 times in the physics. Below 90% success, it is rejected and never reaches the robot.</p></div>
+  </div>
+</div></section>
+
+<section id="fluxo"><div class="wrap">
+  <span class="chip">How it works</span>
+  <h2>From pixel to motion, in five steps</h2>
+  <p class="sub">Each step is a <code>r2s.py</code> command and writes a file you can open and check.</p>
+  <div class="flow">
+    <span>Photo of the table</span><span class="arr">→</span>
+    <span>cena.json (meters)</span><span class="arr">→</span>
+    <span>MuJoCo twin</span><span class="arr">→</span>
+    <span>Closed-loop generator</span><span class="arr">→</span>
+    <span>Labeled episodes</span><span class="arr">→</span>
+    <span>AI plan</span><span class="arr">→</span>
+    <span>Proof in the physics</span>
+  </div>
+  <div class="grid g3" style="margin-top:26px">
+    <div class="card"><h3>Closed loop</h3><p>Every 20 ms the generator reads where the object is and recomputes the target. If the object moves, the arm corrects. This is what Google calls a <em>closed-loop IK trajectory generator</em>.</p></div>
+    <div class="card"><h3>Hindsight annotation</h3><p>Goal → subtasks (pick, carry, drop) → primitives with start and end → events (both fingers touching, object lifted, success).</p></div>
+    <div class="card"><h3>Domain variation</h3><p>Each episode samples position (±4 cm), rotation, mass (±30%). A model trained on this learns to handle a world that is not identical to the photo.</p></div>
+  </div>
+</div></section>
+
+<section id="argon"><div class="wrap">
+  <span class="chip">What Google showed</span>
+  <h2>Gemini 4 Argon in robotics, by the numbers</h2>
+  <p class="sub">Published on 13/10/2026. The post is a collection of examples with video; full sources in <a href="https://github.com/inematds/robotica-real2sim/blob/main/docs/PESQUISA.md">docs/PESQUISA.md</a> (in Portuguese).</p>
+  <div class="aviso">This repository does <strong>not</strong> use Argon. It replicates the flow with open tools. Argon is available in AI Studio (Ultra subscription), in the paid Gemini API (<code>gemini-4-argon</code>, US$ 2 / US$ 10 per million tokens at launch pricing) and in Antigravity.</div>
+  <div class="tw"><table class="t">
+    <tr><th>Example</th><th>What happens</th><th>Number</th></tr>
+    <tr><td>One photo → better VLA</td><td>Photo of a workbench with 2 Franka FR3 arms becomes a MuJoCo twin, 77 tasks, closed-loop IK generator, 4,500+ episodes to fine-tune a VLA</td><td><strong>56% → 75%</strong> success on the real robot; 35 s → 24 s</td></tr>
+    <tr><td>ERQA</td><td>Embodied reasoning benchmark</td><td><strong>87%</strong>, above the other frontier models</td></tr>
+    <tr><td>Spot</td><td>Creates the twin of a pedal bin, trains 3-legged balance in MuJoCo and only then steps on the real pedal</td><td>no published rate</td></tr>
+    <tr><td>SO-101</td><td>Cheap arm improves its own task by looking at logs and video, under the rules of an <code>AGENTS.md</code></td><td><strong>58.9 s → 22.9 s → 17.4 s</strong></td></tr>
+    <tr><td>ALOHA 2</td><td>136 s origami annotated on 4 levels with quality control</td><td>1 goal, 6 subtasks, 17 primitives</td></tr>
+    <tr><td>DroneBench (Andon Labs)</td><td>Models write the code for a US$ 129 drone to find and follow a person</td><td>best model at 84% of the way; nobody completes all 5 tasks</td></tr>
+  </table></div>
+</div></section>
+
+<section id="pre"><div class="wrap">
+  <span class="chip">Prerequisites</span>
+  <h2>What you need</h2>
+  <p class="sub">Runs on Linux, macOS and WSL. Tested on a 20-core ARM with GPU (rendering via EGL).</p>
+  <div class="grid g3">
+    <div class="card"><h3>Python 3.10+ and git</h3><p>The installer creates the environment and downloads the Panda from MuJoCo Menagerie.</p><pre><span class="c"># check</span>
+<span class="k">python3</span> --version && <span class="k">git</span> --version</pre></div>
+    <div class="card"><h3>Headless rendering</h3><p>On a server or WSL, MuJoCo draws through the GPU. Without a GPU, use osmesa.</p><pre><span class="c"># project default</span>
+<span class="k">export</span> MUJOCO_GL=egl</pre></div>
+    <div class="card"><h3>Codex CLI (optional)</h3><p>Only to read the photo and write the plan. Without it, write the scene by hand.</p><pre><span class="c"># once</span>
+<span class="k">codex</span> login</pre></div>
+  </div>
+</div></section>
+
+<section id="guia"><div class="wrap">
+  <span class="chip">User guide · step by step</span>
+  <h2>From zero to an approved plan</h2>
+  <p class="sub">Real commands. Each one prints what it did and saves the result.</p>
+
+  <div class="step"><div class="b">1</div><div>
+    <h3>Install</h3>
+    <p>Creates the <code>.venv</code>, installs MuJoCo, downloads the Franka Panda and runs the 8 tests (~11 s).</p>
+<pre><span class="k">git clone</span> <span class="s">https://github.com/inematds/robotica-real2sim</span> && <span class="k">cd</span> robotica-real2sim
+<span class="k">./instalar.sh</span>   <span class="c"># ends with "TUDO OK"</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">2</div><div>
+    <h3>Photo → scene</h3>
+    <p>Photograph the table from above, with an A4 sheet visible as a ruler. The model returns each object with type, size and position; the script converts to the arm's reference frame and warns if it had to move something closer to within reach.</p>
+<pre><span class="k">./r2s.py foto</span> minha-mesa.jpg cena.json --pedido <span class="s">"pôr o cubo vermelho na bandeja"</span>
+<span class="c"># cena: 4 objetos -> cena.json</span>
+<span class="k">./r2s.py ver</span> cena.json gemeo.png --camera cima   <span class="c"># compare with the photo</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">3</div><div>
+    <h3>Watch the arm work</h3>
+    <p>Films an episode with three cameras (overview, top-down and wrist) and the phase written on screen.</p>
+<pre><span class="k">./r2s.py filmar</span> cena.json episodio.mp4 --cameras geral,cima,pulso
+<span class="c"># sucesso: objeto dentro do destino (269 quadros)</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">4</div><div>
+    <h3>Generate training data</h3>
+    <p>N episodes with variation. <code>--imagens</code> also saves the top-down and wrist cameras (128×128, 10 Hz). A failed episode is left with <code>peso_no_treino: 0</code>.</p>
+<pre><span class="k">./r2s.py episodios</span> cena.json dados/ -n 50 --imagens
+<span class="c"># 50/50 episódios com sucesso (100%) em 8.7 s</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">5</div><div>
+    <h3>Ask for a plan in Portuguese</h3>
+    <p>Codex reads the scene and returns pick → destination steps. The script rejects a plan that cites a nonexistent object or a destination that is not a container.</p>
+<pre><span class="k">./r2s.py planejar</span> cena.json <span class="s">"arrume a mesa: tudo que é redondo vai para a bandeja"</span> plano.json
+<span class="c">#   pegar lata_azul -> bandeja_cinza</span>
+<span class="c">#   pegar bola_tenis -> bandeja_cinza</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">6</div><div>
+    <h3>Prove it before sending it to the robot</h3>
+    <p>The plan runs 20 times with variation. Without slots, the ball lands on top of the can. With one slot per object (the default), it passes.</p>
+<pre><span class="k">./r2s.py provar</span> cena.json plano.json --sem-vagas
+<span class="c"># plano completo em 4/20 (20%) -> REPROVADO: não mande ao robô</span>
+<span class="k">./r2s.py provar</span> cena.json plano.json
+<span class="c"># plano completo em 19/20 (95%) -> APROVADO para o robô real</span></pre>
+  </div></div>
+</div></section>
+
+<section id="exemplos"><div class="wrap">
+  <span class="chip">Measured results</span>
+  <h2>What actually ran (14/10/2026)</h2>
+  <p class="sub">Files in <a href="https://github.com/inematds/robotica-real2sim/tree/main/resultados">resultados/</a> (in Portuguese). The example photo was generated by AI.</p>
+  <div class="ex">
+    <figure><img src="../assets/foto-mesa.jpg" alt="Photo of a table with a red cube, blue can, tennis ball, tray and an A4 sheet" loading="lazy"><figcaption>The photo: cube on the left, can, ball, tray on the right and an A4 sheet as a ruler.</figcaption></figure>
+    <figure><img src="../assets/gemeo-geral.jpg" alt="Simulation twin with the Panda arm and the same objects" loading="lazy"><figcaption>The twin built in ~9 s by Codex: same positions, sizes estimated in centimeters.</figcaption></figure>
+    <figure><video src="../assets/clip-pegar-cubo-3cam.mp4" controls muted loop playsinline preload="metadata" poster="../assets/tres-cameras.jpg"></video><figcaption>One episode with three cameras: overview, top-down and wrist (what a VLA would see).</figcaption></figure>
+    <figure><video src="../assets/clip-plano-com-vagas.mp4" controls muted loop playsinline preload="metadata" poster="../assets/fim-plano-com-vagas.jpg"></video><figcaption>The approved plan: can and ball in the tray, each in its own slot.</figcaption></figure>
+  </div>
+  <div class="tw" style="margin-top:26px"><table class="t">
+    <tr><th>Measure</th><th>Result</th></tr>
+    <tr><td>Episodes on the photo scene (cube → tray, with variation)</td><td><strong>50/50</strong> in 8.7 s</td></tr>
+    <tr><td>Episodes on the test scene</td><td><strong>50/50</strong> in 8.4 s</td></tr>
+    <tr><td>Each object alone (cube, can, ball × 2 scenes, 20 variations)</td><td><strong>20/20</strong> in all</td></tr>
+    <tr><td>Plan "everything round goes to the tray", without slots</td><td><strong>4/20 (20%)</strong> → rejected</td></tr>
+    <tr><td>Same plan with one slot per object</td><td><strong>19/20 (95%)</strong> → approved</td></tr>
+  </table></div>
+  <p class="sub" style="margin-top:22px">Until the can worked, the simulation went wrong in three ways: a grasp that was too high pushed the can into the palm, the cylinder × finger contact pushed in the wrong direction and the model's gripper squeezed only ~3 N (the real one does 70 N). Each error would give a false number. That is why a twin has to be checked.</p>
+</div></section>
+
+<section id="perguntas"><div class="wrap">
+  <span class="chip">The questions this raises</span>
+  <h2>Eight questions, expanded</h2>
+  <p class="sub">Full version, with sources and what we measured, in <a href="https://github.com/inematds/robotica-real2sim/blob/main/docs/QUESTOES.md">docs/QUESTOES.md</a> (in Portuguese).</p>
+  <div class="grid g2">
+    <div class="q"><h3>1. Where does the self-improving loop stop?</h3><p>Jack Clark (Anthropic) saw a 60% chance of recursive self-improvement by 2028; an aggregator says he moved it up to 2027, with no original source. What Google shows is <em>task</em> improvement, not weights. The useful question: who approves the next round?</p></div>
+    <div class="q"><h3>2. Surveillance within anyone's reach?</h3><p>A US$ 129 drone and AI-written code already follow a person better than the human reference code. Andon Labs itself says the public must decide the limits.</p></div>
+    <div class="q"><h3>3. Can an LLM robot be tricked?</h3><p>It can: RoboPAIR jailbroke three robots, with success "often 100%". The defense has to sit outside the model: force limit, forbidden zone, physical stop and proof in simulation.</p></div>
+    <div class="q"><h3>4. Does the simulation lie?</h3><p>Google shows a single real number (56% → 75%). Here, three physics errors would have given false results. Always ask which real-robot number supports the result.</p></div>
+    <div class="q"><h3>5. Who keeps the data?</h3><p>If data gets cheap (50 episodes in 9 s), power shifts to whoever has the model that generates the data and the hardware that validates it. The counterweight is open: MuJoCo, LeRobot, SO-101, OpenVLA.</p></div>
+    <div class="q"><h3>6. And who operates the robot?</h3><p>The first job hit is the teleoperator who generates data and the engineer who writes simulation by hand. The new role is reviewing and calibrating what the model produces.</p></div>
+    <div class="q"><h3>7. Does the model write its own proof?</h3><p>In Google's example, Argon builds the environment and checks <code>reward == 1.0</code> in it. DroneBench records cheating in up to 66% of a model's runs. Separate who builds, who judges and who checks.</p></div>
+    <div class="q"><h3>8. Who regulates?</h3><p>In the EU, the Machinery Regulation applies from 20/01/2027 and requires third-party assessment when safety depends on AI. The practical minimum: record the model, the simulation that approved it and the real-world result.</p></div>
+  </div>
+</div></section>
+
+<section id="roadmap"><div class="wrap">
+  <span class="chip">Next steps</span>
+  <h2>From the twin to the real arm</h2>
+  <p class="sub">What already exists and the path for anyone who wants to take it to the real world.</p>
+  <div class="phase"><div class="tag">Done</div><div class="d"><strong>Photo → twin → data → proof</strong><span>Menagerie Panda, closed-loop generator, episodes with 4-level annotation, Codex plan proven with and without slots, 8 tests.</span></div></div>
+  <div class="phase"><div class="tag">Next</div><div class="d"><strong>SO-101 + LeRobot</strong><span>Swap the Panda for the open SO-101 arm (Menagerie already has the model; the kit costs US$ 100 to 500) and record in the LeRobot format.</span></div></div>
+  <div class="phase"><div class="tag">Later</div><div class="d"><strong>Train a policy</strong><span>Fine-tune an open VLA (OpenVLA, pi0) on the episodes and measure on the real arm, comparing with and without the synthetic data.</span></div></div>
+  <div class="phase"><div class="tag">Rule</div><div class="d"><strong>Nothing goes to the real robot without proof</strong><span>Every plan goes through <code>r2s.py provar</code> before a motor moves.</span></div></div>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    <div class="pill">MuJoCo 3.15</div><div class="pill">Franka Panda · Menagerie</div><div class="pill">Python</div><div class="pill">Codex CLI</div>
+    <p style="margin-top:18px">robotica-real2sim · open, didactic replica, MIT ·
+      <a href="https://github.com/inematds/robotica-real2sim">inematds/robotica-real2sim</a> ·
+      <a href="https://inema.club">INEMA.CLUB</a></p>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var KEY='robotica-real2sim-theme';
+    var b=document.body, t=document.getElementById('themeToggle');
+    if(localStorage.getItem(KEY)==='light'){ b.classList.add('light'); t.textContent='☀️'; }
+    t.addEventListener('click',function(){
+      var light=b.classList.toggle('light');
+      t.textContent=light?'☀️':'🌙';
+      localStorage.setItem(KEY, light?'light':'dark');
+    });
+  })();
+</script>
+</body>
+</html>

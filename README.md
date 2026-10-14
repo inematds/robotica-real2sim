@@ -1,11 +1,17 @@
 # robotica-real2sim
 
+[![robotica-real2sim](guia/assets/banner.jpg)](https://inematds.github.io/robotica-real2sim/guia/)
+
 **De uma foto da mesa a um gêmeo de simulação, a dados de treino rotulados e à prova do plano
 antes de o robô real se mexer.** Réplica aberta e local da ideia "Real2Sim" que o Google mostrou na
 parte de robótica do Gemini 4 Argon (13/10/2026), feita com MuJoCo, o braço Franka Panda do MuJoCo
 Menagerie e o Codex pela assinatura no lugar do Argon.
 
 🇧🇷 Português · [🇺🇸 English](README.en.md) · [🇪🇸 Español](README.es.md) · [Guia ilustrado](https://inematds.github.io/robotica-real2sim/guia/)
+
+## O que é
+
+O robotica-real2sim é um projeto aberto que reproduz no seu computador a ideia que o Google mostrou na parte de robótica do Gemini 4 Argon: tirar uma foto de uma mesa e transformá-la numa simulação física onde um braço robótico treina. Serve para quem quer entender e testar robótica com IA sem ter robô. Ele monta o "gêmeo" da mesa, gera dezenas de tentativas rotuladas para treino e testa cada plano na simulação antes de mandá-lo a um robô real. Precisa de Python, do MuJoCo (simulador gratuito) e, para ler a foto, do Codex.
 
 > **Réplica didática, não o Argon.** O código aqui não chama a API do Gemini. Ele reproduz o
 > *fluxo* descrito pelo Google (foto → cena MuJoCo → gerador de movimento em malha fechada →

@@ -1,11 +1,17 @@
 # robotica-real2sim
 
+[![robotica-real2sim](guia/assets/banner-en.jpg)](https://inematds.github.io/robotica-real2sim/guia/en/)
+
 **From a photo of a table to a simulation twin, to labeled training data, and proof of the plan
 before the real robot moves.** An open, local replica of the “Real2Sim” idea Google showed in the
 robotics segment of Gemini 4 Argon (13/10/2026), built with MuJoCo, the MuJoCo Menagerie Franka
 Panda arm, and Codex via subscription instead of Argon.
 
-[🇧🇷 Português](README.md) · 🇺🇸 English · [🇪🇸 Español](README.es.md) · [Illustrated guide](https://inematds.github.io/robotica-real2sim/guia/)
+[🇧🇷 Português](README.md) · 🇺🇸 English · [🇪🇸 Español](README.es.md) · [Illustrated guide](https://inematds.github.io/robotica-real2sim/guia/en/)
+
+## What it is
+
+robotica-real2sim is an open project that reproduces on your computer the idea Google showed in the robotics part of Gemini 4 Argon: take a photo of a table and turn it into a physics simulation where a robot arm trains. It is for anyone who wants to understand and test AI robotics without owning a robot. It builds the table's "twin", generates dozens of labeled training attempts and tests every plan in simulation before sending it to a real robot. It needs Python, MuJoCo (a free simulator) and, to read the photo, Codex.
 
 > **An educational replica, not Argon.** The code here does not call the Gemini API. It reproduces the
 > *workflow* Google described (photo → MuJoCo scene → closed-loop motion generator →

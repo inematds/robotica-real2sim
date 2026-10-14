@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>robotica-real2sim — de la foto de la mesa al robot probado en simulación</title>
+<meta name="description" content="Réplica abierta del Real2Sim de la robótica de Gemini 4 Argon: la foto de la mesa se convierte en un gemelo MuJoCo, genera datos de entrenamiento etiquetados y prueba el plan antes del robot real. Con investigación y las preguntas que esto plantea.">
+<link rel="alternate" hreflang="pt-BR" href="https://inematds.github.io/robotica-real2sim/guia/">
+<link rel="alternate" hreflang="en" href="https://inematds.github.io/robotica-real2sim/guia/en/">
+<link rel="alternate" hreflang="es" href="https://inematds.github.io/robotica-real2sim/guia/es/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0c0c10; --bg2:#14141b; --card:#16161e; --line:#272730;
+    --txt:#e9e9ee; --mut:#9a9aa6; --amb:#FACC15; --amb2:#f0c070; --sky:#38bdf8; --pro:#cbd5e1;
+    color-scheme:dark;
+  }
+  body.light{
+    --bg:#f6f7f9; --bg2:#eceef2; --card:#ffffff; --line:#e1e3ea;
+    --txt:#1a1a22; --mut:#5b5b68; --amb:#a16207; --amb2:#a16207; --sky:#0369a1; --pro:#b45309;
+    color-scheme:light;
+  }
+  body.light .hero .glow{opacity:.5}
+  body.light pre{background:#0e0e14;color:#d6d6e0}
+  body.light pre .c{color:#8a8a98}
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--txt);font:16px/1.65 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:Sora,sans-serif;line-height:1.15;margin:0}
+  a{color:var(--amb);text-decoration:none}
+  code,pre{font-family:"JetBrains Mono",monospace}
+  .wrap{max-width:1160px;margin:0 auto;padding:0 22px}
+  .mut{color:var(--mut)} .amb{color:var(--amb)}
+  .chip{display:inline-block;font-size:.75rem;letter-spacing:.14em;text-transform:uppercase;color:var(--amb);font-weight:600;font-family:Sora}
+  nav{position:sticky;top:0;z-index:30;backdrop-filter:blur(12px);background:rgba(12,12,16,.78);border-bottom:1px solid var(--line)}
+  nav .wrap{display:flex;align-items:center;gap:22px;height:60px}
+  nav .brand{display:flex;align-items:center;gap:8px;font-family:Sora;font-weight:800;letter-spacing:-.02em;color:var(--amb)}
+  nav .brand .emoji{font-size:1.25rem}
+  nav .sep{color:var(--mut);opacity:.45}
+  nav .inema{color:var(--sky);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .inema:hover{filter:brightness(1.15)}
+  nav .pro{color:var(--pro);font-weight:600;font-size:.88rem;font-family:Sora}
+  nav .pro:hover{filter:brightness(1.15)}
+  nav .clubpro{display:inline-flex;align-items:center;gap:6px}
+  nav .links{margin-left:auto;display:flex;align-items:center;gap:20px;font-size:.92rem}
+  nav .links a.sec{color:var(--mut)} nav .links a.sec:hover{color:var(--txt)}
+  .lang{display:inline-flex;gap:2px;font-family:Sora;font-size:.78rem}
+  .lang a{color:var(--mut);padding:.2em .45em;border-radius:6px} .lang a.on{color:var(--amb);background:rgba(250,204,21,.12)}
+  .tgl{background:var(--bg2);border:1px solid var(--line);color:var(--txt);width:38px;height:38px;border-radius:10px;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;font-size:1.05rem}
+  .tgl:hover{border-color:var(--amb)}
+  .btn{display:inline-block;background:var(--amb);color:#1a1206;font-weight:600;padding:.6em 1.05em;border-radius:10px;font-family:Sora}
+  .btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
+  @media(max-width:1100px){nav .links a.sec{display:none}}
+  @media(max-width:520px){nav .wrap{gap:8px;padding:8px 14px;height:auto;flex-wrap:wrap} nav .links{gap:8px;margin-left:0;width:100%;justify-content:space-between} nav .btn{padding:.45em .7em;font-size:.82rem} .tgl{width:34px;height:34px}}
+  .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+  .hero .glow{position:absolute;inset:-40% -20% auto auto;width:70%;height:600px;background:radial-gradient(closest-side,rgba(250,204,21,.22),transparent 70%);pointer-events:none}
+  .hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:40px;align-items:center;padding:74px 22px}
+  .hero h1{font-size:clamp(2.2rem,5vw,3.5rem);font-weight:800;letter-spacing:-.025em}
+  .hero p.lead{font-size:1.18rem;color:var(--mut);margin:1.1em 0 1.6em;max-width:34ch}
+  .hero .cta{display:flex;gap:12px;flex-wrap:wrap}
+  .hero figure{margin:0;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -30px #000}
+  .hero figure img{width:100%;display:block}
+  .resumo{padding:38px 0 34px;border-bottom:1px solid var(--line)}
+  .resumo p{font-size:1.12rem;line-height:1.7;max-width:74ch;margin:.55em 0 0}
+  @media(max-width:780px){.hero .wrap{grid-template-columns:1fr;padding:48px 22px}}
+  section{padding:62px 0;border-bottom:1px solid var(--line)}
+  section h2{font-size:clamp(1.5rem,3.4vw,2.1rem);font-weight:800;letter-spacing:-.02em}
+  section .sub{color:var(--mut);margin:.6em 0 2em;max-width:62ch}
+  .grid{display:grid;gap:16px}
+  .g3{grid-template-columns:repeat(3,1fr)} .g4{grid-template-columns:repeat(4,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:820px){.g3,.g4{grid-template-columns:1fr 1fr}}
+  @media(max-width:540px){.g2,.g3,.g4{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:20px}
+  .card h3{font-size:1.05rem;margin-bottom:.4em}
+  .card p{color:var(--mut);font-size:.92rem;margin:0}
+  .num{display:inline-flex;width:30px;height:30px;align-items:center;justify-content:center;border-radius:8px;background:rgba(250,204,21,.14);color:var(--amb);font-family:Sora;font-weight:800;font-size:.9rem;margin-bottom:.7em}
+  .flow{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+  .flow span{background:var(--bg2);border:1px solid var(--line);border-radius:999px;padding:.45em .9em;font-size:.85rem;font-family:Sora;font-weight:600}
+  .flow .arr{color:var(--amb);border:none;background:none;padding:0 .1em}
+  pre{background:#0a0a0e;border:1px solid var(--line);border-radius:12px;padding:16px 18px;overflow:auto;font-size:.86rem;line-height:1.6;color:#d6d6e0}
+  pre .c{color:#6f6f7c} pre .k{color:var(--amb2)} pre .s{color:#9ece6a}
+  .step{display:grid;grid-template-columns:46px minmax(0,1fr);gap:16px;margin-bottom:26px}
+  .step>div,.card{min-width:0}
+  p code,li code,td code{overflow-wrap:anywhere}
+  .step .b{width:46px;height:46px;border-radius:12px;background:var(--amb);color:#1a1206;font-family:Sora;font-weight:800;font-size:1.25rem;display:flex;align-items:center;justify-content:center}
+  .step h3{font-size:1.12rem;margin-bottom:.3em}
+  .step p{color:var(--mut);margin:.2em 0 .7em}
+  .ex{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:680px){.ex{grid-template-columns:1fr}}
+  .ex figure{margin:0;border-radius:14px;overflow:hidden;border:1px solid var(--line)}
+  .ex figure img{width:100%;display:block}
+  .ex figcaption{padding:12px 14px;font-size:.88rem;color:var(--mut);background:var(--card)}
+  .phase{display:flex;gap:14px;padding:16px 0;border-bottom:1px solid var(--line)}
+  .phase:last-child{border:none}
+  .phase .tag{flex:0 0 92px;font-family:Sora;font-weight:800;color:var(--amb)}
+  .phase .d strong{display:block;margin-bottom:.2em}
+  .phase .d span{color:var(--mut);font-size:.92rem}
+  footer{padding:46px 0;text-align:center;color:var(--mut);font-size:.9rem}
+  .pill{display:inline-block;border:1px solid var(--line);border-radius:999px;padding:.3em .8em;font-size:.78rem;color:var(--mut);margin:0 4px}
+</style>
+<style>
+  table.t{width:100%;border-collapse:collapse;font-size:.92rem;margin-top:8px}
+  table.t th,table.t td{border-bottom:1px solid var(--line);padding:10px 8px;text-align:left;vertical-align:top}
+  table.t th{font-family:Sora;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+  table.t td strong{color:var(--amb)}
+  .tw{overflow-x:auto}
+  .ex video{width:100%;display:block;background:#000}
+  .q{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
+  .q h3{font-size:1.02rem;margin-bottom:.45em}
+  .q p{color:var(--mut);font-size:.93rem;margin:.35em 0 0}
+  .aviso{border-left:3px solid var(--amb);background:var(--bg2);padding:14px 18px;border-radius:0 12px 12px 0;margin:0 0 26px;color:var(--txt)}
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <a class="brand" href="#top"><span class="emoji">🦾</span> robotica-real2sim</a>
+  <span class="sep">|</span>
+  <span class="clubpro">
+    <a class="inema" href="https://inema.club" target="_blank" rel="noopener">INEMA.CLUB</a>
+    <span class="sep">-</span>
+    <a class="pro" href="https://inema.pro" target="_blank" rel="noopener">PRO</a>
+  </span>
+  <div class="links">
+    <a class="sec" href="#oque">Qué es</a>
+    <a class="sec" href="#argon">Argon</a>
+    <a class="sec" href="#guia">Guía de uso</a>
+    <a class="sec" href="#exemplos">Resultados</a>
+    <a class="sec" href="#perguntas">Preguntas</a>
+    <span class="lang"><a href="../">PT</a><a href="../en/">EN</a><a class="on" href="./">ES</a></span>
+    <button class="tgl" id="themeToggle" aria-label="Cambiar tema" title="Cambiar tema">🌙</button>
+    <a class="btn" href="https://github.com/inematds/robotica-real2sim" target="_blank" rel="noopener">GitHub</a>
+  </div>
+</div></nav>
+
+<header class="hero" id="top">
+  <div class="glow"></div>
+  <div class="wrap">
+    <div>
+      <span class="chip">Robótica con IA · Real2Sim</span>
+      <h1>De la foto de la mesa al <span class="amb">robot</span> que ya entrenó antes de moverse</h1>
+      <p class="lead">Una foto se convierte en un gemelo de simulación, el gemelo genera datos de entrenamiento etiquetados y el plan solo pasa al robot real después de superar la física.</p>
+      <div class="cta">
+        <a class="btn" href="#guia">Empezar la guía</a>
+        <a class="btn ghost" href="https://github.com/inematds/robotica-real2sim" target="_blank" rel="noopener">Ver en GitHub</a>
+      </div>
+    </div>
+    <figure><img src="../assets/banner-es.jpg" alt="De la foto al robot: brazo robótico sobre la mesa y el gemelo de simulación al lado"></figure>
+  </div>
+</header>
+
+<section id="resumo" class="resumo"><div class="wrap">
+  <span class="chip">En resumen</span>
+  <p>robotica-real2sim es un proyecto abierto que reproduce en tu computadora la idea que Google mostró en la parte de robótica de Gemini 4 Argon: tomar una foto de una mesa y convertirla en una simulación física donde un brazo robótico entrena. Sirve para quien quiere entender y probar robótica con IA sin tener un robot. Arma el "gemelo" de la mesa, genera decenas de intentos etiquetados para entrenar y prueba cada plan en la simulación antes de enviarlo a un robot real. Necesita Python, MuJoCo (simulador gratuito) y, para leer la foto, Codex.</p>
+</div></section>
+
+<section id="oque"><div class="wrap">
+  <span class="chip">Qué es</span>
+  <h2>Tres piezas que cambian cómo se entrena un robot</h2>
+  <p class="sub">El cuello de botella de la robótica siempre fueron los datos: personas con lentes de VR guiando el brazo durante horas. Aquí el dato sale de la simulación, y la simulación sale de una foto.</p>
+  <figure style="margin:0 0 26px;border-radius:16px;overflow:hidden;border:1px solid var(--line);box-shadow:0 30px 80px -30px #000"><img src="../assets/banner-grade-es.jpg" alt="Seis etapas: foto de la mesa, gemelo MuJoCo, lazo cerrado, 100 episodios, prueba en la física, preguntas abiertas" loading="lazy" style="width:100%;display:block"></figure>
+  <div class="grid g3">
+    <div class="card"><h3>📷 Foto → gemelo</h3><p>Un modelo de visión lee la foto, mide los objetos usando una hoja A4 como regla y arma la escena en MuJoCo con el brazo Franka Panda.</p></div>
+    <div class="card"><h3>🔁 Datos que se etiquetan solos</h3><p>Un generador de movimiento en lazo cerrado toma y suelta cada objeto con variaciones; cada intento sale con anotación en 4 niveles y sello de calidad.</p></div>
+    <div class="card"><h3>✅ Prueba antes de lo real</h3><p>El plan escrito por la IA se ejecuta 20 veces en la física. Por debajo de 90% de acierto, se reprueba y no llega al robot.</p></div>
+  </div>
+</div></section>
+
+<section id="fluxo"><div class="wrap">
+  <span class="chip">Cómo funciona</span>
+  <h2>Del píxel al movimiento, en cinco etapas</h2>
+  <p class="sub">Cada etapa es un comando de <code>r2s.py</code> y graba un archivo que puedes abrir y verificar.</p>
+  <div class="flow">
+    <span>Foto de la mesa</span><span class="arr">→</span>
+    <span>cena.json (metros)</span><span class="arr">→</span>
+    <span>Gemelo MuJoCo</span><span class="arr">→</span>
+    <span>Generador en lazo cerrado</span><span class="arr">→</span>
+    <span>Episodios etiquetados</span><span class="arr">→</span>
+    <span>Plan de la IA</span><span class="arr">→</span>
+    <span>Prueba en la física</span>
+  </div>
+  <div class="grid g3" style="margin-top:26px">
+    <div class="card"><h3>Lazo cerrado</h3><p>Cada 20 ms el generador lee dónde está el objeto y recalcula el objetivo. Si el objeto se mueve, el brazo corrige. Es lo que Google llama <em>closed-loop IK trajectory generator</em>.</p></div>
+    <div class="card"><h3>Anotación retrospectiva</h3><p>Objetivo → subtareas (tomar, llevar, soltar) → primitivas con inicio y fin → eventos (contacto de los dos dedos, objeto levantado, éxito).</p></div>
+    <div class="card"><h3>Variación de dominio</h3><p>Cada episodio sortea posición (±4 cm), giro, masa (±30%). Un modelo entrenado así aprende a lidiar con un mundo que no es igual a la foto.</p></div>
+  </div>
+</div></section>
+
+<section id="argon"><div class="wrap">
+  <span class="chip">Lo que mostró Google</span>
+  <h2>Gemini 4 Argon en la robótica, en números</h2>
+  <p class="sub">Publicado el 13/10/2026. El post es una colección de ejemplos con video; fuentes completas en <a href="https://github.com/inematds/robotica-real2sim/blob/main/docs/PESQUISA.md">docs/PESQUISA.md</a> (en portugués).</p>
+  <div class="aviso">Este repositorio <strong>no</strong> usa Argon. Replica el flujo con herramientas abiertas. Argon está en AI Studio (suscripción Ultra), en la Gemini API de pago (<code>gemini-4-argon</code>, US$ 2 / US$ 10 por millón de tokens en el precio de lanzamiento) y en Antigravity.</div>
+  <div class="tw"><table class="t">
+    <tr><th>Ejemplo</th><th>Qué ocurre</th><th>Número</th></tr>
+    <tr><td>Una foto → mejor VLA</td><td>La foto de una mesa de trabajo con 2 brazos Franka FR3 se convierte en gemelo MuJoCo, 77 tareas, generador IK en lazo cerrado, 4.500+ episodios para ajustar un VLA</td><td><strong>56% → 75%</strong> de éxito en el robot real; 35 s → 24 s</td></tr>
+    <tr><td>ERQA</td><td>Benchmark de razonamiento corporizado</td><td><strong>87%</strong>, por encima de los otros modelos de frontera</td></tr>
+    <tr><td>Spot</td><td>Crea el gemelo de un bote de basura con pedal, entrena el equilibrio en 3 patas en MuJoCo y solo entonces pisa el pedal real</td><td>sin tasa publicada</td></tr>
+    <tr><td>SO-101</td><td>Un brazo barato mejora su propia tarea mirando registros y video, bajo las reglas de un <code>AGENTS.md</code></td><td><strong>58,9 s → 22,9 s → 17,4 s</strong></td></tr>
+    <tr><td>ALOHA 2</td><td>Origami de 136 s anotado en 4 niveles con control de calidad</td><td>1 objetivo, 6 subtareas, 17 primitivas</td></tr>
+    <tr><td>DroneBench (Andon Labs)</td><td>Los modelos escriben el código para que un dron de US$ 129 encuentre y siga a una persona</td><td>el mejor modelo al 84% del camino; nadie completa las 5 tareas</td></tr>
+  </table></div>
+</div></section>
+
+<section id="pre"><div class="wrap">
+  <span class="chip">Requisitos previos</span>
+  <h2>Qué necesitas</h2>
+  <p class="sub">Funciona en Linux, macOS y WSL. Probado en un ARM de 20 núcleos con GPU (renderizado por EGL).</p>
+  <div class="grid g3">
+    <div class="card"><h3>Python 3.10+ y git</h3><p>El instalador crea el entorno y descarga el Panda de MuJoCo Menagerie.</p><pre><span class="c"># verificar</span>
+<span class="k">python3</span> --version && <span class="k">git</span> --version</pre></div>
+    <div class="card"><h3>Renderizado sin pantalla</h3><p>En servidor o WSL, MuJoCo dibuja por la GPU. Sin GPU, usa osmesa.</p><pre><span class="c"># valor por defecto del proyecto</span>
+<span class="k">export</span> MUJOCO_GL=egl</pre></div>
+    <div class="card"><h3>Codex CLI (opcional)</h3><p>Solo para leer la foto y escribir el plan. Sin él, escribe la escena a mano.</p><pre><span class="c"># una sola vez</span>
+<span class="k">codex</span> login</pre></div>
+  </div>
+</div></section>
+
+<section id="guia"><div class="wrap">
+  <span class="chip">Guía de uso · paso a paso</span>
+  <h2>De cero al plan aprobado</h2>
+  <p class="sub">Comandos reales. Cada uno imprime lo que hizo y graba el resultado.</p>
+
+  <div class="step"><div class="b">1</div><div>
+    <h3>Instalar</h3>
+    <p>Crea el <code>.venv</code>, instala MuJoCo, descarga el Franka Panda y ejecuta las 8 pruebas (~11 s).</p>
+<pre><span class="k">git clone</span> <span class="s">https://github.com/inematds/robotica-real2sim</span> && <span class="k">cd</span> robotica-real2sim
+<span class="k">./instalar.sh</span>   <span class="c"># termina en "TUDO OK"</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">2</div><div>
+    <h3>Foto → escena</h3>
+    <p>Fotografía la mesa desde arriba, con una hoja A4 visible como regla. El modelo devuelve cada objeto con tipo, tamaño y posición; el script lo convierte al marco de referencia del brazo y avisa si tuvo que acercar algo al alcance.</p>
+<pre><span class="k">./r2s.py foto</span> minha-mesa.jpg cena.json --pedido <span class="s">"pôr o cubo vermelho na bandeja"</span>
+<span class="c"># cena: 4 objetos -> cena.json</span>
+<span class="k">./r2s.py ver</span> cena.json gemeo.png --camera cima   <span class="c"># compara con la foto</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">3</div><div>
+    <h3>Ver el brazo trabajando</h3>
+    <p>Filma un episodio con tres cámaras (general, cenital y en la muñeca) y la fase escrita en la pantalla.</p>
+<pre><span class="k">./r2s.py filmar</span> cena.json episodio.mp4 --cameras geral,cima,pulso
+<span class="c"># sucesso: objeto dentro do destino (269 quadros)</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">4</div><div>
+    <h3>Generar datos de entrenamiento</h3>
+    <p>N episodios con variación. <code>--imagens</code> graba también las cámaras cenital y de la muñeca (128×128, 10 Hz). Un episodio que falló queda con <code>peso_no_treino: 0</code>.</p>
+<pre><span class="k">./r2s.py episodios</span> cena.json dados/ -n 50 --imagens
+<span class="c"># 50/50 episódios com sucesso (100%) em 8.7 s</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">5</div><div>
+    <h3>Pedir un plan en portugués</h3>
+    <p>Codex lee la escena y devuelve pasos tomar → destino. El script rechaza un plan que mencione un objeto inexistente o un destino que no es un recipiente.</p>
+<pre><span class="k">./r2s.py planejar</span> cena.json <span class="s">"arrume a mesa: tudo que é redondo vai para a bandeja"</span> plano.json
+<span class="c">#   pegar lata_azul -> bandeja_cinza</span>
+<span class="c">#   pegar bola_tenis -> bandeja_cinza</span></pre>
+  </div></div>
+
+  <div class="step"><div class="b">6</div><div>
+    <h3>Probar antes de enviar al robot</h3>
+    <p>El plan se ejecuta 20 veces con variación. Sin lugares asignados, la pelota cae encima de la lata. Con un lugar por objeto (por defecto), pasa.</p>
+<pre><span class="k">./r2s.py provar</span> cena.json plano.json --sem-vagas
+<span class="c"># plano completo em 4/20 (20%) -> REPROVADO: não mande ao robô</span>
+<span class="k">./r2s.py provar</span> cena.json plano.json
+<span class="c"># plano completo em 19/20 (95%) -> APROVADO para o robô real</span></pre>
+  </div></div>
+</div></section>
+
+<section id="exemplos"><div class="wrap">
+  <span class="chip">Resultados medidos</span>
+  <h2>Lo que se ejecutó de verdad (14/10/2026)</h2>
+  <p class="sub">Archivos en <a href="https://github.com/inematds/robotica-real2sim/tree/main/resultados">resultados/</a> (en portugués). La foto de ejemplo fue generada por IA.</p>
+  <div class="ex">
+    <figure><img src="../assets/foto-mesa.jpg" alt="Foto de una mesa con cubo rojo, lata azul, pelota de tenis, bandeja y hoja A4" loading="lazy"><figcaption>La foto: cubo a la izquierda, lata, pelota, bandeja a la derecha y una hoja A4 de regla.</figcaption></figure>
+    <figure><img src="../assets/gemeo-geral.jpg" alt="Gemelo de simulación con el brazo Panda y los mismos objetos" loading="lazy"><figcaption>El gemelo armado en ~9 s por Codex: mismas posiciones, tamaños estimados en centímetros.</figcaption></figure>
+    <figure><video src="../assets/clip-pegar-cubo-3cam.mp4" controls muted loop playsinline preload="metadata" poster="../assets/tres-cameras.jpg"></video><figcaption>Un episodio con tres cámaras: general, cenital y en la muñeca (lo que vería un VLA).</figcaption></figure>
+    <figure><video src="../assets/clip-plano-com-vagas.mp4" controls muted loop playsinline preload="metadata" poster="../assets/fim-plano-com-vagas.jpg"></video><figcaption>El plan aprobado: lata y pelota en la bandeja, cada una en su lugar.</figcaption></figure>
+  </div>
+  <div class="tw" style="margin-top:26px"><table class="t">
+    <tr><th>Medida</th><th>Resultado</th></tr>
+    <tr><td>Episodios en la escena de la foto (cubo → bandeja, con variación)</td><td><strong>50/50</strong> en 8,7 s</td></tr>
+    <tr><td>Episodios en la escena de prueba</td><td><strong>50/50</strong> en 8,4 s</td></tr>
+    <tr><td>Cada objeto solo (cubo, lata, pelota × 2 escenas, 20 variaciones)</td><td><strong>20/20</strong> en todos</td></tr>
+    <tr><td>Plan "todo lo redondo va a la bandeja", sin lugares asignados</td><td><strong>4/20 (20%)</strong> → reprobado</td></tr>
+    <tr><td>El mismo plan con un lugar por objeto</td><td><strong>19/20 (95%)</strong> → aprobado</td></tr>
+  </table></div>
+  <p class="sub" style="margin-top:22px">Hasta que la lata funcionó, la simulación se equivocó de tres maneras: un agarre demasiado alto metía la lata en la palma, el contacto cilindro × dedo empujaba en la dirección equivocada y la pinza del modelo apretaba solo ~3 N (la real hace 70 N). Cada error habría dado un número falso. Por eso el gemelo necesita ser verificado.</p>
+</div></section>
+
+<section id="perguntas"><div class="wrap">
+  <span class="chip">Las preguntas que esto plantea</span>
+  <h2>Ocho cuestiones, ampliadas</h2>
+  <p class="sub">Versión completa, con fuentes y lo que medimos, en <a href="https://github.com/inematds/robotica-real2sim/blob/main/docs/QUESTOES.md">docs/QUESTOES.md</a> (en portugués).</p>
+  <div class="grid g2">
+    <div class="q"><h3>1. ¿Dónde se detiene el ciclo que se mejora a sí mismo?</h3><p>Jack Clark (Anthropic) veía un 60% de probabilidad de automejora recursiva hasta 2028; un agregador dice que la adelantó a 2027, sin fuente original. Lo que muestra Google es mejora de la <em>tarea</em>, no de los pesos. La pregunta útil: ¿quién aprueba la siguiente vuelta?</p></div>
+    <div class="q"><h3>2. ¿Vigilancia al alcance de cualquiera?</h3><p>Un dron de US$ 129 y código escrito por IA ya siguen a una persona mejor que el código humano de referencia. La propia Andon Labs dice que el público debe decidir los límites.</p></div>
+    <div class="q"><h3>3. ¿Se puede engañar a un robot con LLM?</h3><p>Se puede: RoboPAIR hizo jailbreak a tres robots, con éxito "frecuentemente 100%". La defensa debe estar fuera del modelo: límite de fuerza, zona prohibida, parada física y prueba en la simulación.</p></div>
+    <div class="q"><h3>4. ¿La simulación miente?</h3><p>Google muestra un único número real (56% → 75%). Aquí, tres errores de física habrían dado resultados falsos. Pregunta siempre qué número del robot real respalda el resultado.</p></div>
+    <div class="q"><h3>5. ¿Quién se queda con los datos?</h3><p>Si el dato se abarata (50 episodios en 9 s), el poder pasa a quien tiene el modelo que genera el dato y el hardware que lo valida. El contrapeso es abierto: MuJoCo, LeRobot, SO-101, OpenVLA.</p></div>
+    <div class="q"><h3>6. ¿Y quien opera robots?</h3><p>El primer trabajo afectado es el del teleoperador que genera datos y el del ingeniero que escribe simulación a mano. La nueva función es revisar y calibrar lo que produce el modelo.</p></div>
+    <div class="q"><h3>7. ¿El modelo escribe su propia prueba?</h3><p>En el ejemplo de Google, Argon arma el entorno y verifica <code>reward == 1.0</code> en él. DroneBench registra trampa en hasta el 66% de las ejecuciones de un modelo. Separa quién arma, quién juzga y quién verifica.</p></div>
+    <div class="q"><h3>8. ¿Quién regula?</h3><p>En la UE, el Reglamento de Máquinas rige desde el 20/01/2027 y exige evaluación por terceros cuando la seguridad depende de IA. El mínimo práctico: registrar el modelo, la simulación que aprobó y el resultado en lo real.</p></div>
+  </div>
+</div></section>
+
+<section id="roadmap"><div class="wrap">
+  <span class="chip">Próximos pasos</span>
+  <h2>Del gemelo al brazo de verdad</h2>
+  <p class="sub">Lo que ya existe y el camino para quien quiera llevarlo a lo real.</p>
+  <div class="phase"><div class="tag">Hecho</div><div class="d"><strong>Foto → gemelo → datos → prueba</strong><span>Panda de Menagerie, generador en lazo cerrado, episodios con anotación en 4 niveles, plan de Codex probado con y sin lugares asignados, 8 pruebas.</span></div></div>
+  <div class="phase"><div class="tag">Siguiente</div><div class="d"><strong>SO-101 + LeRobot</strong><span>Cambiar el Panda por el brazo abierto SO-101 (Menagerie ya tiene el modelo; el kit cuesta de US$ 100 a 500) y grabar en el formato de LeRobot.</span></div></div>
+  <div class="phase"><div class="tag">Después</div><div class="d"><strong>Entrenar una política</strong><span>Ajustar un VLA abierto (OpenVLA, pi0) con los episodios y medir en el brazo real, comparando con y sin los datos sintéticos.</span></div></div>
+  <div class="phase"><div class="tag">Regla</div><div class="d"><strong>Nada va a lo real sin prueba</strong><span>Todo plan pasa por <code>r2s.py provar</code> antes de mover un motor.</span></div></div>
+</div></section>
+
+<footer>
+  <div class="wrap">
+    <div class="pill">MuJoCo 3.15</div><div class="pill">Franka Panda · Menagerie</div><div class="pill">Python</div><div class="pill">Codex CLI</div>
+    <p style="margin-top:18px">robotica-real2sim · réplica abierta y didáctica, MIT ·
+      <a href="https://github.com/inematds/robotica-real2sim">inematds/robotica-real2sim</a> ·
+      <a href="https://inema.club">INEMA.CLUB</a></p>
+  </div>
+</footer>
+
+<script>
+  (function(){
+    var KEY='robotica-real2sim-theme';
+    var b=document.body, t=document.getElementById('themeToggle');
+    if(localStorage.getItem(KEY)==='light'){ b.classList.add('light'); t.textContent='☀️'; }
+    t.addEventListener('click',function(){
+      var light=b.classList.toggle('light');
+      t.textContent=light?'☀️':'🌙';
+      localStorage.setItem(KEY, light?'light':'dark');
+    });
+  })();
+</script>
+</body>
+</html>

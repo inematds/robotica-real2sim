@@ -4,3 +4,4 @@ __pycache__/
 *.pyc
 *.mp4
 !guia/assets/*.mp4
+*.codex.log
