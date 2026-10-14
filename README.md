@@ -107,6 +107,8 @@ que este repositório mediu, em **[docs/QUESTOES.md](docs/QUESTOES.md)**.
 
 **Humanoides:** Real2Sim acelera o treino de humanoides? Números da NVIDIA (GR00T N1, Isaac Lab com Unitree G1), onde a simulação ajuda mais, o reality gap e onde este projeto entra, com fontes conferidas em **[docs/HUMANOIDES.md](docs/HUMANOIDES.md)**.
 
+**Na prática:** como o robô recebe instruções (plano → movimento → motor), como são os dados, como ele aprende no mundo real e o passo a passo para quem tem um **SO-101**, em **[docs/APRENDER.md](docs/APRENDER.md)**. Os episódios saem no formato do **LeRobot** com `./instalar.sh --lerobot` e `./r2s.py exportar <episodios> <saida>` (50 episódios com câmeras → 4.361 quadros, 9,7 MB).
+
 ## Próximos passos para quem quer ir ao real
 
 1. Trocar o Panda por um **SO-101** (Menagerie tem `robotstudio_so101`; kit de ~US$ 100 a 500) e

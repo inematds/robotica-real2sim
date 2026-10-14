@@ -364,12 +364,70 @@
   <div class="q" style="margin-top:20px"><h3>The question worth investigating</h3><p>How much does it cost, and how long does it take, to teach a humanoid a new task with Real2Sim2Real compared with teaching it through human demonstrations? With the same task and the same robot, this comparison proves much more than isolated simulation speed figures.</p></div>
 </div></section>
 
+<section id="aprender"><div class="wrap">
+  <span class="chip">In practice</span>
+  <h2>How the robot receives instructions and learns</h2>
+  <p class="sub">The photo sets up the workspace; the simulation does the teaching, with thousands of variations of the same task. Full text, with step-by-step instructions for the SO-101, at <a href="https://github.com/inematds/robotica-real2sim/blob/main/docs/APRENDER.md">docs/APRENDER.md</a>.</p>
+
+  <h3>What goes in</h3>
+  <div class="tw"><table class="t">
+    <tr><th>Input</th><th>What it’s for</th></tr>
+    <tr><td><strong>1 photo</strong></td><td>A simple table, everything in view. This is what already works here.</td></tr>
+    <tr><td><strong>3–4 photos from different angles</strong></td><td>Better measurements and hidden objects. Measurements are where it makes the most mistakes.</td></tr>
+    <tr><td><strong>Sequence of photos</strong></td><td>Multistep task: each photo is a state the robot needs to reach.</td></tr>
+    <tr><td><strong>Video of a person performing the task</strong></td><td>Teaches the how, not just the workspace: human movement becomes robot movement, refined in the simulation.</td></tr>
+  </table></div>
+
+  <h3 style="margin-top:30px">How the instruction reaches the motor</h3>
+  <div class="grid g3">
+    <div class="q"><div class="big">1</div><h3>Plan</h3><p>The AI writes "pick up the cube, take it to the tray, release it." Once per task.</p></div>
+    <div class="q"><div class="big">2</div><h3>Movement</h3><p>Gripper position becomes the angle of each joint (inverse kinematics), 10 to 50 times per second.</p></div>
+    <div class="q"><div class="big">3</div><h3>Motor</h3><p>Target position for each servo goes over USB to the arm board, hundreds of times per second.</p></div>
+  </div>
+  <p style="margin-top:14px">Today, the <strong class="amb">programmed</strong> mode works: the AI plans, the simulation proves it, and the arm executes. Next is the <strong class="amb">learned</strong> mode: a neural network looks at the camera and joints and decides the next action in a continuous loop.</p>
+
+  <h3 style="margin-top:30px">What the data looks like</h3>
+  <p class="mut">Each attempt is an episode: at each moment, what the robot saw and what it did.</p>
+  <pre>episode 0007 · "Put the red cube on the gray tray."
+t=0.0  cameras: top, wrist   joints: [0.10 -0.50 0.80 …]
+       action: target joints [0.12 -0.48 0.79 …]   gripper: open
+t=0.1  …
+end    success = yes</pre>
+
+  <div class="grid g4" style="margin-top:22px">
+    <div class="q"><div class="big">50/50</div><h3>Episodes with cameras</h3><p>Generated in 30 s from the photo of the table.</p></div>
+    <div class="q"><div class="big">4,361</div><h3>Frames in LeRobot</h3><p>At 10 Hz, with state, action, and two cameras.</p></div>
+    <div class="q"><div class="big">69 s</div><h3>Export</h3><p>Through the official LeRobot 0.6.1 API, on a CPU.</p></div>
+    <div class="q"><div class="big">9.7 MB</div><h3>Ready dataset</h3><p>Opens back up in LeRobot, ready to train.</p></div>
+  </div>
+  <pre style="margin-top:16px">./instalar.sh --lerobot
+./r2s.py episodios exemplos/mesa-foto/cena.json eps/ -n 50 --imagens
+./r2s.py exportar eps/ dataset/</pre>
+
+  <h3 style="margin-top:30px">How it learns in the real world</h3>
+  <div class="grid g2">
+    <div class="q"><h3>1. Leader arm</h3><p>You move the leader arm by hand, the follower copies it, and everything is recorded. With 50 to 100 demonstrations, an ACT policy can already learn a simple task.</p></div>
+    <div class="q"><h3>2. Mix with the simulation</h3><p>Thousands of synthetic episodes add variety; a few real demonstrations correct the physics the simulation got wrong.</p></div>
+    <div class="q"><h3>3. Correction during use</h3><p>The robot tries, you take over when it makes a mistake, and the correction becomes new data (DAgger).</p></div>
+    <div class="q"><h3>4. Continuous cycle</h3><p>Each real-world failure goes into the dataset and the policy is trained again. Trial and error directly in the real world is possible, but it is slow and wears out the equipment.</p></div>
+  </div>
+
+  <h3 style="margin-top:30px">I have an SO-101: what should I do?</h3>
+  <div class="phase"><div class="tag">1–4</div><div class="d"><strong>Assemble, install, and calibrate</strong><span>Leader + follower pair, 1 or 2 USB cameras. <code>pip install "lerobot[feetech,core-scripts,training]"</code>, then <code>lerobot-find-port</code>, <code>lerobot-setup-motors</code>, <code>lerobot-calibrate</code>, and <code>lerobot-teleoperate</code> to see the follower copy the leader.</span></div></div>
+  <div class="phase"><div class="tag">5</div><div class="d"><strong>Twin of your table</strong><span>Photo, scene, episodes with cameras, and export, with this repository.</span></div></div>
+  <div class="phase"><div class="tag">6</div><div class="d"><strong>Record real demonstrations</strong><span>50 to 100 with <code>lerobot-record</code>, varying object positions; <code>--dataset.push_to_hub=false</code> keeps everything local.</span></div></div>
+  <div class="phase"><div class="tag">7–8</div><div class="d"><strong>Train and run</strong><span><code>lerobot-train --policy.type=act</code> and <code>lerobot-rollout</code> on the arm, slowly and with the stop button at hand.</span></div></div>
+  <div class="phase"><div class="tag">9–10</div><div class="d"><strong>Correct and measure</strong><span><code>--strategy.type=dagger</code> to correct; success rate over 20 attempts: synthetic only, real only, and both together.</span></div></div>
+  <p class="mut" style="font-size:.9rem;margin-top:12px">The simulation arm is still the Franka Panda: the synthetic data applies directly to the SO-101 once you swap the model for the one from MuJoCo Menagerie.</p>
+</div></section>
+
 <section id="roadmap"><div class="wrap">
   <span class="chip">Next steps</span>
   <h2>From the twin to the real arm</h2>
   <p class="sub">What already exists and the path for anyone who wants to take it to the real world.</p>
   <div class="phase"><div class="tag">Done</div><div class="d"><strong>Photo → twin → data → proof</strong><span>Menagerie Panda, closed-loop generator, episodes with 4-level annotation, Codex plan proven with and without slots, 8 tests.</span></div></div>
-  <div class="phase"><div class="tag">Next</div><div class="d"><strong>SO-101 + LeRobot</strong><span>Swap the Panda for the open SO-101 arm (Menagerie already has the model; the kit costs US$ 100 to 500) and record in the LeRobot format.</span></div></div>
+  <div class="phase"><div class="tag">Done</div><div class="d"><strong>Episodes in LeRobot format</strong><span><code>r2s.py exportar</code>: 50 episodes with cameras become a dataset that LeRobot opens and trains on (<a href="#aprender">in practice</a>).</span></div></div>
+  <div class="phase"><div class="tag">Next</div><div class="d"><strong>SO-101 in simulation</strong><span>Swap the Panda for the open SO-101 arm (Menagerie already has the model; the kit costs US$ 100 to 500) so the synthetic data works directly on the real arm.</span></div></div>
   <div class="phase"><div class="tag">Later</div><div class="d"><strong>Train a policy</strong><span>Fine-tune an open VLA (OpenVLA, pi0) on the episodes and measure on the real arm, comparing with and without the synthetic data.</span></div></div>
   <div class="phase"><div class="tag">Rule</div><div class="d"><strong>Nothing goes to the real robot without proof</strong><span>Every plan goes through <code>r2s.py provar</code> before a motor moves.</span></div></div>
 </div></section>

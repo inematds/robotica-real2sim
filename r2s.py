@@ -9,6 +9,7 @@
   r2s.py planejar  <cena.json> "<pedido em português>" <plano.json> [--motor codex|claude|gemini|openrouter]
   r2s.py provar    <cena.json> <plano.json> [-n 20] [--minimo 0.9] [--sem-vagas]
   r2s.py tudo      <foto.jpg> <pasta> [--pedido "..."] [-n 50]
+  r2s.py exportar  <pasta-episodios> <saida> [--com-falhas] [--sobrescrever]   (dataset LeRobot)
 """
 from __future__ import annotations
 
@@ -85,6 +86,17 @@ def cmd_episodios(a):
           f"em {r['tempo_real_s']} s -> {a.pasta}")
 
 
+def cmd_exportar(a):
+    """Dataset LeRobot. Roda na venv .venv-lerobot (instalar.sh --lerobot); esta venv só tem MuJoCo."""
+    import subprocess
+    py = Path(__file__).resolve().parent / ".venv-lerobot" / "bin" / "python"
+    if not py.exists():
+        sys.exit("falta a venv do LeRobot: ./instalar.sh --lerobot")
+    args = [str(py), "-m", "real2sim.exportar", str(Path(a.episodios).resolve()), str(Path(a.saida).resolve()), "--repo-id", a.repo_id]
+    args += ["--com-falhas"] * a.com_falhas + ["--sobrescrever"] * a.sobrescrever
+    sys.exit(subprocess.call(args, cwd=Path(__file__).resolve().parent))
+
+
 def cmd_planejar(a):
     from real2sim.provar import planejar
     plano = planejar(carregar_cena(a.cena), a.pedido, a.modelo, motor=a.motor)
@@ -145,6 +157,10 @@ def main():
     x = s.add_parser("episodios"); x.add_argument("cena"); x.add_argument("pasta")
     x.add_argument("-n", type=int, default=50); x.add_argument("--semente", type=int, default=0)
     x.add_argument("--imagens", action="store_true"); x.set_defaults(f=cmd_episodios)
+
+    x = s.add_parser("exportar"); x.add_argument("episodios"); x.add_argument("saida")
+    x.add_argument("--repo-id", default="local/real2sim"); x.add_argument("--com-falhas", action="store_true")
+    x.add_argument("--sobrescrever", action="store_true"); x.set_defaults(f=cmd_exportar)
 
     x = s.add_parser("planejar"); x.add_argument("cena"); x.add_argument("pedido"); x.add_argument("plano")
     x.add_argument("--modelo", default=m); x.add_argument("--motor", choices=["codex", "claude", "gemini", "openrouter"], default="codex"); x.set_defaults(f=cmd_planejar)

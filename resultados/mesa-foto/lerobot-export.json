@@ -1,0 +1,19 @@
+{
+ "data": "2026-10-14",
+ "lerobot": "0.6.1",
+ "comando": "./r2s.py episodios exemplos/mesa-foto/cena.json resultados/mesa-foto/episodios-imagens -n 50 --imagens && ./r2s.py exportar resultados/mesa-foto/episodios-imagens resultados/mesa-foto/lerobot",
+ "episodios": 50,
+ "sucessos_no_gerador": 50,
+ "quadros": 4361,
+ "fps": 10,
+ "observation.state": "7 juntas do Panda (qpos)",
+ "action": "7 juntas-alvo + garra (ctrl)",
+ "cameras": {"cima": [128, 128, 3], "pulso": [128, 128, 3]},
+ "tarefa": "Pôr o cubo vermelho na bandeja cinza.",
+ "tempo_gerar_s": 30.2,
+ "tempo_exportar_s": 69.5,
+ "tamanho_episodios_mb": 51,
+ "tamanho_dataset_mb": 9.7,
+ "conferencia": "LeRobotDataset abre de volta; imagem decodificada difere da original 2,3/255 em média (compressão do vídeo); estado idêntico",
+ "maquina": "spark-922b (ARM64), torch CPU"
+}

@@ -1,0 +1,5 @@
+# Venv separada (.venv-lerobot) só para exportar episódios no formato LeRobot: ./instalar.sh --lerobot
+# Torch de CPU basta para exportar (índice da PyTorch); para treinar numa GPU, instale o torch com CUDA.
+--index-url https://download.pytorch.org/whl/cpu
+--extra-index-url https://pypi.org/simple
+lerobot[dataset]==0.6.1

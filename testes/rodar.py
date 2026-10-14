@@ -122,5 +122,21 @@ def _():
 
 
 print()
+LEROBOT = RAIZ / ".venv-lerobot/bin/python"
+if not LEROBOT.exists():
+    print("pulado exportar para o LeRobot (sem .venv-lerobot; ./instalar.sh --lerobot)")
+else:
+    @caso("episódios com câmeras -> dataset LeRobot que abre de volta")
+    def _():
+        import subprocess
+        with tempfile.TemporaryDirectory() as tmp:
+            gerar(FOTO, Path(tmp) / "eps", 2, imagens=True, log=lambda *_: None)
+            r = subprocess.run([str(LEROBOT), "-m", "real2sim.exportar", f"{tmp}/eps", f"{tmp}/ds"],
+                               cwd=RAIZ, capture_output=True, text=True, timeout=300)
+            assert r.returncode == 0, r.stderr[-500:]
+            linha = [x for x in r.stdout.splitlines() if x.startswith("conferido:")]
+            assert linha and "'episodios': 2" in linha[0] and "'fps': 10" in linha[0], r.stdout[-500:]
+            assert "observation.images.cima" in linha[0] and "(7,)" in linha[0] and "(8,)" in linha[0]
+
 print("TUDO OK" if not falhas else f"{len(falhas)} FALHA(S): {falhas}")
 sys.exit(1 if falhas else 0)

@@ -105,6 +105,8 @@ Recursive self-improvement, cheap surveillance, robot jailbreaks, simulation tha
 
 **Humanoids:** does Real2Sim speed up humanoid training? NVIDIA numbers (GR00T N1, Isaac Lab with Unitree G1), where simulation helps most, the reality gap and where this project fits, with checked sources in **[docs/HUMANOIDES.md](docs/HUMANOIDES.md)** (in Portuguese).
 
+**In practice:** how the robot receives instructions (plan → motion → motor), what the data looks like, how it learns in the real world and a step-by-step guide for **SO-101** owners, in **[docs/APRENDER.md](docs/APRENDER.md)** (in Portuguese). Episodes export to the **LeRobot** format with `./instalar.sh --lerobot` and `./r2s.py exportar <episodes> <output>` (50 episodes with cameras → 4,361 frames, 9.7 MB).
+
 ## Next steps for those who want to go real
 
 1. Replace the Panda with an **SO-101** (Menagerie has `robotstudio_so101`; kit costs about US$ 100 to 500) and

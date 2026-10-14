@@ -3,6 +3,14 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
+if [ "${1:-}" = "--lerobot" ]; then   # venv opcional: exportar episódios para o LeRobot (r2s.py exportar)
+  python3 -m venv .venv-lerobot
+  .venv-lerobot/bin/pip install -q --upgrade pip
+  .venv-lerobot/bin/pip install -q -r requirements-lerobot.txt
+  .venv-lerobot/bin/python -c "import lerobot; print('LeRobot', lerobot.__version__, 'ok')"
+  exit 0
+fi
+
 python3 -m venv .venv
 .venv/bin/pip install -q --upgrade pip
 .venv/bin/pip install -q -r requirements.txt

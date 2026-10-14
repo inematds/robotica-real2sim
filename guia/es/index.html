@@ -364,12 +364,70 @@
   <div class="q" style="margin-top:20px"><h3>La pregunta que vale la pena investigar</h3><p>¿Cuánto cuesta y cuánto tiempo lleva enseñar una tarea nueva a un humanoide con Real2Sim2Real, en comparación con enseñársela mediante demostraciones humanas? Con la misma tarea y el mismo robot, esta comparación demuestra mucho más que cifras aisladas sobre la velocidad de simulación.</p></div>
 </div></section>
 
+<section id="aprender"><div class="wrap">
+  <span class="chip">En la práctica</span>
+  <h2>Cómo recibe instrucciones y aprende el robot</h2>
+  <p class="sub">La foto recrea el lugar; quien enseña es la simulación, con miles de variaciones de la misma tarea. Texto completo, con el paso a paso del SO-101, en <a href="https://github.com/inematds/robotica-real2sim/blob/main/docs/APRENDER.md">docs/APRENDER.md</a>.</p>
+
+  <h3>Qué se introduce</h3>
+  <div class="tw"><table class="t">
+    <tr><th>Entrada</th><th>Para qué sirve</th></tr>
+    <tr><td><strong>1 foto</strong></td><td>Mesa sencilla, todo a la vista. Es lo que ya funciona aquí.</td></tr>
+    <tr><td><strong>3–4 fotos desde distintos ángulos</strong></td><td>Mejores medidas y objetos ocultos. Las medidas son lo que más suele fallar.</td></tr>
+    <tr><td><strong>Secuencia de fotos</strong></td><td>Tarea de varias etapas: cada foto es el estado que el robot necesita alcanzar.</td></tr>
+    <tr><td><strong>Video de una persona realizando la tarea</strong></td><td>Enseña el cómo, no solo el lugar: el movimiento humano se convierte en movimiento del robot, refinado en la simulación.</td></tr>
+  </table></div>
+
+  <h3 style="margin-top:30px">Cómo llega la instrucción al motor</h3>
+  <div class="grid g3">
+    <div class="q"><div class="big">1</div><h3>Plan</h3><p>La IA escribe «tomar el cubo, llevarlo a la bandeja, soltarlo». Una vez por tarea.</p></div>
+    <div class="q"><div class="big">2</div><h3>Movimiento</h3><p>La posición de la pinza se convierte en el ángulo de cada articulación (cinemática inversa), de 10 a 50 veces por segundo.</p></div>
+    <div class="q"><div class="big">3</div><h3>Motor</h3><p>Posición objetivo de cada servo por USB hasta la placa del brazo, cientos de veces por segundo.</p></div>
+  </div>
+  <p style="margin-top:14px">Hoy funciona el modo <strong class="amb">programado</strong>: la IA planifica, la simulación comprueba y el brazo ejecuta. El siguiente es el modo <strong class="amb">aprendido</strong>: una red neuronal observa la cámara y las articulaciones y decide la siguiente acción, en un ciclo continuo.</p>
+
+  <h3 style="margin-top:30px">Cómo son los datos</h3>
+  <p class="mut">Cada intento es un episodio: en cada instante, lo que vio el robot y lo que hizo.</p>
+  <pre>episodio 0007 · «Poner el cubo rojo en la bandeja gris.»
+t=0,0  cámaras: arriba, muñeca   articulaciones: [0,10 -0,50 0,80 …]
+       acción: articulaciones objetivo [0,12 -0,48 0,79 …]   pinza: abierta
+t=0,1  …
+fin    éxito = sí</pre>
+
+  <div class="grid g4" style="margin-top:22px">
+    <div class="q"><div class="big">50/50</div><h3>Episodios con cámaras</h3><p>Generados en 30 s a partir de la foto de la mesa.</p></div>
+    <div class="q"><div class="big">4.361</div><h3>Cuadros en LeRobot</h3><p>A 10 Hz, con estado, acción y dos cámaras.</p></div>
+    <div class="q"><div class="big">69 s</div><h3>Exportación</h3><p>Mediante la API oficial de LeRobot 0.6.1, en una CPU.</p></div>
+    <div class="q"><div class="big">9,7 MB</div><h3>Dataset listo</h3><p>Se vuelve a abrir en LeRobot, listo para entrenar.</p></div>
+  </div>
+  <pre style="margin-top:16px">./instalar.sh --lerobot
+./r2s.py episodios exemplos/mesa-foto/cena.json eps/ -n 50 --imagens
+./r2s.py exportar eps/ dataset/</pre>
+
+  <h3 style="margin-top:30px">Cómo aprende en el mundo real</h3>
+  <div class="grid g2">
+    <div class="q"><h3>1. Brazo maestro</h3><p>Mueves el brazo líder con la mano, el seguidor lo copia y todo queda grabado. Con 50 a 100 demostraciones, una política ACT ya aprende una tarea sencilla.</p></div>
+    <div class="q"><h3>2. Combinar con la simulación</h3><p>Miles de episodios sintéticos aportan variedad; unas pocas demostraciones reales corrigen la física en la que se equivocó la simulación.</p></div>
+    <div class="q"><h3>3. Corrección durante el uso</h3><p>El robot lo intenta, tú intervienes cuando se equivoca y la corrección se convierte en un dato nuevo (DAgger).</p></div>
+    <div class="q"><h3>4. Ciclo continuo</h3><p>Cada fallo en el mundo real se incorpora al conjunto de datos y la política se vuelve a entrenar. El ensayo y error directamente en el mundo real existe, pero es lento y desgasta el equipo.</p></div>
+  </div>
+
+  <h3 style="margin-top:30px">Tengo un SO-101: ¿qué hago?</h3>
+  <div class="phase"><div class="tag">1–4</div><div class="d"><strong>Montar, instalar y calibrar</strong><span>Par líder + seguidor, 1 o 2 cámaras USB. <code>pip install "lerobot[feetech,core-scripts,training]"</code>, después <code>lerobot-find-port</code>, <code>lerobot-setup-motors</code>, <code>lerobot-calibrate</code> y <code>lerobot-teleoperate</code> para ver cómo el seguidor copia al líder.</span></div></div>
+  <div class="phase"><div class="tag">5</div><div class="d"><strong>Gemelo de tu mesa</strong><span>Foto, escena, episodios con cámaras y exportación, con este repositorio.</span></div></div>
+  <div class="phase"><div class="tag">6</div><div class="d"><strong>Grabar demostraciones reales</strong><span>De 50 a 100 con <code>lerobot-record</code>, variando la posición de los objetos; <code>--dataset.push_to_hub=false</code> deja todo en local.</span></div></div>
+  <div class="phase"><div class="tag">7–8</div><div class="d"><strong>Entrenar y ejecutar</strong><span><code>lerobot-train --policy.type=act</code> y <code>lerobot-rollout</code> en el brazo, despacio y con la parada a mano.</span></div></div>
+  <div class="phase"><div class="tag">9–10</div><div class="d"><strong>Corregir y medir</strong><span><code>--strategy.type=dagger</code> para corregir; tasa de aciertos en 20 intentos: solo sintético, solo real y ambos juntos.</span></div></div>
+  <p class="mut" style="font-size:.9rem;margin-top:12px">El brazo de la simulación todavía es el Franka Panda: el dato sintético sirve directamente para el SO-101 después de cambiar el modelo por el de MuJoCo Menagerie.</p>
+</div></section>
+
 <section id="roadmap"><div class="wrap">
   <span class="chip">Próximos pasos</span>
   <h2>Del gemelo al brazo de verdad</h2>
   <p class="sub">Lo que ya existe y el camino para quien quiera llevarlo a lo real.</p>
   <div class="phase"><div class="tag">Hecho</div><div class="d"><strong>Foto → gemelo → datos → prueba</strong><span>Panda de Menagerie, generador en lazo cerrado, episodios con anotación en 4 niveles, plan de Codex probado con y sin lugares asignados, 8 pruebas.</span></div></div>
-  <div class="phase"><div class="tag">Siguiente</div><div class="d"><strong>SO-101 + LeRobot</strong><span>Cambiar el Panda por el brazo abierto SO-101 (Menagerie ya tiene el modelo; el kit cuesta de US$ 100 a 500) y grabar en el formato de LeRobot.</span></div></div>
+  <div class="phase"><div class="tag">Hecho</div><div class="d"><strong>Episodios en formato LeRobot</strong><span><code>r2s.py exportar</code>: 50 episodios con cámaras se vuelven un dataset que LeRobot abre y entrena (<a href="#aprender">en la práctica</a>).</span></div></div>
+  <div class="phase"><div class="tag">Siguiente</div><div class="d"><strong>SO-101 en la simulación</strong><span>Cambiar el Panda por el brazo abierto SO-101 (Menagerie ya tiene el modelo; el kit cuesta de US$ 100 a 500) para que el dato sintético sirva directo al brazo real.</span></div></div>
   <div class="phase"><div class="tag">Después</div><div class="d"><strong>Entrenar una política</strong><span>Ajustar un VLA abierto (OpenVLA, pi0) con los episodios y medir en el brazo real, comparando con y sin los datos sintéticos.</span></div></div>
   <div class="phase"><div class="tag">Regla</div><div class="d"><strong>Nada va a lo real sin prueba</strong><span>Todo plan pasa por <code>r2s.py provar</code> antes de mover un motor.</span></div></div>
 </div></section>
