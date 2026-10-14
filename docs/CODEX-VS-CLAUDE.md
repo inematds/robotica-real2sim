@@ -42,11 +42,15 @@ aumentou a bandeja.**
 | Prova com vagas | **19/20 (95%) aprovado** | 16/20 (80%) reprovado | 16/20 (80%) reprovado | **20/20 (100%) aprovado** |
 | Onde falha | a bola cai em cima da lata | a lata alta tomba da bandeja rasa | a bola cai sobre a lata; com vagas, a bandeja de 18 cm aperta | sem vagas, a lata tomba sobre a bola |
 
-## Custo medido
+## Custo e tokens medidos
+
+Números brutos em [`resultados/comparativo-motores.json`](../resultados/comparativo-motores.json); a tabela em imagem sai de `ferramentas/tabela_motores.py`.
+
 
 | Motor | Custo | Tokens |
 |---|---|---|
-| Codex, Claude | 0 a mais (assinatura) | Codex: ~27 mil entrada na foto, ~25 mil no plano (a maior parte são instruções do próprio CLI) |
+| Codex (`gpt-6-luna`) | 0 a mais (assinatura) | foto: 26.760 entrada + 279 saída; plano: 24.741 + 100 (a maior parte da entrada são instruções do próprio Codex) |
+| Claude (`claude-opus-5-5`) | 0 a mais (assinatura) | foto: 174.040 entrada (111.596 lidos do cache) + 3.928 saída; plano: 116.476 (20.936 do cache) + 662 (a entrada inclui as instruções do Claude Code) |
 | Robotics-ER 2 | **US$ 0** (camada gratuita) | foto: 1.600 entrada (1.080 da imagem) + 433 resposta + 1.538 de raciocínio; plano: 377 + 70 + 1.145 |
 | Argon via OpenRouter (**medido**) | **US$ 0,0101** por foto + plano (foto US$ 0,0086; plano US$ 0,0015) | foto: 1.614 entrada + 542 saída; plano: 389 + 72 (sem raciocínio contado à parte) |
 

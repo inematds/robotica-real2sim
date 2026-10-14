@@ -291,6 +291,18 @@
   <p class="sub" style="margin-top:22px">Hasta que la lata funcionó, la simulación se equivocó de tres maneras: un agarre demasiado alto metía la lata en la palma, el contacto cilindro × dedo empujaba en la dirección equivocada y la pinza del modelo apretaba solo ~3 N (la real hace 70 N). Cada error habría dado un número falso. Por eso el gemelo necesita ser verificado.</p>
 </div></section>
 
+<section id="modelos"><div class="wrap">
+  <span class="chip">Prueba de modelos</span>
+  <h2>Misma foto, cuatro modelos</h2>
+  <p class="sub">Codex, Claude, Gemini Robotics-ER 2 y Gemini 4 Argon armaron la escena con la misma foto y escribieron el plan para el mismo pedido. La física decidió. Datos completos en <a href="https://github.com/inematds/robotica-real2sim/blob/main/docs/CODEX-VS-CLAUDE.md">docs/CODEX-VS-CLAUDE.md</a> (en portugués).</p>
+  <figure style="margin:0 0 26px;border-radius:16px;overflow:hidden;border:1px solid var(--line)"><img src="../assets/tabela-motores-es.jpg" alt="Tabla: distancia medida, tiempo, tokens, costo y prueba de cada modelo" loading="lazy" style="width:100%;display:block"></figure>
+  <div class="tw"><table class="t">
+    <tr><th>Modelo</th><th>Acceso</th><th>Foto → escena: entrada / salida</th><th>Plan: entrada / salida</th><th>Costo</th><th>Cubo–bandeja</th><th>Prueba sin / con espacios</th></tr>
+    <tr><td><strong>Codex</strong><br><small class='mut'>gpt-6-luna</small></td><td>codex exec</td><td>26.760 / 279</td><td>24.741 / 100</td><td>suscripción</td><td>78 cm</td><td>4/20 / <strong>19/20</strong></td></tr><tr><td><strong>Claude</strong><br><small class='mut'>claude-opus-5-5</small></td><td>claude -p</td><td>174.040 / 3.928<br><small class='mut'>111.596 caché</small></td><td>116.476 / 662<br><small class='mut'>20.936 caché</small></td><td>suscripción</td><td>48 cm</td><td>16/20 / <strong>16/20</strong></td></tr><tr><td><strong>Gemini Robotics-ER 2</strong><br><small class='mut'>gemini-robotics-er-2-preview</small></td><td>Gemini API</td><td>1.600 / 433<br><small class='mut'>+1.538 razonamiento</small></td><td>377 / 70<br><small class='mut'>+1.145 razonamiento</small></td><td>US$ 0 · gratis</td><td>45 cm</td><td>0/20 / <strong>16/20</strong></td></tr><tr><td><strong>Gemini 4 Argon</strong><br><small class='mut'>google/gemini-4-argon</small></td><td>OpenRouter</td><td>1.614 / 542</td><td>389 / 72</td><td>US$ 0,0101</td><td>41 cm</td><td>7/20 / <strong>20/20</strong></td></tr>
+  </table></div>
+  <ul style="margin-top:22px;color:var(--mut)"><li><strong>Una escena generosa engaña:</strong> Codex solo pasó porque su bandeja salió 50% más grande y profunda que la real.</li><li><strong>Argon:</strong> escena fiel, plan aprobado (20/20), 7 s y US$ 0,0101 vía OpenRouter. Una sola corrida: puede ser variación.</li><li><strong>Robotics-ER 2</strong> (el modelo de robótica de Google) midió tan bien como Claude, en la mitad del tiempo y gratis.</li><li>Por la Gemini API directa Argon no corrió: la clave estaba en la capa gratuita, con cuota cero para él.</li><li>Los tokens de Codex y Claude incluyen las instrucciones del propio CLI; con suscripción no hay cobro por llamada.</li></ul>
+</div></section>
+
 <section id="perguntas"><div class="wrap">
   <span class="chip">Las preguntas que esto plantea</span>
   <h2>Ocho cuestiones, ampliadas</h2>
