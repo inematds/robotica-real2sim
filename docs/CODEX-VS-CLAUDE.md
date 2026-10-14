@@ -69,3 +69,15 @@ Números brutos em [`resultados/comparativo-motores.json`](../resultados/compara
 Arquivos: `resultados/mesa-foto/claude/`, `resultados/mesa-foto/gemini-robotics-er-2-preview/` e
 `resultados/mesa-foto/gemini-4-argon/`
 (cena, plano, provas, 50 episódios e `*.uso.json` com os tokens).
+
+## Próximo teste (pendente, pedido em 14/10/2026)
+
+Rodar a mesma foto e o mesmo pedido em mais dois modelos, **pela assinatura**, com **esforço alto**:
+
+- **Fable 5.1** (`claude-fable-5-1`), via `claude -p --model claude-fable-5-1 --effort high`.
+- **GPT-6 Astra** (`gpt-6-astra`), via `codex exec -m gpt-6-astra -c model_reasoning_effort="high"`.
+
+O código ainda não passa o esforço: hoje Codex e Claude rodam no padrão do CLI. Falta uma opção
+`--esforco` no `r2s.py` (repassada em `real2sim/foto2cena.py` e `real2sim/provar.py`). Para a
+comparação ser justa, repetir também Codex (gpt-6-luna) e Claude (Opus 5.5) em esforço alto, e
+registrar tempo, tokens, cena (cubo–bandeja) e prova sem/com vagas na mesma tabela.
