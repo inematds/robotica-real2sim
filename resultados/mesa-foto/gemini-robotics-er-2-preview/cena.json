@@ -1,0 +1,78 @@
+{
+ "fonte": "foto",
+ "mesa": {
+  "largura": 0.9,
+  "profundidade": 0.7,
+  "centro_x": 0.5,
+  "cor": "marrom"
+ },
+ "objetos": [
+  {
+   "nome": "cubo_vermelho",
+   "tipo": "caixa",
+   "tamanho": [
+    0.05,
+    0.05,
+    0.05
+   ],
+   "pos": [
+    0.33,
+    0.22
+   ],
+   "yaw": 0.436,
+   "cor": "vermelho",
+   "massa": 0.08
+  },
+  {
+   "nome": "lata_azul",
+   "tipo": "cilindro",
+   "tamanho": [
+    0.066,
+    0.12300000000000001
+   ],
+   "pos": [
+    0.38,
+    0.11
+   ],
+   "yaw": 0.0,
+   "cor": "azul",
+   "massa": 0.04
+  },
+  {
+   "nome": "bola_tenis",
+   "tipo": "esfera",
+   "tamanho": [
+    0.067
+   ],
+   "pos": [
+    0.36,
+    -0.05
+   ],
+   "yaw": 0.0,
+   "cor": "verde",
+   "massa": 0.058
+  },
+  {
+   "nome": "bandeja_cinza",
+   "tipo": "recipiente",
+   "tamanho": [
+    0.18,
+    0.18,
+    0.04
+   ],
+   "pos": [
+    0.34,
+    -0.23
+   ],
+   "yaw": 0.209,
+   "cor": "cinza",
+   "massa": 0.2
+  }
+ ],
+ "tarefa": {
+  "pegar": "cubo_vermelho",
+  "destino": "bandeja_cinza",
+  "descricao": "Colocar o cubo vermelho dentro da bandeja cinza"
+ },
+ "confianca": "As coordenadas em x foram estimadas usando a proporção da folha A4 e a rotação dos objetos."
+}

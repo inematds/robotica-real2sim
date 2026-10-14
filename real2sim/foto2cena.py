@@ -85,7 +85,35 @@ def perguntar_claude(prompt: str, foto: Path | None = None, modelo: str | None =
         return r.stdout
 
 
+ULTIMO_USO: dict = {}  # tokens da última chamada ao Gemini (para medir custo)
+
+
+def perguntar_gemini(prompt: str, foto: Path | None = None, modelo: str = "gemini-4-argon",
+                     timeout: int = 600) -> str:
+    """Gemini API (PAGA, só com autorização do dono). Chave na variável de ambiente GEMINI_API_KEY."""
+    import base64
+    import os
+    import urllib.request
+    chave = os.environ.get("GEMINI_API_KEY")
+    if not chave:
+        raise RuntimeError("defina GEMINI_API_KEY (Gemini API é paga; o padrão do projeto é o Codex)")
+    partes = [{"text": prompt}]
+    if foto is not None:
+        tipo = "image/png" if foto.suffix.lower() == ".png" else "image/jpeg"
+        partes.insert(0, {"inline_data": {"mime_type": tipo, "data": base64.b64encode(foto.read_bytes()).decode()}})
+    corpo = json.dumps({"contents": [{"role": "user", "parts": partes}]}).encode()
+    req = urllib.request.Request(
+        f"https://generativelanguage.googleapis.com/v1beta/models/{modelo}:generateContent",
+        data=corpo, headers={"content-type": "application/json", "x-goog-api-key": chave})
+    d = json.load(urllib.request.urlopen(req, timeout=timeout))
+    ULTIMO_USO.clear()
+    ULTIMO_USO.update(d.get("usageMetadata", {}), modelo=modelo)
+    return "".join(p.get("text", "") for p in d["candidates"][0]["content"]["parts"] if not p.get("thought"))
+
+
 def perguntar(motor: str, prompt: str, foto: Path | None = None, modelo: str | None = None) -> str:
+    if motor == "gemini":
+        return perguntar_gemini(prompt, foto, modelo or "gemini-4-argon")
     if motor == "claude":
         return perguntar_claude(prompt, foto, modelo)
     if foto is None:

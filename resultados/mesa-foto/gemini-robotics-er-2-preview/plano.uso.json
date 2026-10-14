@@ -1,0 +1,14 @@
+{
+ "promptTokenCount": 377,
+ "candidatesTokenCount": 70,
+ "totalTokenCount": 1592,
+ "promptTokensDetails": [
+  {
+   "modality": "TEXT",
+   "tokenCount": 377
+  }
+ ],
+ "thoughtsTokenCount": 1145,
+ "serviceTier": "standard",
+ "modelo": "gemini-robotics-er-2-preview"
+}

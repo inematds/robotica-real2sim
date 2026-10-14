@@ -55,7 +55,7 @@ foto.jpg ──(modelo de visão)──> cena.json ──> gêmeo MuJoCo (Panda 
 Arquivos: [resultados/](resultados/) (resumos, plano, provas e os 100 episódios).
 
 
-**Codex × Claude:** a mesma foto e o mesmo pedido rodaram nos dois motores (`--motor claude`). O Claude mediu a mesa com mais fidelidade, e nessa cena mais real o plano reprova (80%): a lata alta tomba da bandeja rasa. Detalhes em [docs/CODEX-VS-CLAUDE.md](docs/CODEX-VS-CLAUDE.md).
+**Codex × Claude × Gemini:** a mesma foto e o mesmo pedido rodaram no Codex, no Claude (`--motor claude`) e no Gemini Robotics-ER 2 (`--motor gemini`). Claude e Robotics-ER mediram a mesa com fidelidade, e nessas cenas mais reais o plano reprova (80%); só a cena generosa do Codex passou. O Gemini 4 Argon não rodou: cota zero na camada gratuita da API. Detalhes em [docs/CODEX-VS-CLAUDE.md](docs/CODEX-VS-CLAUDE.md).
 
 ## Instalar e rodar
 

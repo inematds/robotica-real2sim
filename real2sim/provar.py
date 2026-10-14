@@ -35,6 +35,10 @@ Responda SOMENTE com JSON: {{"passos": [{{"pegar": "", "destino": ""}}], "obs": 
 def planejar(cena: dict, pedido: str, modelo: str | None = None, timeout: int = 600, motor: str = "codex") -> dict:
     resumo = [{k: o[k] for k in ("nome", "tipo", "tamanho", "pos", "cor")} for o in cena["objetos"]]
     prompt = PROMPT_PLANO.format(cena=json.dumps(resumo, ensure_ascii=False), pedido=pedido)
+    if motor == "gemini":
+        from .foto2cena import perguntar_gemini
+        plano = extrair_json(perguntar_gemini(prompt, None, modelo or "gemini-4-argon", timeout))
+        return _conferir_plano(cena, plano, pedido)
     if motor == "claude":
         from .foto2cena import perguntar_claude
         plano = extrair_json(perguntar_claude(prompt, None, modelo, timeout))
