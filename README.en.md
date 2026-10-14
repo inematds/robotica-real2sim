@@ -55,7 +55,7 @@ photo.jpg ──(vision model)──> scene.json ──> MuJoCo twin (Panda + ta
 Files: [resultados/](resultados/) (summaries, plan, proofs, and the 100 episodes).
 
 
-**Codex × Claude × Gemini:** the same photo and request ran on Codex, Claude (`--motor claude`) and Gemini Robotics-ER 2 (`--motor gemini`). Claude and Robotics-ER measured the table faithfully, and in those more realistic scenes the plan fails (80%); only Codex's generous scene passed. Gemini 4 Argon did not run: zero quota on the API free tier. Details in [docs/CODEX-VS-CLAUDE.md](docs/CODEX-VS-CLAUDE.md) (in Portuguese).
+**Codex × Claude × Gemini:** the same photo and request ran on Codex, Claude (`--motor claude`), Gemini Robotics-ER 2 (`--motor gemini`) and Gemini 4 Argon via OpenRouter (`--motor openrouter`). Claude, ER and Argon measured the table faithfully; Argon was the only one with a faithful scene and an approved plan (100%), in 7 s for US$ 0.01. Details in [docs/CODEX-VS-CLAUDE.md](docs/CODEX-VS-CLAUDE.md) (in Portuguese).
 
 ## Install and run
 

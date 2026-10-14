@@ -52,7 +52,7 @@ foto.jpg ──(modelo de visión)──> escena.json ──> gemelo MuJoCo (Pan
 Archivos: [resultados/](resultados/) (resúmenes, plan, pruebas y los 100 episodios).
 
 
-**Codex × Claude × Gemini:** la misma foto y el mismo pedido corrieron en Codex, Claude (`--motor claude`) y Gemini Robotics-ER 2 (`--motor gemini`). Claude y Robotics-ER midieron la mesa con fidelidad, y en esas escenas más reales el plan reprueba (80%); solo pasó la escena generosa de Codex. Gemini 4 Argon no corrió: cuota cero en la capa gratuita de la API. Detalles en [docs/CODEX-VS-CLAUDE.md](docs/CODEX-VS-CLAUDE.md) (en portugués).
+**Codex × Claude × Gemini:** la misma foto y el mismo pedido corrieron en Codex, Claude (`--motor claude`), Gemini Robotics-ER 2 (`--motor gemini`) y Gemini 4 Argon vía OpenRouter (`--motor openrouter`). Claude, ER y Argon midieron la mesa con fidelidad; Argon fue el único con escena fiel y plan aprobado (100%), en 7 s y por US$ 0,01. Detalles en [docs/CODEX-VS-CLAUDE.md](docs/CODEX-VS-CLAUDE.md) (en portugués).
 
 ## Instalar y ejecutar
 

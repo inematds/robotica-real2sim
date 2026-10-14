@@ -111,7 +111,33 @@ def perguntar_gemini(prompt: str, foto: Path | None = None, modelo: str = "gemin
     return "".join(p.get("text", "") for p in d["candidates"][0]["content"]["parts"] if not p.get("thought"))
 
 
+def perguntar_openrouter(prompt: str, foto: Path | None = None, modelo: str = "google/gemini-4-argon",
+                         timeout: int = 600) -> str:
+    """OpenRouter (PAGA, só com autorização do dono). Chave na variável de ambiente OPENROUTER_API_KEY."""
+    import base64
+    import os
+    import urllib.request
+    chave = os.environ.get("OPENROUTER_API_KEY")
+    if not chave:
+        raise RuntimeError("defina OPENROUTER_API_KEY (OpenRouter é paga; o padrão do projeto é o Codex)")
+    conteudo = [{"type": "text", "text": prompt}]
+    if foto is not None:
+        tipo = "image/png" if foto.suffix.lower() == ".png" else "image/jpeg"
+        url = f"data:{tipo};base64," + base64.b64encode(foto.read_bytes()).decode()
+        conteudo.insert(0, {"type": "image_url", "image_url": {"url": url}})
+    corpo = json.dumps({"model": modelo, "messages": [{"role": "user", "content": conteudo}],
+                        "usage": {"include": True}}).encode()
+    req = urllib.request.Request("https://openrouter.ai/api/v1/chat/completions", data=corpo,
+                                 headers={"content-type": "application/json", "authorization": "Bearer " + chave})
+    d = json.load(urllib.request.urlopen(req, timeout=timeout))
+    ULTIMO_USO.clear()
+    ULTIMO_USO.update(d.get("usage", {}), modelo=modelo, provedor=d.get("provider"))
+    return d["choices"][0]["message"]["content"]
+
+
 def perguntar(motor: str, prompt: str, foto: Path | None = None, modelo: str | None = None) -> str:
+    if motor == "openrouter":
+        return perguntar_openrouter(prompt, foto, modelo or "google/gemini-4-argon")
     if motor == "gemini":
         return perguntar_gemini(prompt, foto, modelo or "gemini-4-argon")
     if motor == "claude":

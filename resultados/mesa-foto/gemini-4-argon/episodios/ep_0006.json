@@ -1,0 +1,99 @@
+{
+ "nivel_1_objetivo": "pôr o cubo vermelho na bandeja",
+ "nivel_2_subtarefas": [
+  {
+   "subtarefa": "pegar",
+   "inicio": 0.0,
+   "fim": 3.76,
+   "primitivas": [
+    {
+     "primitiva": "ir para cima do objeto",
+     "fase": "aproximar",
+     "inicio": 0.0,
+     "fim": 1.76
+    },
+    {
+     "primitiva": "descer até o objeto",
+     "fase": "descer",
+     "inicio": 1.76,
+     "fim": 2.94
+    },
+    {
+     "primitiva": "fechar a garra",
+     "fase": "fechar",
+     "inicio": 2.94,
+     "fim": 3.76
+    }
+   ]
+  },
+  {
+   "subtarefa": "levar",
+   "inicio": 3.76,
+   "fim": 5.24,
+   "primitivas": [
+    {
+     "primitiva": "levantar o objeto",
+     "fase": "subir",
+     "inicio": 3.76,
+     "fim": 4.22
+    },
+    {
+     "primitiva": "transportar até o destino",
+     "fase": "levar",
+     "inicio": 4.22,
+     "fim": 5.24
+    }
+   ]
+  }
+ ],
+ "nivel_4_eventos": [
+  {
+   "t": 3.76,
+   "evento": "contato dos dois dedos com o objeto"
+  },
+  {
+   "t": 4.22,
+   "evento": "objeto levantado da mesa"
+  }
+ ],
+ "qualidade": {
+  "sucesso": false,
+  "motivo": "perdeu o objeto no transporte",
+  "peso_no_treino": 0.0
+ },
+ "duracao_s": 5.24,
+ "variacao": {
+  "cubo_vermelho": {
+   "pos": [
+    0.3232,
+    0.2288
+   ],
+   "yaw": 0.777,
+   "massa": 0.1889
+  },
+  "lata_azul": {
+   "pos": [
+    0.3342,
+    0.1083
+   ],
+   "yaw": 0.513,
+   "massa": 0.4483
+  },
+  "bola_tenis": {
+   "pos": [
+    0.3212,
+    -0.0109
+   ],
+   "yaw": 0.577,
+   "massa": 0.0739
+  },
+  "bandeja_cinza": {
+   "pos": [
+    0.331,
+    -0.1811
+   ],
+   "yaw": -0.262,
+   "massa": 0.2
+  }
+ }
+}

@@ -1,0 +1,28 @@
+{
+ "tentativas": 20,
+ "planos_completos": 7,
+ "taxa": 0.35,
+ "minimo": 0.9,
+ "aprovado": false,
+ "por_passo": [
+  {
+   "passo": {
+    "pegar": "bola_tenis",
+    "destino": "bandeja_cinza"
+   },
+   "ok": 20,
+   "falhas": {}
+  },
+  {
+   "passo": {
+    "pegar": "lata_azul",
+    "destino": "bandeja_cinza"
+   },
+   "ok": 7,
+   "falhas": {
+    "objeto caiu fora do destino": 13
+   }
+  }
+ ],
+ "vagas": false
+}

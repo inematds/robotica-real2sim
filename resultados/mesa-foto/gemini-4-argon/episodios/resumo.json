@@ -1,0 +1,13 @@
+{
+ "episodios": 50,
+ "sucessos": 46,
+ "taxa_sucesso": 0.92,
+ "falhas_por_motivo": {
+  "perdeu o objeto no transporte": 2,
+  "objeto caiu fora do destino": 2
+ },
+ "semente": 0,
+ "imagens": false,
+ "tempo_real_s": 9.5,
+ "cpu": 20
+}

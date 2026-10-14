@@ -1,0 +1,78 @@
+{
+ "fonte": "foto",
+ "mesa": {
+  "largura": 0.9,
+  "profundidade": 0.7,
+  "centro_x": 0.5,
+  "cor": "marrom"
+ },
+ "objetos": [
+  {
+   "nome": "cubo_vermelho",
+   "tipo": "caixa",
+   "tamanho": [
+    0.065,
+    0.065,
+    0.065
+   ],
+   "pos": [
+    0.33,
+    0.21
+   ],
+   "yaw": 0.524,
+   "cor": "vermelho",
+   "massa": 0.15
+  },
+  {
+   "nome": "lata_azul",
+   "tipo": "cilindro",
+   "tamanho": [
+    0.066,
+    0.122
+   ],
+   "pos": [
+    0.365,
+    0.09
+   ],
+   "yaw": 0.0,
+   "cor": "azul",
+   "massa": 0.35
+  },
+  {
+   "nome": "bola_tenis",
+   "tipo": "esfera",
+   "tamanho": [
+    0.067
+   ],
+   "pos": [
+    0.36,
+    -0.04
+   ],
+   "yaw": 0.0,
+   "cor": "amarelo",
+   "massa": 0.058
+  },
+  {
+   "nome": "bandeja_cinza",
+   "tipo": "recipiente",
+   "tamanho": [
+    0.15,
+    0.15,
+    0.04
+   ],
+   "pos": [
+    0.345,
+    -0.2
+   ],
+   "yaw": -0.262,
+   "cor": "cinza",
+   "massa": 0.2
+  }
+ ],
+ "tarefa": {
+  "pegar": "cubo_vermelho",
+  "destino": "bandeja_cinza",
+  "descricao": "pôr o cubo vermelho na bandeja"
+ },
+ "confianca": "A borda da mesa não é visível, logo as dimensões totais do tampo e o zero do eixo x foram estimados a partir do enquadramento da foto e da posição da folha A4."
+}
