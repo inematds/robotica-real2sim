@@ -1,0 +1,6 @@
+.venv/
+vendor/
+__pycache__/
+*.pyc
+*.mp4
+!guia/assets/*.mp4

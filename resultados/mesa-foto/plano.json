@@ -1,0 +1,14 @@
+{
+ "passos": [
+  {
+   "pegar": "lata_azul",
+   "destino": "bandeja_cinza"
+  },
+  {
+   "pegar": "bola_tenis",
+   "destino": "bandeja_cinza"
+  }
+ ],
+ "obs": "A lata e a bola são redondas e cabem na garra, mas a abertura máxima de 8 cm impede pegar a bola de tênis, com 6,7 cm? Não; ambas cabem. A bandeja comporta os dois objetos.",
+ "pedido": "arrume a mesa: tudo que é redondo vai para a bandeja"
+}

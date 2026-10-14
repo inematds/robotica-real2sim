@@ -1,0 +1,11 @@
+{
+  "fonte": "escrita à mão para testar o motor",
+  "mesa": {"largura": 1.2, "profundidade": 0.8, "centro_x": 0.5, "cor": "bege"},
+  "objetos": [
+    {"nome": "cubo_vermelho", "tipo": "caixa", "tamanho": [0.05, 0.05, 0.05], "pos": [0.5, 0.18], "cor": "vermelho", "massa": 0.08},
+    {"nome": "lata_azul", "tipo": "cilindro", "tamanho": [0.055, 0.1], "pos": [0.42, -0.2], "cor": "azul", "massa": 0.12},
+    {"nome": "bola_verde", "tipo": "esfera", "tamanho": [0.05], "pos": [0.62, -0.02], "cor": "verde", "massa": 0.05},
+    {"nome": "bandeja", "tipo": "recipiente", "tamanho": [0.2, 0.16, 0.05], "pos": [0.4, -0.42], "cor": "cinza"}
+  ],
+  "tarefa": {"pegar": "cubo_vermelho", "destino": "bandeja", "descricao": "pegar o cubo vermelho e pôr na bandeja"}
+}

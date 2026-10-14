@@ -1,0 +1,78 @@
+{
+ "fonte": "foto",
+ "mesa": {
+  "largura": 1.2,
+  "profundidade": 0.8,
+  "centro_x": 0.5,
+  "cor": "bege"
+ },
+ "objetos": [
+  {
+   "nome": "cubo_vermelho",
+   "tipo": "caixa",
+   "tamanho": [
+    0.06,
+    0.06,
+    0.06
+   ],
+   "pos": [
+    0.48,
+    0.48
+   ],
+   "yaw": 0.0,
+   "cor": "vermelho",
+   "massa": 0.12
+  },
+  {
+   "nome": "lata_azul",
+   "tipo": "cilindro",
+   "tamanho": [
+    0.065,
+    0.12
+   ],
+   "pos": [
+    0.58,
+    0.27
+   ],
+   "yaw": 0.0,
+   "cor": "azul",
+   "massa": 0.35
+  },
+  {
+   "nome": "bola_tenis",
+   "tipo": "esfera",
+   "tamanho": [
+    0.067
+   ],
+   "pos": [
+    0.57,
+    0.0
+   ],
+   "yaw": 0.0,
+   "cor": "amarelo",
+   "massa": 0.058
+  },
+  {
+   "nome": "bandeja_cinza",
+   "tipo": "recipiente",
+   "tamanho": [
+    0.27,
+    0.22,
+    0.06
+   ],
+   "pos": [
+    0.5,
+    -0.3
+   ],
+   "yaw": 0.0,
+   "cor": "cinza",
+   "massa": 0.6
+  }
+ ],
+ "tarefa": {
+  "pegar": "cubo_vermelho",
+  "destino": "bandeja_cinza",
+  "descricao": "Pôr o cubo vermelho na bandeja cinza."
+ },
+ "confianca": "Posições, dimensões da mesa e massas são estimativas pela perspectiva; a bola parece verde-amarelada."
+}

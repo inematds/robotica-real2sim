@@ -1,0 +1,157 @@
+#!/usr/bin/env python3
+"""r2s — da foto da mesa ao gêmeo de simulação, aos dados de treino e à prova do plano.
+
+  r2s.py foto      <foto.jpg> <cena.json> [--pedido "..."] [--referencia "..."]
+  r2s.py ver       <cena.json> <saida.png> [--camera cima|geral|frente]
+  r2s.py xml       <cena.json> <saida.xml>
+  r2s.py filmar    <cena.json> <saida.mp4> [--cameras geral,cima,pulso] [--plano p.json] [--sem-vagas]
+  r2s.py episodios <cena.json> <pasta> [-n 50] [--imagens] [--semente 0]
+  r2s.py planejar  <cena.json> "<pedido em português>" <plano.json>
+  r2s.py provar    <cena.json> <plano.json> [-n 20] [--minimo 0.9] [--sem-vagas]
+  r2s.py tudo      <foto.jpg> <pasta> [--pedido "..."] [-n 50]
+"""
+from __future__ import annotations
+
+import argparse
+import json
+import os
+import sys
+from pathlib import Path
+
+os.environ.setdefault("MUJOCO_GL", "egl")
+_RAIZ = Path(__file__).resolve().parent
+_VENV = _RAIZ / ".venv/bin/python"
+if _VENV.exists() and Path(sys.prefix).resolve() != (_RAIZ / ".venv").resolve():
+    os.execv(str(_VENV), [str(_VENV), *sys.argv])  # roda no venv criado pelo instalar.sh
+sys.path.insert(0, str(_RAIZ))
+
+from real2sim.cena2mjcf import carregar_cena, compilar  # noqa: E402
+
+
+def salvar(obj, caminho):
+    Path(caminho).write_text(json.dumps(obj, ensure_ascii=False, indent=1), encoding="utf-8")
+
+
+def cmd_foto(a):
+    from real2sim.foto2cena import foto_para_cena
+    cena, avisos, _ = foto_para_cena(a.foto, a.referencia, a.pedido, a.modelo)
+    salvar(cena, a.cena)
+    for av in avisos:
+        print("aviso:", av)
+    print(f"cena: {len(cena['objetos'])} objetos -> {a.cena}")
+    print("tarefa:", cena.get("tarefa", {}).get("descricao", "-"))
+    if cena.get("confianca"):
+        print("incerteza declarada pelo modelo:", cena["confianca"])
+
+
+def cmd_ver(a):
+    from real2sim.filmar import foto_da_cena
+    foto_da_cena(carregar_cena(a.cena), a.saida, a.camera)
+    print("imagem:", a.saida)
+
+
+def cmd_xml(a):
+    m, xml = compilar(carregar_cena(a.cena))
+    Path(a.saida).write_text(xml, encoding="utf-8")
+    print(f"MJCF: {m.nbody} corpos, {m.ngeom} geoms -> {a.saida}")
+
+
+def cmd_filmar(a):
+    from real2sim.filmar import filmar
+    from real2sim.provar import distribuir_vagas
+    cena, passos = carregar_cena(a.cena), None
+    if getattr(a, "plano", None):
+        passos = json.loads(Path(a.plano).read_text(encoding="utf-8"))["passos"]
+        passos = passos if a.sem_vagas else distribuir_vagas(cena, passos)
+    r = filmar(cena, a.saida, tuple(a.cameras.split(",")), a.largura, a.altura, a.semente,
+               passos=passos, titulo=getattr(a, "titulo", "") or "")
+    print(("sucesso: " if r["sucesso"] else "falha: ") + r["motivo"], f"({r['quadros']} quadros) -> {a.saida}")
+
+
+def cmd_episodios(a):
+    from real2sim.episodios import gerar
+    r = gerar(carregar_cena(a.cena), a.pasta, a.n, a.semente, a.imagens)
+    print(f"{r['sucessos']}/{r['episodios']} episódios com sucesso ({r['taxa_sucesso']:.0%}) "
+          f"em {r['tempo_real_s']} s -> {a.pasta}")
+
+
+def cmd_planejar(a):
+    from real2sim.provar import planejar
+    plano = planejar(carregar_cena(a.cena), a.pedido, a.modelo)
+    salvar(plano, a.plano)
+    for p in plano["passos"]:
+        print(f"  pegar {p['pegar']} -> {p['destino']}")
+    if plano.get("obs"):
+        print("obs:", plano["obs"])
+
+
+def cmd_provar(a):
+    from real2sim.provar import distribuir_vagas, provar
+    plano = json.loads(Path(a.plano).read_text(encoding="utf-8"))
+    cena = carregar_cena(a.cena)
+    passos = plano["passos"] if a.sem_vagas else distribuir_vagas(cena, plano["passos"])
+    r = provar(cena, passos, a.n, a.minimo, a.semente)
+    r["vagas"] = not a.sem_vagas
+    sufixo = ".prova-sem-vagas.json" if a.sem_vagas else ".prova.json"
+    salvar(r, Path(a.plano).with_suffix(sufixo))
+    print(f"plano completo em {r['planos_completos']}/{r['tentativas']} ({r['taxa']:.0%}); "
+          f"mínimo {a.minimo:.0%} -> {'APROVADO para o robô real' if r['aprovado'] else 'REPROVADO: não mande ao robô'}")
+    for p in r["por_passo"]:
+        print(f"  {p['passo']['pegar']} -> {p['passo']['destino']}: {p['ok']} ok", p["falhas"] or "")
+    sys.exit(0 if r["aprovado"] else 2)
+
+
+def cmd_tudo(a):
+    pasta = Path(a.pasta); pasta.mkdir(parents=True, exist_ok=True)
+    a.cena = str(pasta / "cena.json")
+    cmd_foto(a)
+    a.saida, a.camera = str(pasta / "gemeo-cima.png"), "cima"; cmd_ver(a)
+    a.saida, a.cameras, a.semente = str(pasta / "episodio.mp4"), "geral,cima,pulso", None; cmd_filmar(a)
+    a.pasta, a.semente, a.imagens = str(pasta / "episodios"), 0, False; cmd_episodios(a)
+
+
+def main():
+    p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    s = p.add_subparsers(dest="cmd", required=True)
+    m = "gpt-6-luna"
+
+    x = s.add_parser("foto"); x.add_argument("foto"); x.add_argument("cena")
+    x.add_argument("--pedido", default=""); x.add_argument("--referencia", default="uma folha A4 (21 x 29,7 cm)")
+    x.add_argument("--modelo", default=m); x.set_defaults(f=cmd_foto)
+
+    x = s.add_parser("ver"); x.add_argument("cena"); x.add_argument("saida")
+    x.add_argument("--camera", default="cima"); x.set_defaults(f=cmd_ver)
+
+    x = s.add_parser("xml"); x.add_argument("cena"); x.add_argument("saida"); x.set_defaults(f=cmd_xml)
+
+    x = s.add_parser("filmar"); x.add_argument("cena"); x.add_argument("saida")
+    x.add_argument("--cameras", default="geral"); x.add_argument("--semente", type=int, default=None)
+    x.add_argument("--largura", type=int, default=1280); x.add_argument("--altura", type=int, default=720)
+    x.add_argument("--plano", help="plano.json com vários passos"); x.add_argument("--sem-vagas", action="store_true")
+    x.add_argument("--titulo", default=""); x.set_defaults(f=cmd_filmar)
+
+    x = s.add_parser("episodios"); x.add_argument("cena"); x.add_argument("pasta")
+    x.add_argument("-n", type=int, default=50); x.add_argument("--semente", type=int, default=0)
+    x.add_argument("--imagens", action="store_true"); x.set_defaults(f=cmd_episodios)
+
+    x = s.add_parser("planejar"); x.add_argument("cena"); x.add_argument("pedido"); x.add_argument("plano")
+    x.add_argument("--modelo", default=m); x.set_defaults(f=cmd_planejar)
+
+    x = s.add_parser("provar"); x.add_argument("cena"); x.add_argument("plano")
+    x.add_argument("-n", type=int, default=20); x.add_argument("--minimo", type=float, default=0.9)
+    x.add_argument("--semente", type=int, default=0)
+    x.add_argument("--sem-vagas", action="store_true", help="todos no centro do recipiente (mostra o erro)")
+    x.set_defaults(f=cmd_provar)
+
+    x = s.add_parser("tudo"); x.add_argument("foto"); x.add_argument("pasta")
+    x.add_argument("--pedido", default=""); x.add_argument("--referencia", default="uma folha A4 (21 x 29,7 cm)")
+    x.add_argument("--modelo", default=m); x.add_argument("-n", type=int, default=50)
+    x.add_argument("--largura", type=int, default=1280); x.add_argument("--altura", type=int, default=720)
+    x.set_defaults(f=cmd_tudo)
+
+    a = p.parse_args()
+    a.f(a)
+
+
+if __name__ == "__main__":
+    main()

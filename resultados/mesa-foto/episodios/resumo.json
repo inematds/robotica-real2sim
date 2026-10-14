@@ -1,0 +1,10 @@
+{
+ "episodios": 50,
+ "sucessos": 50,
+ "taxa_sucesso": 1.0,
+ "falhas_por_motivo": {},
+ "semente": 0,
+ "imagens": false,
+ "tempo_real_s": 8.7,
+ "cpu": 20
+}
