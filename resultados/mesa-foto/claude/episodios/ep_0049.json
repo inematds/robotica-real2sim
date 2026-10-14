@@ -1,0 +1,65 @@
+{
+ "nivel_1_objetivo": "Pegar o cubo vermelho à esquerda e colocá-lo dentro da bandeja cinza à direita.",
+ "nivel_2_subtarefas": [
+  {
+   "subtarefa": "pegar",
+   "inicio": 0.0,
+   "fim": 4.4,
+   "primitivas": [
+    {
+     "primitiva": "ir para cima do objeto",
+     "fase": "aproximar",
+     "inicio": 0.0,
+     "fim": 1.38
+    },
+    {
+     "primitiva": "descer até o objeto",
+     "fase": "descer",
+     "inicio": 1.38,
+     "fim": 4.4
+    }
+   ]
+  }
+ ],
+ "nivel_4_eventos": [],
+ "qualidade": {
+  "sucesso": false,
+  "motivo": "não desceu até o objeto (erro 0.8 cm)",
+  "peso_no_treino": 0.0
+ },
+ "duracao_s": 4.4,
+ "variacao": {
+  "cubo_vermelho": {
+   "pos": [
+    0.349,
+    0.2788
+   ],
+   "yaw": 0.73,
+   "massa": 0.2012
+  },
+  "lata_azul": {
+   "pos": [
+    0.3423,
+    0.0731
+   ],
+   "yaw": -0.056,
+   "massa": 0.4481
+  },
+  "bola_tenis": {
+   "pos": [
+    0.382,
+    -0.0631
+   ],
+   "yaw": 0.307,
+   "massa": 0.0558
+  },
+  "bandeja_cinza": {
+   "pos": [
+    0.3793,
+    -0.2329
+   ],
+   "yaw": -0.175,
+   "massa": 0.15
+  }
+ }
+}

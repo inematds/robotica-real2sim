@@ -1,6 +1,7 @@
 """Foto de uma mesa -> cena.json calibrada, usando um modelo de visão.
 
-Padrão: Codex CLI pela assinatura (`codex exec -i foto`). O modelo devolve objetos com tipo,
+Motores (os dois pela assinatura, sem API): Codex CLI (`codex exec -i foto`, padrão) ou
+Claude Code (`claude -p`, a foto lida pela ferramenta Read) com `motor="claude"`. O modelo devolve objetos com tipo,
 tamanho e posição em centímetros; a calibração vem de um objeto de tamanho conhecido na foto
 (folha A4 = 21 x 29,7 cm, por padrão). Depois o script converte para o referencial do braço,
 que fica no meio da borda da mesa mais próxima da câmera.
@@ -58,6 +59,40 @@ def perguntar_codex(foto: Path, prompt: str, modelo: str = "gpt-6-luna", timeout
         return saida.read_text(encoding="utf-8")
 
 
+def modelo_claude() -> str:
+    """Modelo Claude da fonte única do ecossistema (~/.config/inema/modelos.env), se existir."""
+    env = Path.home() / ".config/inema/modelos.env"
+    if env.exists():
+        for linha in env.read_text(encoding="utf-8").splitlines():
+            if linha.startswith("INEMA_CLAUDE_TOPO="):
+                return linha.split("=", 1)[1].strip()
+    return "claude-opus-5-5"
+
+
+def perguntar_claude(prompt: str, foto: Path | None = None, modelo: str | None = None, timeout: int = 600) -> str:
+    """Claude Code pela assinatura (`claude -p`); a foto é lida com a ferramenta Read."""
+    with tempfile.TemporaryDirectory() as tmp:
+        if foto is not None:
+            destino = Path(tmp) / ("foto" + foto.suffix.lower())
+            destino.write_bytes(foto.read_bytes())
+            prompt = (f"Abra a imagem {destino.name} deste diretório com a ferramenta Read e responda sobre ela.\n\n"
+                      + prompt)
+        cmd = ["claude", "-p", "--model", modelo or modelo_claude(), "--allowedTools", "Read",
+               "--output-format", "text"]
+        r = subprocess.run(cmd, input=prompt, text=True, capture_output=True, timeout=timeout, cwd=tmp)
+        if r.returncode != 0 or not r.stdout.strip():
+            raise RuntimeError(f"o Claude não respondeu (confira `claude` logado): {r.stderr[-300:]}")
+        return r.stdout
+
+
+def perguntar(motor: str, prompt: str, foto: Path | None = None, modelo: str | None = None) -> str:
+    if motor == "claude":
+        return perguntar_claude(prompt, foto, modelo)
+    if foto is None:
+        raise ValueError("perguntar(codex) sem foto: use provar.planejar")
+    return perguntar_codex(foto, prompt, modelo or "gpt-6-luna")
+
+
 def extrair_json(texto: str) -> dict:
     m = re.search(r"\{.*\}", texto, re.S)
     if not m:
@@ -102,11 +137,12 @@ def para_referencial_do_robo(bruta: dict) -> tuple[dict, list[str]]:
 
 
 def foto_para_cena(foto: str | Path, referencia: str = "uma folha A4 (21 x 29,7 cm)",
-                   instrucao: str = "", modelo: str = "gpt-6-luna") -> tuple[dict, list[str], str]:
+                   instrucao: str = "", modelo: str | None = None,
+                   motor: str = "codex") -> tuple[dict, list[str], str]:
     foto = Path(foto).resolve()
     texto_instr = f"Tarefa pedida pelo usuário: {instrucao}" if instrucao else \
         "Escolha uma tarefa simples de pegar-e-pôr um objeto dentro de um recipiente."
-    resposta = perguntar_codex(foto, PROMPT.format(referencia=referencia, instrucao=texto_instr), modelo)
+    resposta = perguntar(motor, PROMPT.format(referencia=referencia, instrucao=texto_instr), foto, modelo)
     bruta = extrair_json(resposta)
     cena, avisos = para_referencial_do_robo(bruta)
     validar_cena(cena)

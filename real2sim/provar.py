@@ -32,9 +32,14 @@ impossível, devolva passos vazios e explique em "obs".
 Responda SOMENTE com JSON: {{"passos": [{{"pegar": "", "destino": ""}}], "obs": ""}}"""
 
 
-def planejar(cena: dict, pedido: str, modelo: str = "gpt-6-luna", timeout: int = 600) -> dict:
+def planejar(cena: dict, pedido: str, modelo: str | None = None, timeout: int = 600, motor: str = "codex") -> dict:
     resumo = [{k: o[k] for k in ("nome", "tipo", "tamanho", "pos", "cor")} for o in cena["objetos"]]
     prompt = PROMPT_PLANO.format(cena=json.dumps(resumo, ensure_ascii=False), pedido=pedido)
+    if motor == "claude":
+        from .foto2cena import perguntar_claude
+        plano = extrair_json(perguntar_claude(prompt, None, modelo, timeout))
+        return _conferir_plano(cena, plano, pedido)
+    modelo = modelo or "gpt-6-luna"
     with tempfile.TemporaryDirectory() as tmp:
         saida = Path(tmp) / "plano.txt"
         subprocess.run(["codex", "exec", "-m", modelo, "-s", "read-only", "--skip-git-repo-check",
@@ -43,6 +48,10 @@ def planejar(cena: dict, pedido: str, modelo: str = "gpt-6-luna", timeout: int =
         if not saida.exists():
             raise RuntimeError("o Codex não devolveu o plano (confira `codex login`)")
         plano = extrair_json(saida.read_text(encoding="utf-8"))
+    return _conferir_plano(cena, plano, pedido)
+
+
+def _conferir_plano(cena: dict, plano: dict, pedido: str) -> dict:
     nomes = {o["nome"]: o for o in cena["objetos"]}
     for p in plano.get("passos", []):
         if p["pegar"] not in nomes or p["destino"] not in nomes:

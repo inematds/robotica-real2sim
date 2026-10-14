@@ -51,6 +51,9 @@ foto.jpg ──(modelo de visión)──> escena.json ──> gemelo MuJoCo (Pan
 
 Archivos: [resultados/](resultados/) (resúmenes, plan, pruebas y los 100 episodios).
 
+
+**Codex × Claude:** la misma foto y el mismo pedido corrieron en los dos motores (`--motor claude`). Claude midió la mesa con más fidelidad, y en esa escena más real el plan reprueba (80%): la lata alta se cae de la bandeja baja. Detalles en [docs/CODEX-VS-CLAUDE.md](docs/CODEX-VS-CLAUDE.md) (en portugués).
+
 ## Instalar y ejecutar
 
 ```bash

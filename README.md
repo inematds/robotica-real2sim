@@ -54,6 +54,9 @@ foto.jpg ──(modelo de visão)──> cena.json ──> gêmeo MuJoCo (Panda 
 
 Arquivos: [resultados/](resultados/) (resumos, plano, provas e os 100 episódios).
 
+
+**Codex × Claude:** a mesma foto e o mesmo pedido rodaram nos dois motores (`--motor claude`). O Claude mediu a mesa com mais fidelidade, e nessa cena mais real o plano reprova (80%): a lata alta tomba da bandeja rasa. Detalhes em [docs/CODEX-VS-CLAUDE.md](docs/CODEX-VS-CLAUDE.md).
+
 ## Instalar e rodar
 
 ```bash

@@ -1,0 +1,13 @@
+{
+ "episodios": 50,
+ "sucessos": 47,
+ "taxa_sucesso": 0.94,
+ "falhas_por_motivo": {
+  "objeto caiu fora do destino": 2,
+  "não desceu até o objeto (erro 0.8 cm)": 1
+ },
+ "semente": 0,
+ "imagens": false,
+ "tempo_real_s": 9.5,
+ "cpu": 20
+}

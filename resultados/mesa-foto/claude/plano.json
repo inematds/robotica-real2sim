@@ -1,0 +1,15 @@
+{
+ "passos": [
+  {
+   "pegar": "bola_tenis",
+   "destino": "bandeja_cinza"
+  },
+  {
+   "pegar": "lata_azul",
+   "destino": "bandeja_cinza"
+  }
+ ],
+ "obs": "Considerei redondos a bola_tenis (esfera, 6,7 cm) e a lata_azul (cilindro, 6,6 cm de diâmetro). As duas cabem na garra de 8 cm. A bola vai primeiro porque está mais perto da bandeja. A lata está em pé e mede 12,2 cm de altura, por isso deve ser pega pela lateral. Ela pode ficar em pé ou deitada na bandeja, já que a borda tem só 4 cm de altura. O cubo_vermelho não é redondo e continua no lugar.",
+ "pedido": "arrume a mesa: tudo que é redondo vai para a bandeja",
+ "motor": "claude"
+}

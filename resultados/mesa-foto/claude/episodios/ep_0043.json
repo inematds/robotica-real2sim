@@ -1,0 +1,128 @@
+{
+ "nivel_1_objetivo": "Pegar o cubo vermelho à esquerda e colocá-lo dentro da bandeja cinza à direita.",
+ "nivel_2_subtarefas": [
+  {
+   "subtarefa": "pegar",
+   "inicio": 0.0,
+   "fim": 3.14,
+   "primitivas": [
+    {
+     "primitiva": "ir para cima do objeto",
+     "fase": "aproximar",
+     "inicio": 0.0,
+     "fim": 1.26
+    },
+    {
+     "primitiva": "descer até o objeto",
+     "fase": "descer",
+     "inicio": 1.26,
+     "fim": 2.32
+    },
+    {
+     "primitiva": "fechar a garra",
+     "fase": "fechar",
+     "inicio": 2.32,
+     "fim": 3.14
+    }
+   ]
+  },
+  {
+   "subtarefa": "levar",
+   "inicio": 3.14,
+   "fim": 4.8,
+   "primitivas": [
+    {
+     "primitiva": "levantar o objeto",
+     "fase": "subir",
+     "inicio": 3.14,
+     "fim": 3.56
+    },
+    {
+     "primitiva": "transportar até o destino",
+     "fase": "levar",
+     "inicio": 3.56,
+     "fim": 4.8
+    }
+   ]
+  },
+  {
+   "subtarefa": "soltar",
+   "inicio": 4.8,
+   "fim": 7.28,
+   "primitivas": [
+    {
+     "primitiva": "baixar sobre o destino",
+     "fase": "baixar",
+     "inicio": 4.8,
+     "fim": 5.84
+    },
+    {
+     "primitiva": "abrir a garra",
+     "fase": "abrir",
+     "inicio": 5.84,
+     "fim": 6.46
+    },
+    {
+     "primitiva": "recuar para cima",
+     "fase": "recuar",
+     "inicio": 6.46,
+     "fim": 7.28
+    }
+   ]
+  }
+ ],
+ "nivel_4_eventos": [
+  {
+   "t": 3.14,
+   "evento": "contato dos dois dedos com o objeto"
+  },
+  {
+   "t": 3.56,
+   "evento": "objeto levantado da mesa"
+  },
+  {
+   "t": 7.88,
+   "evento": "sucesso verificado pela física"
+  }
+ ],
+ "qualidade": {
+  "sucesso": true,
+  "motivo": "objeto dentro do destino",
+  "peso_no_treino": 1.0
+ },
+ "duracao_s": 7.88,
+ "variacao": {
+  "cubo_vermelho": {
+   "pos": [
+    0.3441,
+    0.2626
+   ],
+   "yaw": 0.487,
+   "massa": 0.2104
+  },
+  "lata_azul": {
+   "pos": [
+    0.3392,
+    0.1085
+   ],
+   "yaw": -0.592,
+   "massa": 0.2996
+  },
+  "bola_tenis": {
+   "pos": [
+    0.3637,
+    -0.0547
+   ],
+   "yaw": -0.457,
+   "massa": 0.0555
+  },
+  "bandeja_cinza": {
+   "pos": [
+    0.3649,
+    -0.2349
+   ],
+   "yaw": -0.175,
+   "massa": 0.15
+  }
+ }
+}

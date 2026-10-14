@@ -54,6 +54,9 @@ photo.jpg ──(vision model)──> scene.json ──> MuJoCo twin (Panda + ta
 
 Files: [resultados/](resultados/) (summaries, plan, proofs, and the 100 episodes).
 
+
+**Codex × Claude:** the same photo and request ran on both engines (`--motor claude`). Claude measured the table more faithfully, and in that more realistic scene the plan fails (80%): the tall can tips out of the shallow tray. Details in [docs/CODEX-VS-CLAUDE.md](docs/CODEX-VS-CLAUDE.md) (in Portuguese).
+
 ## Install and run
 
 ```bash
