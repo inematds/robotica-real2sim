@@ -105,6 +105,8 @@ Autoaperfeiçoamento recursivo, vigilância barata, jailbreak de robô, simulaç
 dados, emprego, modelo que escreve a própria prova e regulação: cada uma ampliada, com fonte e com o
 que este repositório mediu, em **[docs/QUESTOES.md](docs/QUESTOES.md)**.
 
+**Humanoides:** Real2Sim acelera o treino de humanoides? Números da NVIDIA (GR00T N1, Isaac Lab com Unitree G1), onde a simulação ajuda mais, o reality gap e onde este projeto entra, com fontes conferidas em **[docs/HUMANOIDES.md](docs/HUMANOIDES.md)**.
+
 ## Próximos passos para quem quer ir ao real
 
 1. Trocar o Panda por um **SO-101** (Menagerie tem `robotstudio_so101`; kit de ~US$ 100 a 500) e

@@ -103,6 +103,8 @@ The **photo → scene** and **planning** stages use the Codex CLI (`codex login`
 
 Recursive self-improvement, cheap surveillance, robot jailbreaks, simulation that lies, data ownership, jobs, a model that writes its own proof, and regulation: each expanded with sources and what this repository measured, in **[docs/QUESTOES.md](docs/QUESTOES.md)**.
 
+**Humanoids:** does Real2Sim speed up humanoid training? NVIDIA numbers (GR00T N1, Isaac Lab with Unitree G1), where simulation helps most, the reality gap and where this project fits, with checked sources in **[docs/HUMANOIDES.md](docs/HUMANOIDES.md)** (in Portuguese).
+
 ## Next steps for those who want to go real
 
 1. Replace the Panda with an **SO-101** (Menagerie has `robotstudio_so101`; kit costs about US$ 100 to 500) and

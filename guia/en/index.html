@@ -52,7 +52,9 @@
   .tgl:hover{border-color:var(--amb)}
   .btn{display:inline-block;background:var(--amb);color:#1a1206;font-weight:600;padding:.6em 1.05em;border-radius:10px;font-family:Sora}
   .btn.ghost{background:transparent;color:var(--txt);border:1px solid var(--line)}
-  @media(max-width:1100px){nav .links a.sec{display:none}}
+  nav .links a.sec,nav .brand{white-space:nowrap}
+  nav .links{gap:13px;font-size:.86rem}
+  @media(max-width:1140px){nav .links a.sec{display:none}}
   @media(max-width:520px){nav .wrap{gap:8px;padding:8px 14px;height:auto;flex-wrap:wrap} nav .links{gap:8px;margin-left:0;width:100%;justify-content:space-between} nav .btn{padding:.45em .7em;font-size:.82rem} .tgl{width:34px;height:34px}}
   .hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
   .hero .glow{position:absolute;inset:-40% -20% auto auto;width:70%;height:600px;background:radial-gradient(closest-side,rgba(250,204,21,.22),transparent 70%);pointer-events:none}
@@ -110,6 +112,7 @@
   .q{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px}
   .q h3{font-size:1.02rem;margin-bottom:.45em}
   .q p{color:var(--mut);font-size:.93rem;margin:.35em 0 0}
+  .big{font-family:Sora;font-weight:800;font-size:2.1rem;line-height:1.05;color:var(--amb);margin-bottom:.35em;letter-spacing:-.02em}
   .aviso{border-left:3px solid var(--amb);background:var(--bg2);padding:14px 18px;border-radius:0 12px 12px 0;margin:0 0 26px;color:var(--txt)}
 </style>
 </head>
@@ -128,6 +131,7 @@
     <a class="sec" href="#argon">Argon</a>
     <a class="sec" href="#guia">User guide</a>
     <a class="sec" href="#exemplos">Results</a>
+    <a class="sec" href="#humanoides">Humanoids</a>
     <a class="sec" href="#perguntas">Questions</a>
     <span class="lang"><a href="../">PT</a><a class="on" href="./">EN</a><a href="../es/">ES</a></span>
     <button class="tgl" id="themeToggle" aria-label="Toggle theme" title="Toggle theme">🌙</button>
@@ -317,6 +321,47 @@
     <div class="q"><h3>7. Does the model write its own proof?</h3><p>In Google's example, Argon builds the environment and checks <code>reward == 1.0</code> in it. DroneBench records cheating in up to 66% of a model's runs. Separate who builds, who judges and who checks.</p></div>
     <div class="q"><h3>8. Who regulates?</h3><p>In the EU, the Machinery Regulation applies from 20/01/2027 and requires third-party assessment when safety depends on AI. The practical minimum: record the model, the simulation that approved it and the real-world result.</p></div>
   </div>
+</div></section>
+
+<section id="humanoides"><div class="wrap">
+  <span class="chip">Humanoids</span>
+  <h2>Does Real2Sim speed up humanoid training?</h2>
+  <p class="sub">Yes, and the gains are already significant. In simulation, multiple copies of the humanoid train in parallel without wearing out the equipment. Full text, with sources and review, at <a href="https://github.com/inematds/robotica-real2sim/blob/main/docs/HUMANOIDES.md">docs.HUMANOIDES.md</a>.</p>
+  <div class="grid g4">
+    <div class="q"><div class="big">+40%</div><h3>GR00T N1 performance</h3><p>With synthetic + real data, compared with real data alone.</p></div>
+    <div class="q"><div class="big">780K</div><h3>Generated trajectories</h3><p>Artificial movements created in 11 hours.</p></div>
+    <div class="q"><div class="big">6,500 h</div><h3>Equivalent volume</h3><p>In terms of the duration of human demonstrations.</p></div>
+    <div class="q"><div class="big">591×</div><h3>Generation speed</h3><p>6,500 h of trajectories in 11 h. This is data generation, not the entire training process running faster.</p></div>
+  </div>
+  <p class="mut" style="font-size:.9rem;margin-top:12px">NVIDIA data, March 2025 (<a href="https://developer.nvidia.com/blog/building-a-synthetic-motion-generation-pipeline-for-humanoid-robot-learning">technical blog</a>).</p>
+
+  <h3 style="margin-top:34px">Where simulation helps most</h3>
+  <div class="tw"><table class="t">
+    <tr><th>Capability</th><th>Potential gain</th></tr>
+    <tr><td><strong>Learning to walk</strong></td><td>Experiment with falls and terrain without breaking the robot</td></tr>
+    <tr><td><strong>Balance</strong></td><td>Simulate pushes, stumbles, and different loads</td></tr>
+    <tr><td><strong>Manipulation</strong></td><td>Learn to pick up objects of various sizes</td></tr>
+    <tr><td><strong>Hand coordination</strong></td><td>Generate many attempts at fine movements</td></tr>
+    <tr><td><strong>New environments</strong></td><td>Prepare behaviors before deployment</td></tr>
+    <tr><td><strong>Safety</strong></td><td>Test dangerous situations virtually</td></tr>
+  </table></div>
+
+  <div class="grid g2" style="margin-top:28px">
+    <div class="q"><div class="big">1,620×</div><h3>Unitree G1 walking in Isaac Lab</h3><p>On an RTX 4090, each second of computing is worth about 27 minutes of virtual experience, with 4,096 environments in parallel. This comes from parallelism: the robot did not become 1,620× smarter. This figure is based on the <a href="https://isaac-sim.github.io/IsaacLab/v3.0.0-beta/source/overview/reinforcement-learning/performance_benchmarks.html">benchmark table</a> and varies by version.</p></div>
+    <div class="q"><div class="big">8 actions</div><h3>G1 in construction (2026)</h3><p>Including pushing and pulling a wheelbarrow. Each action was first simulated in two physics engines, and only approved actions were tried on the real robot. Locomotion, still without autonomy on the job site (<a href="https://arxiv.org/pdf/2608.01600">arXiv 2608.01600</a>).</p></div>
+  </div>
+
+  <h3 style="margin-top:34px">Where INEMA's Real2Sim fits in</h3>
+  <p>The opportunity is not to compete with Isaac Lab: it is to <strong class="amb">automate the creation of the environment where the humanoid will learn</strong>. Film a kitchen or factory, generate the digital twin, prepare the tasks, train the virtual humanoid, validate it, and only then move to the robot. Reconstructing the place is not enough: contacts, doors and drawers, sensors, and the humanoid's own dynamics must be modeled. The closest reference is <a href="https://video2sim2real.github.io/">Video2Sim2Real</a> (June 2026): a manipulation skill learned from a single human video, refined in simulation, and transferred to the robot.</p>
+
+  <h3 style="margin-top:28px">What remains to be solved: the reality gap</h3>
+  <ul style="color:var(--mut)">
+    <li>The virtual hand grips the cup; the physical hand may slip.</li>
+    <li>Calculated balance can fail on an unfamiliar floor.</li>
+    <li>Small differences in weight, friction, or motor delay can compromise movement.</li>
+    <li>A policy trained for one body may not work on another without adaptation.</li>
+  </ul>
+  <div class="q" style="margin-top:20px"><h3>The question worth investigating</h3><p>How much does it cost, and how long does it take, to teach a humanoid a new task with Real2Sim2Real compared with teaching it through human demonstrations? With the same task and the same robot, this comparison proves much more than isolated simulation speed figures.</p></div>
 </div></section>
 
 <section id="roadmap"><div class="wrap">
