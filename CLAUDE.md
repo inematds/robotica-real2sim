@@ -25,3 +25,5 @@ When I correct you, or you catch yourself making a mistake: before continuing, a
 - Torção baixa (`friction[1]` = 0,02) deixa objeto alto girar entre os dedos; 0,06 resolveu. Mexer em solref/solmix dos objetos piorou: não repetir. (14/10/2026)
 - Câmera no pulso: o eixo -z da câmera é a direção de visão; conferir um quadro antes de filmar (a primeira saiu preta). (14/10/2026)
 - Variar o tamanho em ±15% não pega erro de escala de 50% (o plano do Codex passou no pior caso da própria cena); para saber se a medida enganou, rodar a prova cruzada (`ferramentas/matriz_prova.py`) na menor cena plausível. (15/10/2026)
+- Contar "passa nos três modos" com critério explícito (≥ 18/20 em cada modo) e por script, não de olho na tabela: escrevi "1 de 8" quando eram 2. (15/10/2026)
+- Deitar a lata: girar 90° deixa o pulso baixo demais e o braço não desce até a bandeja; girar a garra em torno da vertical com a lata na mão faz ela escorregar. 60° em torno do eixo dos dedos funcionou. (15/10/2026)
