@@ -67,6 +67,8 @@ Arquivos: [resultados/](resultados/) (resumos, plano, provas e os 100 episódios
 
 **Aprendizado prático:** (1) rode a visão 3 vezes, porque discordância grande quer dizer medida ruim; (2) leia os avisos do `r2s.py foto` ("mais largo que a garra", "posições reduzidas"); (3) prove no pior caso e na menor cena plausível; (4) escolha primeiro o modelo da visão, depois o esforço, e no plano use o padrão (`medium`); (5) teste as duas ordens de passos; (6) fita métrica vale mais que trocar de modelo. **Lata deitada (`--deitar`):** na bandeja de 18×22, as duas ordens de plano passam a aprovar no pior caso (19/20); na de 18×18, uma piora, e na de 15×15 a lata quase não cabe. Quem escolhe entre em pé e deitada deve ser a prova, cena por cena.
 
+**Próximos passos:** o braço real escolhido (Hiwonder SO-ARM101) segue no projeto [robotica-so101](https://github.com/inematds/robotica-so101), com o plano em [docs/PLANO-SO101.md](docs/PLANO-SO101.md). Pendente aqui: mesa real medida com fita métrica, prova no braço físico, Claude Opus em esforço alto, mais sementes nas linhas que oscilam e a prova escolher sozinha entre lata em pé e deitada.
+
 ## Instalar e rodar
 
 ```bash

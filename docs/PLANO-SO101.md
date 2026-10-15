@@ -4,6 +4,8 @@ Plano passo a passo para levar o robotica-real2sim ao braço que vai ser comprad
 Arm Kit for LeRobot SO-ARM101** (Amazon B0HGDCBWWV, US$ 459,99 em 15/10/2026). Escrito em 15/10/2026.
 Tudo que está marcado **[confirmar]** ainda não foi verificado.
 
+**A execução deste plano segue no projeto separado [robotica-so101](https://github.com/inematds/robotica-so101)** (um projeto por robô; este repositório continua com o Panda).
+
 ## O que é o kit (página da Amazon, 15/10/2026)
 
 | Item | Valor |

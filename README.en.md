@@ -67,6 +67,8 @@ Files: [resultados/](resultados/) (summaries, plan, proofs, and the 100 episodes
 
 **Practical lessons:** (1) run vision 3 times, because large disagreement means a bad measurement; (2) read the `r2s.py foto` warnings ("wider than the gripper", "positions reduced"); (3) prove in the worst case and in the smallest plausible scene; (4) pick the vision model first, then the effort, and keep the default (`medium`) for the plan; (5) test both step orders; (6) a tape measure is worth more than switching models. **Lying can (`--deitar`):** in the 18×22 tray both plan orders now pass the worst case (19/20); in the 18×18 tray one gets worse, and in the 15×15 tray the can barely fits. The proof should choose upright vs. lying, scene by scene.
 
+**Next steps:** the chosen real arm (Hiwonder SO-ARM101) continues in the [robotica-so101](https://github.com/inematds/robotica-so101) project, with the plan in [docs/PLANO-SO101.md](docs/PLANO-SO101.md) (Portuguese). Pending here: a real table measured with a tape, the proof on the physical arm, Claude Opus at high effort, more seeds on the rows that swing, and the proof choosing upright or lying can by itself.
+
 ## Install and run
 
 ```bash
