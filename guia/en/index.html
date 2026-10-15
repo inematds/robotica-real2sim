@@ -131,6 +131,7 @@
     <a class="sec" href="#argon">Argon</a>
     <a class="sec" href="#guia">User guide</a>
     <a class="sec" href="#exemplos">Results</a>
+    <a class="sec" href="#erro-medida">Measurement error</a>
     <a class="sec" href="#humanoides">Humanoids</a>
     <a class="sec" href="#perguntas">Questions</a>
     <span class="lang"><a href="../">PT</a><a class="on" href="./">EN</a><a href="../es/">ES</a></span>
@@ -323,6 +324,20 @@
     <tr><td>Argon (15×15×4)</td><td>bola→lata</td><td>20/20</td><td>17/20</td><td>0/20</td></tr>
   </table></div>
   <ul style="margin-top:22px;color:var(--mut)"><li><strong>Order matters as much as size:</strong> the Codex plan passes 20/20 in Claude's faithful scene, but drops to 2/20 in the smallest plausible tray (15×15).</li><li><strong>A 15% margin does not cover a 50% error:</strong> in its own scene, the Codex plan passes even in the worst case. Against a large error, only the cross-check or a tape measure helps.</li><li><strong>Only 1 of the 8 pairs passes all three modes.</strong> Two items in a 15–18 cm tray, one of them a 12 cm upright can, keep the task on the edge. New rule: only what passes the worst case and the smallest plausible tray goes to the robot.</li><li>20 trials, one seed: the numbers swing (20 → 5 → 16). Next step: a real photo with tape-measured sizes, once the arms arrive.</li></ul>
+  <h3 style="margin-top:34px">Does reasoning effort change the measurement?</h3>
+  <p class="sub">Same model (<code>gpt-6-luna</code>), same photo, 3 runs at each effort (<code>--esforco medium|high</code>). The other AIs measured a 15–18 cm tray and 41–48 cm cube–tray.</p>
+  <div class="tw"><table class="t">
+    <tr><th>Run</th><th>Time</th><th>Cube</th><th>Tray (cm)</th><th>Cube–tray</th><th>Best plan: measured / ±15% / worst</th></tr>
+    <tr><td>medium 1</td><td>8 s</td><td>10 cm</td><td>27×27×7</td><td>78 cm</td><td>5 / 5 / 4</td></tr>
+    <tr><td>medium 2</td><td>15 s</td><td>10 cm</td><td>30×25×6</td><td>75 cm</td><td>20 / 20 / 18</td></tr>
+    <tr><td>medium 3</td><td>9 s</td><td>8 cm</td><td>28×23×5</td><td>83 cm</td><td>1 / 1 / 1</td></tr>
+    <tr><td>high 1</td><td>27 s</td><td>6 cm</td><td>20×16×5</td><td>27 cm</td><td>16 / 15 / 0</td></tr>
+    <tr><td>high 2</td><td>17 s</td><td>–</td><td>27×24×7</td><td>–</td><td>20 / 17 / 12</td></tr>
+    <tr><td>high 3</td><td>26 s</td><td>6 cm</td><td>20×18×5</td><td>29 cm</td><td>18 / 10 / 0</td></tr>
+  </table></div>
+  <ul style="margin-top:22px;color:var(--mut)"><li><strong>Medium inflates everything 1.6×, every time:</strong> a 10 cm cube (bigger than the gripper) and the tray near the arm's limit. Codex's 78 cm was not bad luck.</li><li><strong>High gets the size right and squeezes the distance</strong> (~28 cm); in 1 of 3 runs it forgot the cube. It takes 2× longer.</li><li><strong>The plan does not change:</strong> can→ball in all 4 runs. More effort changes the kind of error, it does not remove it.</li></ul>
+  <h3 style="margin-top:34px">Practical lessons</h3>
+  <ol style="color:var(--mut)"><li><strong>One vision run is not enough.</strong> Run the photo 3 times or on 2 models; if they disagree a lot, the scene approves nothing.</li><li><strong>Read the warnings from <code>r2s.py foto</code>.</strong> "Wider than the gripper" and "positions reduced" showed up in all 3 inflated scenes.</li><li><strong>Prove in the worst case</strong> (<code>--pior-caso</code>) and in the smallest plausible scene, not in the measured one.</li><li><strong>High effort for vision, normal for the plan.</strong> On the plan it only costs time.</li><li><strong>Test both step orders:</strong> can→ball and ball→can swap winners depending on the tray.</li><li><strong>A real measurement beats everything:</strong> a tape measure or two photos are worth more than changing model or effort.</li></ol>
 </div></section>
 
 <section id="perguntas"><div class="wrap">

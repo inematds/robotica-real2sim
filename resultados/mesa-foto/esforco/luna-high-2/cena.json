@@ -1,0 +1,62 @@
+{
+ "fonte": "foto",
+ "mesa": {
+  "largura": 1.2,
+  "profundidade": 0.8,
+  "centro_x": 0.5,
+  "cor": "bege"
+ },
+ "objetos": [
+  {
+   "nome": "lata_azul",
+   "tipo": "cilindro",
+   "tamanho": [
+    0.066,
+    0.12
+   ],
+   "pos": [
+    0.39,
+    0.07
+   ],
+   "yaw": 0.0,
+   "cor": "azul",
+   "massa": 0.015
+  },
+  {
+   "nome": "bola_tenis",
+   "tipo": "esfera",
+   "tamanho": [
+    0.067
+   ],
+   "pos": [
+    0.39,
+    -0.06
+   ],
+   "yaw": 0.0,
+   "cor": "amarelo",
+   "massa": 0.058
+  },
+  {
+   "nome": "bandeja_cinza",
+   "tipo": "recipiente",
+   "tamanho": [
+    0.27,
+    0.24,
+    0.07
+   ],
+   "pos": [
+    0.33,
+    -0.21
+   ],
+   "yaw": 0.0,
+   "cor": "cinza",
+   "massa": 0.35
+  }
+ ],
+ "tarefa": {
+  "pegar": "lata_azul",
+  "destino": "bandeja_cinza",
+  "descricao": "Colocar os objetos redondos na bandeja."
+ },
+ "confianca": "Posições e dimensões são estimadas pela perspectiva; a bandeja parece ser de plástico ou metal leve. O cubo vermelho parece largo demais para a garra de 8 cm."
+}

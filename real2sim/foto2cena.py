@@ -48,11 +48,20 @@ Responda SOMENTE com JSON válido, sem comentários, neste formato:
 ALCANCE_MIN, ALCANCE_MAX = 0.30, 0.75
 
 
+ESFORCO: str | None = None  # esforço de raciocínio (low/medium/high/xhigh); None = padrão do CLI
+
+
+def args_esforco(motor: str) -> list[str]:
+    if not ESFORCO:
+        return []
+    return ["-c", f'model_reasoning_effort="{ESFORCO}"'] if motor == "codex" else ["--effort", ESFORCO]
+
+
 def perguntar_codex(foto: Path, prompt: str, modelo: str = "gpt-6-luna", timeout: int = 600) -> str:
     with tempfile.TemporaryDirectory() as tmp:
         saida = Path(tmp) / "resposta.txt"
         cmd = ["codex", "exec", "-m", modelo, "-s", "read-only", "--skip-git-repo-check",
-               "-i", str(foto), "-o", str(saida), "-"]
+               *args_esforco("codex"), "-i", str(foto), "-o", str(saida), "-"]
         subprocess.run(cmd, input=prompt, text=True, capture_output=True, timeout=timeout, cwd=tmp)
         if not saida.exists():
             raise RuntimeError("o Codex não devolveu resposta (confira `codex login`)")
@@ -78,7 +87,7 @@ def perguntar_claude(prompt: str, foto: Path | None = None, modelo: str | None =
             prompt = (f"Abra a imagem {destino.name} deste diretório com a ferramenta Read e responda sobre ela.\n\n"
                       + prompt)
         cmd = ["claude", "-p", "--model", modelo or modelo_claude(), "--allowedTools", "Read",
-               "--output-format", "text"]
+               "--output-format", "text", *args_esforco("claude")]
         r = subprocess.run(cmd, input=prompt, text=True, capture_output=True, timeout=timeout, cwd=tmp)
         if r.returncode != 0 or not r.stdout.strip():
             raise RuntimeError(f"o Claude não respondeu (confira `claude` logado): {r.stderr[-300:]}")

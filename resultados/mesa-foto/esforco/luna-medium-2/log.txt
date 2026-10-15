@@ -1,0 +1,4 @@
+aviso: cubo_vermelho: mais largo que a garra (8 cm); só pode ser empurrado
+cena: 4 objetos -> resultados/mesa-foto/esforco/luna-medium-2/cena.json
+tarefa: Colocar a lata azul na bandeja; depois colocar a bola de tênis junto.
+incerteza declarada pelo modelo: Escala e posições aproximadas pela folha A4; as bordas da mesa não aparecem, então largura e profundidade da mesa são estimativas.

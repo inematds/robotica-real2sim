@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """r2s — da foto da mesa ao gêmeo de simulação, aos dados de treino e à prova do plano.
 
-  r2s.py foto      <foto.jpg> <cena.json> [--pedido "..."] [--motor codex|claude|gemini|openrouter]
+  r2s.py foto      <foto.jpg> <cena.json> [--pedido "..."] [--motor codex|claude|gemini|openrouter] [--esforco high]
   r2s.py ver       <cena.json> <saida.png> [--camera cima|geral|frente]
   r2s.py xml       <cena.json> <saida.xml>
   r2s.py filmar    <cena.json> <saida.mp4> [--cameras geral,cima,pulso] [--plano p.json] [--sem-vagas]
   r2s.py episodios <cena.json> <pasta> [-n 50] [--imagens] [--semente 0]
-  r2s.py planejar  <cena.json> "<pedido em português>" <plano.json> [--motor codex|claude|gemini|openrouter]
+  r2s.py planejar  <cena.json> "<pedido em português>" <plano.json> [--motor codex|claude|gemini|openrouter] [--esforco high]
   r2s.py provar    <cena.json> <plano.json> [-n 20] [--minimo 0.9] [--sem-vagas] [--var-tamanho 0.15] [--pior-caso]
   r2s.py tudo      <foto.jpg> <pasta> [--pedido "..."] [-n 50]
   r2s.py exportar  <pasta-episodios> <saida> [--com-falhas] [--sobrescrever]   (dataset LeRobot)
@@ -142,7 +142,7 @@ def main():
 
     x = s.add_parser("foto"); x.add_argument("foto"); x.add_argument("cena")
     x.add_argument("--pedido", default=""); x.add_argument("--referencia", default="uma folha A4 (21 x 29,7 cm)")
-    x.add_argument("--modelo", default=m); x.add_argument("--motor", choices=["codex", "claude", "gemini", "openrouter"], default="codex"); x.set_defaults(f=cmd_foto)
+    x.add_argument("--modelo", default=m); x.add_argument("--motor", choices=["codex", "claude", "gemini", "openrouter"], default="codex"); x.add_argument("--esforco", choices=["low", "medium", "high", "xhigh", "max"], help="esforço de raciocínio (codex/claude; padrão do CLI)"); x.set_defaults(f=cmd_foto)
 
     x = s.add_parser("ver"); x.add_argument("cena"); x.add_argument("saida")
     x.add_argument("--camera", default="cima"); x.set_defaults(f=cmd_ver)
@@ -164,7 +164,7 @@ def main():
     x.add_argument("--sobrescrever", action="store_true"); x.set_defaults(f=cmd_exportar)
 
     x = s.add_parser("planejar"); x.add_argument("cena"); x.add_argument("pedido"); x.add_argument("plano")
-    x.add_argument("--modelo", default=m); x.add_argument("--motor", choices=["codex", "claude", "gemini", "openrouter"], default="codex"); x.set_defaults(f=cmd_planejar)
+    x.add_argument("--modelo", default=m); x.add_argument("--motor", choices=["codex", "claude", "gemini", "openrouter"], default="codex"); x.add_argument("--esforco", choices=["low", "medium", "high", "xhigh", "max"], help="esforço de raciocínio (codex/claude; padrão do CLI)"); x.set_defaults(f=cmd_planejar)
 
     x = s.add_parser("provar"); x.add_argument("cena"); x.add_argument("plano")
     x.add_argument("-n", type=int, default=20); x.add_argument("--minimo", type=float, default=0.9)
@@ -177,11 +177,14 @@ def main():
 
     x = s.add_parser("tudo"); x.add_argument("foto"); x.add_argument("pasta")
     x.add_argument("--pedido", default=""); x.add_argument("--referencia", default="uma folha A4 (21 x 29,7 cm)")
-    x.add_argument("--modelo", default=m); x.add_argument("--motor", choices=["codex", "claude", "gemini", "openrouter"], default="codex"); x.add_argument("-n", type=int, default=50)
+    x.add_argument("--modelo", default=m); x.add_argument("--motor", choices=["codex", "claude", "gemini", "openrouter"], default="codex"); x.add_argument("--esforco", choices=["low", "medium", "high", "xhigh", "max"], help="esforço de raciocínio (codex/claude; padrão do CLI)"); x.add_argument("-n", type=int, default=50)
     x.add_argument("--largura", type=int, default=1280); x.add_argument("--altura", type=int, default=720)
     x.set_defaults(f=cmd_tudo)
 
     a = p.parse_args()
+    if getattr(a, "esforco", None):
+        import real2sim.foto2cena as f2c
+        f2c.ESFORCO = a.esforco
     a.f(a)
 
 

@@ -61,6 +61,10 @@ Files: [resultados/](resultados/) (summaries, plan, proofs, and the 100 episodes
 
 **Measurement error:** the proof now also varies size (`--var-tamanho 0.15`, `--pior-caso`), and `ferramentas/matriz_prova.py` runs each plan order in every model's scene. Only 1 of the 8 pairs passes every mode; new rule: only what passes the worst case and the smallest plausible tray goes to the robot. Details in [docs/ERRO-DE-MEDIDA.md](docs/ERRO-DE-MEDIDA.md) (in Portuguese).
 
+**Reasoning effort (`--esforco`):** the same `gpt-6-luna`, 3 runs at each level. At medium effort it inflates everything 1.6× in all 3 runs (10 cm cube, bigger than the gripper; cube–tray ~78 cm). At high it gets sizes right (6 cm cube, 20 cm tray) but squeezes distances (~28 cm), and in one run it forgot the cube. The plan was the same in all 4 runs. More effort changes the kind of error, it does not remove it.
+
+**Practical lessons:** (1) run vision 3 times, because large disagreement means a bad measurement; (2) read the `r2s.py foto` warnings ("wider than the gripper", "positions reduced"); (3) prove in the worst case and in the smallest plausible scene; (4) use high effort for vision and normal effort for the plan; (5) test both step orders; (6) a tape measure is worth more than switching models.
+
 ## Install and run
 
 ```bash

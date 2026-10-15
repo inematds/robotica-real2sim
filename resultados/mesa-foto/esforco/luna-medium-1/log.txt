@@ -1,0 +1,5 @@
+aviso: cena maior que o alcance do braço: posições reduzidas a 98% (tamanhos mantidos)
+aviso: cubo_vermelho: mais largo que a garra (8 cm); só pode ser empurrado
+cena: 4 objetos -> resultados/mesa-foto/esforco/luna-medium-1/cena.json
+tarefa: Colocar a bola de tênis na bandeja.
+incerteza declarada pelo modelo: A4 estimada em perspectiva; dimensões da mesa, posições e alturas aproximadas. A lata também é redonda, mas sua largura pode dificultar a garra de 8 cm.

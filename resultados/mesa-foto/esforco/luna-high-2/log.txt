@@ -1,0 +1,4 @@
+aviso: objetos perto da borda: a cena foi empurrada 8 cm para frente
+cena: 3 objetos -> resultados/mesa-foto/esforco/luna-high-2/cena.json
+tarefa: Colocar os objetos redondos na bandeja.
+incerteza declarada pelo modelo: Posições e dimensões são estimadas pela perspectiva; a bandeja parece ser de plástico ou metal leve. O cubo vermelho parece largo demais para a garra de 8 cm.

@@ -1,0 +1,5 @@
+aviso: cena maior que o alcance do braço: posições reduzidas a 95% (tamanhos mantidos)
+aviso: cubo_vermelho: mais largo que a garra (8 cm); só pode ser empurrado
+cena: 4 objetos -> resultados/mesa-foto/esforco/luna-medium-3/cena.json
+tarefa: Colocar os objetos redondos na bandeja.
+incerteza declarada pelo modelo: A escala e as posições foram estimadas pela folha A4; as dimensões da mesa e da bandeja, as massas e a posição exata dos objetos são aproximadas.

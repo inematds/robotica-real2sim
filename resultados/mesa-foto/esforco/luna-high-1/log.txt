@@ -1,0 +1,3 @@
+cena: 4 objetos -> resultados/mesa-foto/esforco/luna-high-1/cena.json
+tarefa: Colocar a bola de tênis e a lata azul na bandeja.
+incerteza declarada pelo modelo: Dimensões da mesa, escala dos objetos, posições e massa são estimativas pela perspectiva da foto e pela folha A4.

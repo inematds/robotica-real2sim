@@ -1,0 +1,78 @@
+{
+ "fonte": "foto",
+ "mesa": {
+  "largura": 1.0,
+  "profundidade": 0.8,
+  "centro_x": 0.5,
+  "cor": "marrom"
+ },
+ "objetos": [
+  {
+   "nome": "cubo_vermelho",
+   "tipo": "caixa",
+   "tamanho": [
+    0.1,
+    0.1,
+    0.1
+   ],
+   "pos": [
+    0.48,
+    0.284
+   ],
+   "yaw": 0.0,
+   "cor": "vermelho",
+   "massa": 0.5
+  },
+  {
+   "nome": "lata_azul",
+   "tipo": "cilindro",
+   "tamanho": [
+    0.07,
+    0.12
+   ],
+   "pos": [
+    0.598,
+    0.029
+   ],
+   "yaw": 0.0,
+   "cor": "azul",
+   "massa": 0.025
+  },
+  {
+   "nome": "bola_tenis",
+   "tipo": "esfera",
+   "tamanho": [
+    0.067
+   ],
+   "pos": [
+    0.598,
+    -0.235
+   ],
+   "yaw": 0.0,
+   "cor": "amarelo",
+   "massa": 0.058
+  },
+  {
+   "nome": "bandeja_cinza",
+   "tipo": "recipiente",
+   "tamanho": [
+    0.27,
+    0.27,
+    0.07
+   ],
+   "pos": [
+    0.559,
+    -0.5
+   ],
+   "yaw": 0.0,
+   "cor": "cinza",
+   "massa": 0.45
+  }
+ ],
+ "tarefa": {
+  "pegar": "bola_tenis",
+  "destino": "bandeja_cinza",
+  "descricao": "Colocar a bola de tênis na bandeja."
+ },
+ "confianca": "A4 estimada em perspectiva; dimensões da mesa, posições e alturas aproximadas. A lata também é redonda, mas sua largura pode dificultar a garra de 8 cm."
+}

@@ -52,6 +52,52 @@ A linha "Medida" repete os resultados antigos de cada modelo (19, 16, 16 e 20 de
   Com 20 tentativas e uma lata alta caindo numa bandeja rasa, a variação entre rodadas é grande.
   Antes de concluir algo de uma linha só, rodar com mais tentativas e outras sementes.
 
+## O esforço de raciocínio muda a medida? (15/10/2026)
+
+Mesmo modelo (`gpt-6-luna`), mesma foto, mesmo pedido, 3 rodadas em cada esforço
+(`./r2s.py foto ... --esforco medium|high`). Referência: as cenas de Claude, Robotics-ER 2 e Argon
+(bandeja 15–18 cm, cubo–bandeja 41–48 cm) e a régua A4 da foto (45–55 cm).
+
+| Rodada | Tempo | Cubo | Bandeja | Cubo–bandeja | Melhor plano: medida / ±15% / pior caso |
+|---|---|---|---|---|---|
+| médio 1 | 8 s | **10 cm** | 27×27×7 | 78 cm | 5 / 5 / 4 de 20 |
+| médio 2 | 15 s | **10 cm** | 30×25×6 | 75 cm | 20 / 20 / 18 de 20 |
+| médio 3 | 9 s | 8 cm | 28×23×5 | 83 cm | 1 / 1 / 1 de 20 |
+| alto 1 | 27 s | 6 cm | 20×16×5 | 27 cm | 16 / 15 / 0 de 20 |
+| alto 2 | 17 s | **esqueceu o cubo** | 27×24×7 | – | 20 / 17 / 12 de 20 |
+| alto 3 | 26 s | 6 cm | 20×18×5 | 29 cm | 18 / 10 / 0 de 20 |
+
+O plano, nas duas faixas de esforço, saiu igual 4 vezes em 4: lata→bola.
+Números brutos: [`resultados/mesa-foto/esforco/`](../resultados/mesa-foto/esforco/) (cenas, planos e
+`matriz.json`).
+
+- **Esforço médio erra sempre para o mesmo lado:** tudo 1,6× maior. Os 78 cm da primeira rodada do
+  Codex não foram azar. O cubo saiu com 10 cm em duas rodadas, maior que os 8 cm da garra, e a bandeja
+  foi parar a ~75 cm da base, perto do limite do braço (80 cm): aí o objeto cai no transporte.
+- **Esforço alto acerta o tamanho e erra a distância:** cubo de 6 cm e bandeja de 20 cm (perto das
+  outras IAs), mas tudo espremido a ~28 cm, e os objetos se esbarram. Em 1 de 3 rodadas, ele esqueceu
+  o cubo e voltou a inflar a bandeja. Demora 2× mais.
+- **O plano não muda com o esforço.** Com 2 passos, não há o que pensar a mais. Quem decide se a lata
+  tomba é a física.
+- **Conclusão:** mais esforço troca o tipo de erro, não acaba com ele. Com uma foto só, a escala é o
+  ponto fraco de qualquer modelo. Rodar 3 vezes mostra o tamanho da dúvida: se as rodadas discordam
+  muito, a cena não serve para aprovar nada.
+
+## Aprendizado prático
+
+1. **Não confie numa rodada só da visão.** Rode a foto 3 vezes (ou em 2 modelos). Discordância grande
+   entre rodadas é sinal de medida ruim, antes de qualquer simulação.
+2. **Leia os avisos do `r2s.py foto` e confira 3 números à mão** antes de simular. "Mais largo que a
+   garra" e "posições reduzidas" apareceram nas 3 rodadas de esforço médio, e as 3 estavam infladas. O
+   objeto cabe na garra (≤ 8 cm)? O recipiente tem tamanho plausível? A distância bate com a régua?
+3. **Prove no pior caso**, não na medida: `--pior-caso`, e a prova cruzada na menor cena plausível.
+4. **Esforço alto na visão, esforço normal no plano.** Na visão ele melhora o tamanho, mas não resolve
+   a escala; no plano não muda nada e só custa tempo.
+5. **A física manda na ordem dos passos:** lata→bola e bola→lata trocam de vencedor conforme a
+   bandeja. Teste as duas ordens.
+6. **Medida de verdade vence tudo:** uma foto com fita métrica (ou duas fotos de ângulos diferentes)
+   vale mais que qualquer troca de modelo ou de esforço.
+
 ## Regra nova para mandar ao robô real
 
 Um plano só vai para o braço se passar **no pior caso** (`--pior-caso`) **e** na menor bandeja

@@ -46,8 +46,9 @@ def planejar(cena: dict, pedido: str, modelo: str | None = None, timeout: int = 
     modelo = modelo or "gpt-6-luna"
     with tempfile.TemporaryDirectory() as tmp:
         saida = Path(tmp) / "plano.txt"
+        from .foto2cena import args_esforco
         subprocess.run(["codex", "exec", "-m", modelo, "-s", "read-only", "--skip-git-repo-check",
-                        "-o", str(saida), "-"], input=prompt, text=True, capture_output=True,
+                        *args_esforco("codex"), "-o", str(saida), "-"], input=prompt, text=True, capture_output=True,
                        timeout=timeout, cwd=tmp)
         if not saida.exists():
             raise RuntimeError("o Codex não devolveu o plano (confira `codex login`)")

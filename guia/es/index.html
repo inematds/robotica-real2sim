@@ -131,6 +131,7 @@
     <a class="sec" href="#argon">Argon</a>
     <a class="sec" href="#guia">Guía de uso</a>
     <a class="sec" href="#exemplos">Resultados</a>
+    <a class="sec" href="#erro-medida">Error de medida</a>
     <a class="sec" href="#humanoides">Humanoides</a>
     <a class="sec" href="#perguntas">Preguntas</a>
     <span class="lang"><a href="../">PT</a><a href="../en/">EN</a><a class="on" href="./">ES</a></span>
@@ -323,6 +324,20 @@
     <tr><td>Argon (15×15×4)</td><td>bola→lata</td><td>20/20</td><td>17/20</td><td>0/20</td></tr>
   </table></div>
   <ul style="margin-top:22px;color:var(--mut)"><li><strong>El orden pesa tanto como el tamaño:</strong> el plan de Codex pasa 20/20 en la escena fiel de Claude, pero cae a 2/20 en la bandeja más chica plausible (15×15).</li><li><strong>Un 15% de margen no cubre un error del 50%:</strong> en su propia escena, el plan de Codex pasa incluso en el peor caso. Contra un error grande, solo sirven la prueba cruzada o la cinta métrica.</li><li><strong>Solo 1 de los 8 pares pasa los tres modos.</strong> Dos cosas en una bandeja de 15–18 cm, una de ellas una lata de 12 cm de pie, dejan la tarea al límite. Regla nueva: solo va al robot lo que pasa el peor caso y la bandeja más chica plausible.</li><li>20 intentos, una semilla: los números oscilan (20 → 5 → 16). Próximo paso: foto real con medidas de cinta métrica, cuando lleguen los brazos.</li></ul>
+  <h3 style="margin-top:34px">¿El esfuerzo de razonamiento cambia la medida?</h3>
+  <p class="sub">Mismo modelo (<code>gpt-6-luna</code>), misma foto, 3 corridas en cada esfuerzo (<code>--esforco medium|high</code>). Las otras IAs midieron bandeja de 15–18 cm y cubo–bandeja de 41–48 cm.</p>
+  <div class="tw"><table class="t">
+    <tr><th>Corrida</th><th>Tiempo</th><th>Cubo</th><th>Bandeja (cm)</th><th>Cubo–bandeja</th><th>Mejor plan: medida / ±15% / peor</th></tr>
+    <tr><td>medio 1</td><td>8 s</td><td>10 cm</td><td>27×27×7</td><td>78 cm</td><td>5 / 5 / 4</td></tr>
+    <tr><td>medio 2</td><td>15 s</td><td>10 cm</td><td>30×25×6</td><td>75 cm</td><td>20 / 20 / 18</td></tr>
+    <tr><td>medio 3</td><td>9 s</td><td>8 cm</td><td>28×23×5</td><td>83 cm</td><td>1 / 1 / 1</td></tr>
+    <tr><td>alto 1</td><td>27 s</td><td>6 cm</td><td>20×16×5</td><td>27 cm</td><td>16 / 15 / 0</td></tr>
+    <tr><td>alto 2</td><td>17 s</td><td>–</td><td>27×24×7</td><td>–</td><td>20 / 17 / 12</td></tr>
+    <tr><td>alto 3</td><td>26 s</td><td>6 cm</td><td>20×18×5</td><td>29 cm</td><td>18 / 10 / 0</td></tr>
+  </table></div>
+  <ul style="margin-top:22px;color:var(--mut)"><li><strong>Medio infla todo 1,6×, siempre:</strong> cubo de 10 cm (más grande que la pinza) y bandeja cerca del límite del brazo. Los 78 cm de Codex no fueron mala suerte.</li><li><strong>Alto acierta el tamaño y aprieta la distancia</strong> (~28 cm); en 1 de 3 corridas olvidó el cubo. Tarda 2× más.</li><li><strong>El plan no cambia:</strong> lata→pelota en las 4 corridas. Más esfuerzo cambia el tipo de error, no lo elimina.</li></ul>
+  <h3 style="margin-top:34px">Aprendizaje práctico</h3>
+  <ol style="color:var(--mut)"><li><strong>Una corrida de visión no basta.</strong> Corre la foto 3 veces o en 2 modelos; si discrepan mucho, la escena no aprueba nada.</li><li><strong>Lee los avisos de <code>r2s.py foto</code>.</strong> "Más ancho que la pinza" y "posiciones reducidas" aparecieron en las 3 escenas infladas.</li><li><strong>Prueba en el peor caso</strong> (<code>--pior-caso</code>) y en la escena más chica plausible, no en la medida.</li><li><strong>Esfuerzo alto en la visión, normal en el plan.</strong> En el plan solo cuesta tiempo.</li><li><strong>Prueba los dos órdenes de pasos:</strong> lata→pelota y pelota→lata cambian de ganador según la bandeja.</li><li><strong>La medida real gana a todo:</strong> una cinta métrica o dos fotos valen más que cambiar de modelo o de esfuerzo.</li></ol>
 </div></section>
 
 <section id="perguntas"><div class="wrap">

@@ -79,7 +79,10 @@ Rodar a mesma foto e o mesmo pedido em mais dois modelos, **pela assinatura**, c
 - **Fable 5.1** (`claude-fable-5-1`), via `claude -p --model claude-fable-5-1 --effort high`.
 - **GPT-6 Astra** (`gpt-6-astra`), via `codex exec -m gpt-6-astra -c model_reasoning_effort="high"`.
 
-O código ainda não passa o esforço: hoje Codex e Claude rodam no padrão do CLI. Falta uma opção
-`--esforco` no `r2s.py` (repassada em `real2sim/foto2cena.py` e `real2sim/provar.py`). Para a
-comparação ser justa, repetir também Codex (gpt-6-luna) e Claude (Opus 5.5) em esforço alto, e
-registrar tempo, tokens, cena (cubo–bandeja) e prova sem/com vagas na mesma tabela.
+- **GPT-6.1 Sol** (`gpt-6.1-sol`), via `codex exec -m gpt-6.1-sol` (incluído em 15/10).
+
+**Feito em 15/10:** opção `--esforco low|medium|high|xhigh|max` no `r2s.py foto/planejar/tudo`
+(Codex e Claude), e o primeiro teste com o mesmo `gpt-6-luna` em esforço médio × alto, 3 rodadas cada
+([ERRO-DE-MEDIDA.md](ERRO-DE-MEDIDA.md#o-esforço-de-raciocínio-muda-a-medida-15102026)). O médio
+infla tudo 1,6×; o alto acerta o tamanho, mas espreme as distâncias. Para os modelos novos, medir o
+erro da cena (bandeja, cubo–bandeja) e rodar `ferramentas/matriz_prova.py`, 3 rodadas por modelo.

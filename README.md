@@ -61,6 +61,10 @@ Arquivos: [resultados/](resultados/) (resumos, plano, provas e os 100 episódios
 
 **Erro de medida:** a prova agora também varia o tamanho (`--var-tamanho 0.15`, `--pior-caso`), e `ferramentas/matriz_prova.py` roda cada ordem de plano na cena de cada modelo. Só 1 dos 8 pares passa em todos os modos; regra nova: só vai ao robô o que passa no pior caso e na menor bandeja plausível. Detalhes em [docs/ERRO-DE-MEDIDA.md](docs/ERRO-DE-MEDIDA.md).
 
+**Esforço de raciocínio (`--esforco`):** o mesmo `gpt-6-luna`, 3 rodadas em cada faixa. Em esforço médio, ele infla tudo 1,6× nas 3 rodadas (cubo de 10 cm, maior que a garra; cubo–bandeja ~78 cm). Em alto, acerta o tamanho (cubo de 6 cm, bandeja de 20 cm), mas espreme as distâncias (~28 cm) e numa rodada esqueceu o cubo. O plano saiu igual nas 4 rodadas. Mais esforço troca o tipo de erro, não acaba com ele.
+
+**Aprendizado prático:** (1) rode a visão 3 vezes, porque discordância grande quer dizer medida ruim; (2) leia os avisos do `r2s.py foto` ("mais largo que a garra", "posições reduzidas"); (3) prove no pior caso e na menor cena plausível; (4) use esforço alto na visão e normal no plano; (5) teste as duas ordens de passos; (6) fita métrica vale mais que trocar de modelo.
+
 ## Instalar e rodar
 
 ```bash
