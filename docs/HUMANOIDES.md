@@ -79,7 +79,7 @@ O principal problema continua sendo a diferença entre simulação e realidade, 
 - Pequenas diferenças de peso, atrito ou atraso dos motores comprometem o movimento.
 - Uma política treinada para um corpo pode não funcionar em outro sem adaptação.
 
-Por isso os melhores resultados atuais combinam simulação, dados reais, calibração e testes físicos. Neste repositório, o mesmo princípio aparece em pequena escala: o plano só vale depois de passar por `r2s.py provar`, e uma cena generosa demais (a bandeja do Codex, 50% maior que a real) aprova um plano que falharia no mundo real (ver [ERRO-DE-MEDIDA.md](ERRO-DE-MEDIDA.md): com a bandeja 15% menor e a prova cruzada entre modelos, só 1 de 8 combinações se sustenta).
+Por isso os melhores resultados atuais combinam simulação, dados reais, calibração e testes físicos. Neste repositório, o mesmo princípio aparece em pequena escala: o plano só vale depois de passar por `r2s.py provar`, e uma cena generosa demais (a bandeja do Codex, 50% maior que a real) aprova um plano que falharia no mundo real (ver [ERRO-DE-MEDIDA.md](ERRO-DE-MEDIDA.md): com a bandeja 15% menor e a prova cruzada entre modelos, só 2 de 8 combinações se sustentam, uma delas na cena inflada).
 
 ## Conclusão
 

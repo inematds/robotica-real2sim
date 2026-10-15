@@ -132,6 +132,7 @@
     <a class="sec" href="#guia">Guía de uso</a>
     <a class="sec" href="#exemplos">Resultados</a>
     <a class="sec" href="#erro-medida">Error de medida</a>
+    <a class="sec" href="#real">Brazo real</a>
     <a class="sec" href="#humanoides">Humanoides</a>
     <a class="sec" href="#perguntas">Preguntas</a>
     <span class="lang"><a href="../">PT</a><a href="../en/">EN</a><a class="on" href="./">ES</a></span>
@@ -254,7 +255,7 @@
     <h3>Generar datos de entrenamiento</h3>
     <p>N episodios con variación. <code>--imagens</code> graba también las cámaras cenital y de la muñeca (128×128, 10 Hz). Un episodio que falló queda con <code>peso_no_treino: 0</code>.</p>
 <pre><span class="k">./r2s.py episodios</span> cena.json dados/ -n 50 --imagens
-<span class="c"># 50/50 episódios com sucesso (100%) em 8.7 s</span></pre>
+<span class="c"># 50/50 episódios com sucesso (100%) em 12.4 s</span></pre>
   </div></div>
 
   <div class="step"><div class="b">5</div><div>
@@ -287,8 +288,8 @@
   </div>
   <div class="tw" style="margin-top:26px"><table class="t">
     <tr><th>Medida</th><th>Resultado</th></tr>
-    <tr><td>Episodios en la escena de la foto (cubo → bandeja, con variación)</td><td><strong>50/50</strong> en 8,7 s</td></tr>
-    <tr><td>Episodios en la escena de prueba</td><td><strong>50/50</strong> en 8,4 s</td></tr>
+    <tr><td>Episodios en la escena de la foto (cubo → bandeja, con variación)</td><td><strong>50/50</strong> en 12,4 s</td></tr>
+    <tr><td>Episodios en la escena de prueba</td><td><strong>50/50</strong> en 10,3 s</td></tr>
     <tr><td>Cada objeto solo (cubo, lata, pelota × 2 escenas, 20 variaciones)</td><td><strong>20/20</strong> en todos</td></tr>
     <tr><td>Plan "todo lo redondo va a la bandeja", sin lugares asignados</td><td><strong>4/20 (20%)</strong> → reprobado</td></tr>
     <tr><td>El mismo plan con un lugar por objeto</td><td><strong>19/20 (95%)</strong> → aprobado</td></tr>
@@ -323,7 +324,7 @@
     <tr><td>Argon (15×15×4)</td><td>lata→bola</td><td>2/20</td><td>1/20</td><td>0/20</td></tr>
     <tr><td>Argon (15×15×4)</td><td>bola→lata</td><td>20/20</td><td>17/20</td><td>0/20</td></tr>
   </table></div>
-  <ul style="margin-top:22px;color:var(--mut)"><li><strong>El orden pesa tanto como el tamaño:</strong> el plan de Codex pasa 20/20 en la escena fiel de Claude, pero cae a 2/20 en la bandeja más chica plausible (15×15).</li><li><strong>Un 15% de margen no cubre un error del 50%:</strong> en su propia escena, el plan de Codex pasa incluso en el peor caso. Contra un error grande, solo sirven la prueba cruzada o la cinta métrica.</li><li><strong>Solo 1 de los 8 pares pasa los tres modos.</strong> Dos cosas en una bandeja de 15–18 cm, una de ellas una lata de 12 cm de pie, dejan la tarea al límite. Regla nueva: solo va al robot lo que pasa el peor caso y la bandeja más chica plausible.</li><li>20 intentos, una semilla: los números oscilan (20 → 5 → 16). Próximo paso: foto real con medidas de cinta métrica, cuando lleguen los brazos.</li></ul>
+  <ul style="margin-top:22px;color:var(--mut)"><li><strong>El orden pesa tanto como el tamaño:</strong> el plan de Codex pasa 20/20 en la escena fiel de Claude, pero cae a 2/20 en la bandeja más chica plausible (15×15).</li><li><strong>Un 15% de margen no cubre un error del 50%:</strong> en su propia escena, el plan de Codex pasa incluso en el peor caso. Contra un error grande, solo sirven la prueba cruzada o la cinta métrica.</li><li><strong>Solo 2 de los 8 pares pasan los tres modos</strong> (uno en la escena inflada de Codex). Dos cosas en una bandeja de 15–18 cm, una de ellas una lata de 12 cm de pie, dejan la tarea al límite. Regla nueva: solo va al robot lo que pasa el peor caso y la bandeja más chica plausible.</li><li>20 intentos, una semilla: los números oscilan (20 → 5 → 16). Próximo paso: foto real con medidas de cinta métrica, cuando lleguen los brazos.</li></ul>
   <h3 style="margin-top:34px">¿El esfuerzo de razonamiento cambia la medida?</h3>
   <p class="sub">Mismo modelo (<code>gpt-6-luna</code>), misma foto, 3 corridas en cada esfuerzo (<code>--esforco medium|high</code>). Las otras IAs midieron bandeja de 15–18 cm y cubo–bandeja de 41–48 cm.</p>
   <div class="tw"><table class="t">
@@ -346,8 +347,31 @@
     <tr><td>claude-fable-5-1</td><td>107–164 s</td><td>5–7</td><td>12–18</td><td><strong>47</strong></td><td><strong>20, 20, 20</strong></td><td>13, 1, 2</td></tr>
   </table></div>
   <ul style="margin-top:22px;color:var(--mut)"><li><strong>Astra, Sol y Fable acertaron la escala en las 9 corridas</strong>, y luna falló en las 6. Cambiar de modelo pesó más que cambiar de esfuerzo.</li><li><strong>Astra:</strong> la medida más estable (bandeja de 16–17 cm en las 3). <strong>Fable:</strong> lata→pelota 20/20 en las 3 escenas, pero tarda 2–3 min y la bandeja varió de 12 a 18 cm. <strong>Sol:</strong> agranda la lata (hasta 16,5 cm).</li><li><strong>Todos planearon lata→pelota y ninguno pasa el peor caso</strong> (el mejor: 13/20). Con una lata alta en una bandeja baja, falta física (acostar la lata), no modelo.</li></ul>
+  <h3 style="margin-top:34px">Corrección física: acostar la lata</h3>
+  <p class="sub">Con <code>--deitar</code>, la lata más alta que el doble del borde gira 60° sobre la bandeja y baja acostada; los espacios ahora respetan el ancho de cada objeto. Girar 90° no funcionó: la muñeca queda demasiado baja y el brazo no alcanza.</p>
+  <figure style="margin:0 0 22px;max-width:640px"><video src="../assets/clip-lata-deitada.mp4" controls muted loop playsinline preload="metadata" poster="../assets/fim-lata-deitada.jpg" style="width:100%;border-radius:12px"></video><figcaption class="mut">Lata acostada y pelota lado a lado en la bandeja de 18×22 cm.</figcaption></figure>
+  <div class="tw"><table class="t">
+    <tr><th>Escena (bandeja)</th><th>Plan</th><th>De pie: medida / ±15% / peor</th><th>Acostada 60°</th></tr>
+    <tr><td>Claude (18×22×4)</td><td>lata→bola</td><td>20 / 17 / 1</td><td><strong>20 / 20 / 19</strong></td></tr>
+    <tr><td>Claude (18×22×4)</td><td>bola→lata</td><td>16 / 2 / 8</td><td><strong>20 / 19 / 19</strong></td></tr>
+    <tr><td>Robotics-ER 2 (18×18×4)</td><td>lata→bola</td><td>16 / 12 / 1</td><td>20 / 18 / 0</td></tr>
+    <tr><td>Robotics-ER 2 (18×18×4)</td><td>bola→lata</td><td><strong>20 / 20 / 20</strong></td><td>17 / 15 / 10</td></tr>
+    <tr><td>Argon (15×15×4)</td><td>lata→bola</td><td>2 / 1 / 0</td><td>5 / 3 / 0</td></tr>
+    <tr><td>Argon (15×15×4)</td><td>bola→lata</td><td>20 / 17 / 0</td><td>18 / 16 / 1</td></tr>
+  </table></div>
+  <ul style="margin-top:22px;color:var(--mut)"><li><strong>En la bandeja de 18×22, acostarla lo resuelve:</strong> los dos órdenes aprueban, incluso en el peor caso.</li><li><strong>No es una bala de plata:</strong> en la de 18×18, pelota→lata empeoró; en la de 15×15, la lata de 12 cm casi no cabe acostada.</li><li><strong>Quien elige entre de pie y acostada es la prueba en simulación</strong>, escena por escena. Pares aprobados en los tres modos: de 2 a 3 de 8.</li></ul>
   <h3 style="margin-top:34px">Aprendizaje práctico</h3>
-  <ol style="color:var(--mut)"><li><strong>Una corrida de visión no basta.</strong> Corre la foto 3 veces o en 2 modelos; si discrepan mucho, la escena no aprueba nada.</li><li><strong>Lee los avisos de <code>r2s.py foto</code>.</strong> "Más ancho que la pinza" y "posiciones reducidas" aparecieron en las 3 escenas infladas.</li><li><strong>Prueba en el peor caso</strong> (<code>--pior-caso</code>) y en la escena más chica plausible, no en la medida.</li><li><strong>Elige bien el modelo de visión, y después el esfuerzo.</strong> Astra, Sol y Fable acertaron la escala; luna no. En el plan usa el predeterminado (<code>medium</code>): el alto solo cuesta tiempo.</li><li><strong>Prueba los dos órdenes de pasos:</strong> lata→pelota y pelota→lata cambian de ganador según la bandeja.</li><li><strong>La medida real gana a todo:</strong> una cinta métrica o dos fotos valen más que cambiar de modelo o de esfuerzo.</li></ol>
+  <ol style="color:var(--mut)"><li><strong>Una corrida de visión no basta.</strong> Corre la foto 3 veces o en 2 modelos; si discrepan mucho, la escena no aprueba nada.</li><li><strong>Lee los avisos de <code>r2s.py foto</code>.</strong> "Más ancho que la pinza" y "posiciones reducidas" aparecieron en las 3 escenas infladas.</li><li><strong>Prueba en el peor caso</strong> (<code>--pior-caso</code>) y en la escena más chica plausible, no en la medida.</li><li><strong>Elige bien el modelo de visión, y después el esfuerzo.</strong> Astra, Sol y Fable acertaron la escala; luna no. En el plan usa el predeterminado (<code>medium</code>): el alto solo cuesta tiempo.</li><li><strong>Prueba los dos órdenes de pasos:</strong> lata→pelota y pelota→lata cambian de ganador según la bandeja.</li><li><strong>Prueba las estrategias, no solo el orden:</strong> de pie o acostada, cada bandeja tiene su ganadora.</li><li><strong>La medida real gana a todo:</strong> una cinta métrica o dos fotos valen más que cambiar de modelo o de esfuerzo.</li></ol>
+</div></section>
+
+<section id="real"><div class="wrap">
+  <span class="chip">Próximo paso</span>
+  <h2>Del gemelo al brazo real: SO-101</h2>
+  <p class="sub">El brazo elegido es el kit Hiwonder SO-ARM101 (LeRobot): brazo líder y seguidor, 2 cámaras, <strong>200 g de carga y 40 cm de alcance</strong>. El Panda de la simulación alcanza el doble y carga 15 veces más, así que el primer paso es cambiar el gemelo. Plan completo (en portugués) en <a href="https://github.com/inematds/robotica-real2sim/blob/main/docs/PLANO-SO101.md">docs/PLANO-SO101.md</a>.</p>
+  <div style="margin-top:22px"><div class="phase"><div class="tag">Fase 0</div><div class="d"><strong>Gemelo del SO-101</strong><span>modelo oficial de MuJoCo en lugar del Panda; objetos de hasta 150 g</span></div></div><div class="phase"><div class="tag">Fase 1</div><div class="d"><strong>Mesa medida con cinta</strong><span>error real de cada modelo de visión; sin encender motores</span></div></div><div class="phase"><div class="tag">Fase 2</div><div class="d"><strong>Encender y calibrar</strong><span>líder en 5 V, seguidor en 12 V (cambiarlas quema los servos); confirmar el driver de los servos HX</span></div></div><div class="phase"><div class="tag">Fase 3</div><div class="d"><strong>Gemelo × brazo</strong><span>mismas 10 posturas; error de la punta menor a 1 cm</span></div></div><div class="phase"><div class="tag">Fase 4</div><div class="d"><strong>La cámara da la posición</strong><span>marcadores ArUco en lugar de la posición perfecta del simulador</span></div></div><div class="phase"><div class="tag">Fase 5</div><div class="d"><strong>Primera prueba física</strong><span>solo va al brazo lo que pasa el peor caso; 20 intentos reales</span></div></div><div class="phase"><div class="tag">Fase 6</div><div class="d"><strong>Entrenamiento con LeRobot</strong><span>50 episodios reales + 50 simulados; ¿el gemelo ayuda?</span></div></div></div>
+  <h3 style="margin-top:34px">Más allá de la pelota</h3>
+  <ul style="color:var(--mut)"><li><strong>Estudio de viabilidad por foto:</strong> probar la tarea de una empresa antes de comprar un brazo industrial.</li><li><strong>Clasificación por color o tipo:</strong> tornillos, semillas, piezas livianas en recipientes.</li><li><strong>Armar kits pequeños:</strong> 3–5 ítems livianos en una cajita.</li><li><strong>Mostrar la pieza a la cámara:</strong> inspección y fotos de catálogo.</li><li><strong>Probar una app o un aparato:</strong> apretar botones y tocar pantallas mil veces.</li><li><strong>Clase de robótica con IA:</strong> el ciclo completo en una mesa.</li></ul>
+  <p class="sub">Kit de enseñanza y prototipo: no sirve para objetos de más de ~150 g, precisión menor a 1–2 mm ni uso continuo en fábrica.</p>
 </div></section>
 
 <section id="perguntas"><div class="wrap">

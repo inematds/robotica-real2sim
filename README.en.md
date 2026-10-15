@@ -45,27 +45,27 @@ photo.jpg ──(vision model)──> scene.json ──> MuJoCo twin (Panda + ta
 | Measure | Result |
 |---|---|
 | Photo → scene (Codex, `gpt-6-luna`) | 4 objects in ~9 s, cube on the left and tray on the right as in the photo |
-| `mesa-foto` episodes (cube → tray, with variation) | **50/50** in 8.7 s |
-| `mesa-teste` episodes | **50/50** in 8.4 s |
+| `mesa-foto` episodes (cube → tray, with variation) | **50/50** in 12.4 s |
+| `mesa-teste` episodes | **50/50** in 10.3 s |
 | Each object alone (cube, can, ball × 2 scenes, 20 variations) | **20/20** for all |
 | Codex plan “put everything round in the tray,” naive | **4/20 (20%) → FAILED**: the ball falls on top of the can |
 | Same plan with one slot per object | **19/20 (95%) → PASSED** |
 | Same plan with the tray 15% smaller (`--pior-caso`) | 19/20, but the Codex tray is still bigger than the real one |
 | Codex plan in the smallest measured tray (15×15, Argon) | **2/20 → FAILED** |
-| Tests (`python3 testes/rodar.py`) | 10/10 |
+| Tests (`python3 testes/rodar.py`) | 12/12 |
 
 Files: [resultados/](resultados/) (summaries, plan, proofs, and the 100 episodes).
 
 
 **Codex × Claude × Gemini:** the same photo and request ran on Codex, Claude (`--motor claude`), Gemini Robotics-ER 2 (`--motor gemini`) and Gemini 4 Argon via OpenRouter (`--motor openrouter`). Claude, ER and Argon measured the table faithfully; Argon was the only one with a faithful scene and an approved plan (100%), in 7 s for US$ 0.01. Details in [docs/CODEX-VS-CLAUDE.md](docs/CODEX-VS-CLAUDE.md) (in Portuguese).
 
-**Measurement error:** the proof now also varies size (`--var-tamanho 0.15`, `--pior-caso`), and `ferramentas/matriz_prova.py` runs each plan order in every model's scene. Only 1 of the 8 pairs passes every mode; new rule: only what passes the worst case and the smallest plausible tray goes to the robot. Details in [docs/ERRO-DE-MEDIDA.md](docs/ERRO-DE-MEDIDA.md) (in Portuguese).
+**Measurement error:** the proof now also varies size (`--var-tamanho 0.15`, `--pior-caso`), and `ferramentas/matriz_prova.py` runs each plan order in every model's scene. Only 2 of the 8 pairs pass every mode (one of them in Codex's inflated scene); new rule: only what passes the worst case and the smallest plausible tray goes to the robot. Details in [docs/ERRO-DE-MEDIDA.md](docs/ERRO-DE-MEDIDA.md) (in Portuguese).
 
 **Reasoning effort (`--esforco`):** the same `gpt-6-luna`, 3 runs at each level. At medium effort it inflates everything 1.6× in all 3 runs (10 cm cube, bigger than the gripper; cube–tray ~78 cm). At high it gets sizes right (6 cm cube, 20 cm tray) but squeezes distances (~28 cm), and in one run it forgot the cube. The plan was the same in all 4 runs. More effort changes the kind of error, it does not remove it.
 
 **Astra, Sol and Fable (high effort, 3 runs each):** all three got the scale right in all 9 runs (cube–tray 45–47 cm). Astra was the most stable measurement (16–17 cm tray, 35–48 s). Fable passed can→ball 20/20 in all 3 scenes, but takes 2–3 min. Switching model mattered more than switching effort. All of them planned can→ball, and none passes the worst case: what is missing is physics (lay the can down), not a model.
 
-**Practical lessons:** (1) run vision 3 times, because large disagreement means a bad measurement; (2) read the `r2s.py foto` warnings ("wider than the gripper", "positions reduced"); (3) prove in the worst case and in the smallest plausible scene; (4) pick the vision model first, then the effort, and keep the default (`medium`) for the plan; (5) test both step orders; (6) a tape measure is worth more than switching models.
+**Practical lessons:** (1) run vision 3 times, because large disagreement means a bad measurement; (2) read the `r2s.py foto` warnings ("wider than the gripper", "positions reduced"); (3) prove in the worst case and in the smallest plausible scene; (4) pick the vision model first, then the effort, and keep the default (`medium`) for the plan; (5) test both step orders; (6) a tape measure is worth more than switching models. **Lying can (`--deitar`):** in the 18×22 tray both plan orders now pass the worst case (19/20); in the 18×18 tray one gets worse, and in the 15×15 tray the can barely fits. The proof should choose upright vs. lying, scene by scene.
 
 ## Install and run
 

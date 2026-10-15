@@ -132,6 +132,7 @@
     <a class="sec" href="#guia">User guide</a>
     <a class="sec" href="#exemplos">Results</a>
     <a class="sec" href="#erro-medida">Measurement error</a>
+    <a class="sec" href="#real">Real arm</a>
     <a class="sec" href="#humanoides">Humanoids</a>
     <a class="sec" href="#perguntas">Questions</a>
     <span class="lang"><a href="../">PT</a><a class="on" href="./">EN</a><a href="../es/">ES</a></span>
@@ -254,7 +255,7 @@
     <h3>Generate training data</h3>
     <p>N episodes with variation. <code>--imagens</code> also saves the top-down and wrist cameras (128×128, 10 Hz). A failed episode is left with <code>peso_no_treino: 0</code>.</p>
 <pre><span class="k">./r2s.py episodios</span> cena.json dados/ -n 50 --imagens
-<span class="c"># 50/50 episódios com sucesso (100%) em 8.7 s</span></pre>
+<span class="c"># 50/50 episódios com sucesso (100%) em 12.4 s</span></pre>
   </div></div>
 
   <div class="step"><div class="b">5</div><div>
@@ -287,8 +288,8 @@
   </div>
   <div class="tw" style="margin-top:26px"><table class="t">
     <tr><th>Measure</th><th>Result</th></tr>
-    <tr><td>Episodes on the photo scene (cube → tray, with variation)</td><td><strong>50/50</strong> in 8.7 s</td></tr>
-    <tr><td>Episodes on the test scene</td><td><strong>50/50</strong> in 8.4 s</td></tr>
+    <tr><td>Episodes on the photo scene (cube → tray, with variation)</td><td><strong>50/50</strong> in 12.4 s</td></tr>
+    <tr><td>Episodes on the test scene</td><td><strong>50/50</strong> in 10.3 s</td></tr>
     <tr><td>Each object alone (cube, can, ball × 2 scenes, 20 variations)</td><td><strong>20/20</strong> in all</td></tr>
     <tr><td>Plan "everything round goes to the tray", without slots</td><td><strong>4/20 (20%)</strong> → rejected</td></tr>
     <tr><td>Same plan with one slot per object</td><td><strong>19/20 (95%)</strong> → approved</td></tr>
@@ -323,7 +324,7 @@
     <tr><td>Argon (15×15×4)</td><td>lata→bola</td><td>2/20</td><td>1/20</td><td>0/20</td></tr>
     <tr><td>Argon (15×15×4)</td><td>bola→lata</td><td>20/20</td><td>17/20</td><td>0/20</td></tr>
   </table></div>
-  <ul style="margin-top:22px;color:var(--mut)"><li><strong>Order matters as much as size:</strong> the Codex plan passes 20/20 in Claude's faithful scene, but drops to 2/20 in the smallest plausible tray (15×15).</li><li><strong>A 15% margin does not cover a 50% error:</strong> in its own scene, the Codex plan passes even in the worst case. Against a large error, only the cross-check or a tape measure helps.</li><li><strong>Only 1 of the 8 pairs passes all three modes.</strong> Two items in a 15–18 cm tray, one of them a 12 cm upright can, keep the task on the edge. New rule: only what passes the worst case and the smallest plausible tray goes to the robot.</li><li>20 trials, one seed: the numbers swing (20 → 5 → 16). Next step: a real photo with tape-measured sizes, once the arms arrive.</li></ul>
+  <ul style="margin-top:22px;color:var(--mut)"><li><strong>Order matters as much as size:</strong> the Codex plan passes 20/20 in Claude's faithful scene, but drops to 2/20 in the smallest plausible tray (15×15).</li><li><strong>A 15% margin does not cover a 50% error:</strong> in its own scene, the Codex plan passes even in the worst case. Against a large error, only the cross-check or a tape measure helps.</li><li><strong>Only 2 of the 8 pairs pass all three modes</strong> (one of them in Codex's inflated scene). Two items in a 15–18 cm tray, one of them a 12 cm upright can, keep the task on the edge. New rule: only what passes the worst case and the smallest plausible tray goes to the robot.</li><li>20 trials, one seed: the numbers swing (20 → 5 → 16). Next step: a real photo with tape-measured sizes, once the arms arrive.</li></ul>
   <h3 style="margin-top:34px">Does reasoning effort change the measurement?</h3>
   <p class="sub">Same model (<code>gpt-6-luna</code>), same photo, 3 runs at each effort (<code>--esforco medium|high</code>). The other AIs measured a 15–18 cm tray and 41–48 cm cube–tray.</p>
   <div class="tw"><table class="t">
@@ -346,8 +347,31 @@
     <tr><td>claude-fable-5-1</td><td>107–164 s</td><td>5–7</td><td>12–18</td><td><strong>47</strong></td><td><strong>20, 20, 20</strong></td><td>13, 1, 2</td></tr>
   </table></div>
   <ul style="margin-top:22px;color:var(--mut)"><li><strong>Astra, Sol and Fable got the scale right in all 9 runs</strong>, and luna missed in all 6. Switching model mattered more than switching effort.</li><li><strong>Astra:</strong> the most stable measurement (16–17 cm tray in all 3). <strong>Fable:</strong> can→ball 20/20 in all 3 scenes, but it takes 2–3 min and the tray ranged from 12 to 18 cm. <strong>Sol:</strong> makes the can taller (up to 16.5 cm).</li><li><strong>All of them planned can→ball, and none passes the worst case</strong> (best: 13/20). With a tall can in a shallow tray, what is missing is physics (lay the can down), not a model.</li></ul>
+  <h3 style="margin-top:34px">Physical fix: lay the can down</h3>
+  <p class="sub">With <code>--deitar</code>, a can taller than twice the tray wall is tilted 60° over the tray and goes down lying; slots now respect each object's width. Tilting 90° did not work: the wrist gets too low and the arm cannot reach.</p>
+  <figure style="margin:0 0 22px;max-width:640px"><video src="../assets/clip-lata-deitada.mp4" controls muted loop playsinline preload="metadata" poster="../assets/fim-lata-deitada.jpg" style="width:100%;border-radius:12px"></video><figcaption class="mut">Can lying down and ball side by side in the 18×22 cm tray.</figcaption></figure>
+  <div class="tw"><table class="t">
+    <tr><th>Scene (tray)</th><th>Plan</th><th>Upright: measured / ±15% / worst</th><th>Lying 60°</th></tr>
+    <tr><td>Claude (18×22×4)</td><td>lata→bola</td><td>20 / 17 / 1</td><td><strong>20 / 20 / 19</strong></td></tr>
+    <tr><td>Claude (18×22×4)</td><td>bola→lata</td><td>16 / 2 / 8</td><td><strong>20 / 19 / 19</strong></td></tr>
+    <tr><td>Robotics-ER 2 (18×18×4)</td><td>lata→bola</td><td>16 / 12 / 1</td><td>20 / 18 / 0</td></tr>
+    <tr><td>Robotics-ER 2 (18×18×4)</td><td>bola→lata</td><td><strong>20 / 20 / 20</strong></td><td>17 / 15 / 10</td></tr>
+    <tr><td>Argon (15×15×4)</td><td>lata→bola</td><td>2 / 1 / 0</td><td>5 / 3 / 0</td></tr>
+    <tr><td>Argon (15×15×4)</td><td>bola→lata</td><td>20 / 17 / 0</td><td>18 / 16 / 1</td></tr>
+  </table></div>
+  <ul style="margin-top:22px;color:var(--mut)"><li><strong>In the 18×22 tray, lying down fixes it:</strong> both orders pass, worst case included.</li><li><strong>Not a silver bullet:</strong> in the 18×18 tray, ball→can got worse; in the 15×15 tray the 12 cm can barely fits lying down.</li><li><strong>The simulation proof should choose between upright and lying</strong>, scene by scene. Pairs passing all three modes: from 2 to 3 out of 8.</li></ul>
   <h3 style="margin-top:34px">Practical lessons</h3>
-  <ol style="color:var(--mut)"><li><strong>One vision run is not enough.</strong> Run the photo 3 times or on 2 models; if they disagree a lot, the scene approves nothing.</li><li><strong>Read the warnings from <code>r2s.py foto</code>.</strong> "Wider than the gripper" and "positions reduced" showed up in all 3 inflated scenes.</li><li><strong>Prove in the worst case</strong> (<code>--pior-caso</code>) and in the smallest plausible scene, not in the measured one.</li><li><strong>Pick the vision model first, then the effort.</strong> Astra, Sol and Fable got the scale right; luna did not. For the plan, keep the default (<code>medium</code>): high only costs time.</li><li><strong>Test both step orders:</strong> can→ball and ball→can swap winners depending on the tray.</li><li><strong>A real measurement beats everything:</strong> a tape measure or two photos are worth more than changing model or effort.</li></ol>
+  <ol style="color:var(--mut)"><li><strong>One vision run is not enough.</strong> Run the photo 3 times or on 2 models; if they disagree a lot, the scene approves nothing.</li><li><strong>Read the warnings from <code>r2s.py foto</code>.</strong> "Wider than the gripper" and "positions reduced" showed up in all 3 inflated scenes.</li><li><strong>Prove in the worst case</strong> (<code>--pior-caso</code>) and in the smallest plausible scene, not in the measured one.</li><li><strong>Pick the vision model first, then the effort.</strong> Astra, Sol and Fable got the scale right; luna did not. For the plan, keep the default (<code>medium</code>): high only costs time.</li><li><strong>Test both step orders:</strong> can→ball and ball→can swap winners depending on the tray.</li><li><strong>Prove strategies, not just order:</strong> upright or lying, each tray has its own winner.</li><li><strong>A real measurement beats everything:</strong> a tape measure or two photos are worth more than changing model or effort.</li></ol>
+</div></section>
+
+<section id="real"><div class="wrap">
+  <span class="chip">Next step</span>
+  <h2>From twin to real arm: SO-101</h2>
+  <p class="sub">The chosen arm is the Hiwonder SO-ARM101 kit (LeRobot): leader and follower arms, 2 cameras, <strong>200 g payload and 40 cm reach</strong>. The simulated Panda reaches twice as far and carries 15 times more, so the first step is to swap the twin. Full plan (in Portuguese) in <a href="https://github.com/inematds/robotica-real2sim/blob/main/docs/PLANO-SO101.md">docs/PLANO-SO101.md</a>.</p>
+  <div style="margin-top:22px"><div class="phase"><div class="tag">Fase 0</div><div class="d"><strong>SO-101 twin</strong><span>official MuJoCo model instead of the Panda; objects up to 150 g</span></div></div><div class="phase"><div class="tag">Fase 1</div><div class="d"><strong>Tape-measured table</strong><span>real error of each vision model; no motors on</span></div></div><div class="phase"><div class="tag">Fase 2</div><div class="d"><strong>Power up and calibrate</strong><span>leader on 5 V, follower on 12 V (swapping burns servos); confirm the HX servo driver</span></div></div><div class="phase"><div class="tag">Fase 3</div><div class="d"><strong>Twin × arm</strong><span>same 10 poses; tip error below 1 cm</span></div></div><div class="phase"><div class="tag">Fase 4</div><div class="d"><strong>Camera gives the position</strong><span>ArUco markers instead of the simulator's perfect position</span></div></div><div class="phase"><div class="tag">Fase 5</div><div class="d"><strong>First physical proof</strong><span>only what passes the worst case goes to the arm; 20 real trials</span></div></div><div class="phase"><div class="tag">Fase 6</div><div class="d"><strong>Training with LeRobot</strong><span>50 real + 50 simulated episodes; does the twin help?</span></div></div></div>
+  <h3 style="margin-top:34px">Beyond the ball</h3>
+  <ul style="color:var(--mut)"><li><strong>Feasibility study from a photo:</strong> prove a company's task before buying an industrial arm.</li><li><strong>Sorting by color or type:</strong> screws, seeds, light parts into bins.</li><li><strong>Small kit assembly:</strong> 3–5 light items into a small box.</li><li><strong>Showing a part to the camera:</strong> inspection and catalog photos.</li><li><strong>Testing an app or device:</strong> pressing buttons and tapping screens a thousand times.</li><li><strong>Robotics + AI class:</strong> the whole loop on one table.</li></ul>
+  <p class="sub">An education and prototyping kit: not for objects over ~150 g, precision below 1–2 mm or continuous factory use.</p>
 </div></section>
 
 <section id="perguntas"><div class="wrap">

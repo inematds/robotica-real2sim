@@ -42,27 +42,27 @@ foto.jpg ──(modelo de visión)──> escena.json ──> gemelo MuJoCo (Pan
 | Medición | Resultado |
 |---|---|
 | Foto → escena (Codex, `gpt-6-luna`) | 4 objetos en ~9 s, cubo a la izquierda y bandeja a la derecha, como en la foto |
-| Episodios `mesa-foto` (cubo → bandeja, con variaciones) | **50/50** en 8,7 s |
-| Episodios `mesa-teste` | **50/50** en 8,4 s |
+| Episodios `mesa-foto` (cubo → bandeja, con variaciones) | **50/50** en 12,4 s |
+| Episodios `mesa-teste` | **50/50** en 10,3 s |
 | Cada objeto por separado (cubo, lata, pelota × 2 escenas, 20 variaciones) | **20/20** en todos |
 | Plan ingenuo de Codex «todo lo redondo va a la bandeja» | **4/20 (20%) → REPROBADO**: la pelota cae encima de la lata |
 | El mismo plan con un espacio por objeto | **19/20 (95%) → APROBADO** |
 | El mismo plan con la bandeja 15% más chica (`--pior-caso`) | 19/20, pero la bandeja de Codex sigue siendo más grande que la real |
 | Plan de Codex en la bandeja medida más chica (15×15, Argon) | **2/20 → REPROBADO** |
-| Pruebas (`python3 testes/rodar.py`) | 10/10 |
+| Pruebas (`python3 testes/rodar.py`) | 12/12 |
 
 Archivos: [resultados/](resultados/) (resúmenes, plan, pruebas y los 100 episodios).
 
 
 **Codex × Claude × Gemini:** la misma foto y el mismo pedido corrieron en Codex, Claude (`--motor claude`), Gemini Robotics-ER 2 (`--motor gemini`) y Gemini 4 Argon vía OpenRouter (`--motor openrouter`). Claude, ER y Argon midieron la mesa con fidelidad; Argon fue el único con escena fiel y plan aprobado (100%), en 7 s y por US$ 0,01. Detalles en [docs/CODEX-VS-CLAUDE.md](docs/CODEX-VS-CLAUDE.md) (en portugués).
 
-**Error de medida:** la prueba ahora también varía el tamaño (`--var-tamanho 0.15`, `--pior-caso`), y `ferramentas/matriz_prova.py` corre cada orden de plan en la escena de cada modelo. Solo 1 de los 8 pares pasa todos los modos; regla nueva: solo va al robot lo que pasa el peor caso y la bandeja más chica plausible. Detalles en [docs/ERRO-DE-MEDIDA.md](docs/ERRO-DE-MEDIDA.md) (en portugués).
+**Error de medida:** la prueba ahora también varía el tamaño (`--var-tamanho 0.15`, `--pior-caso`), y `ferramentas/matriz_prova.py` corre cada orden de plan en la escena de cada modelo. Solo 2 de los 8 pares pasan todos los modos (uno en la escena inflada de Codex); regla nueva: solo va al robot lo que pasa el peor caso y la bandeja más chica plausible. Detalles en [docs/ERRO-DE-MEDIDA.md](docs/ERRO-DE-MEDIDA.md) (en portugués).
 
 **Esfuerzo de razonamiento (`--esforco`):** el mismo `gpt-6-luna`, 3 corridas en cada nivel. En esfuerzo medio infla todo 1,6× en las 3 corridas (cubo de 10 cm, más grande que la pinza; cubo–bandeja ~78 cm). En alto acierta el tamaño (cubo de 6 cm, bandeja de 20 cm), pero aprieta las distancias (~28 cm) y en una corrida olvidó el cubo. El plan salió igual en las 4 corridas. Más esfuerzo cambia el tipo de error, no lo elimina.
 
 **Astra, Sol y Fable (esfuerzo alto, 3 corridas cada uno):** los tres acertaron la escala en las 9 corridas (cubo–bandeja 45–47 cm). Astra fue la medida más estable (bandeja de 16–17 cm, 35–48 s). Fable pasó lata→pelota 20/20 en las 3 escenas, pero tarda 2–3 min. Cambiar de modelo pesó más que cambiar de esfuerzo. Todos planearon lata→pelota y ninguno pasa el peor caso: falta física (acostar la lata), no modelo.
 
-**Aprendizaje práctico:** (1) corre la visión 3 veces, porque una discrepancia grande significa una mala medida; (2) lee los avisos de `r2s.py foto` ("más ancho que la pinza", "posiciones reducidas"); (3) prueba en el peor caso y en la escena más chica plausible; (4) elige primero el modelo de visión, después el esfuerzo, y en el plan usa el predeterminado (`medium`); (5) prueba los dos órdenes de pasos; (6) una cinta métrica vale más que cambiar de modelo.
+**Aprendizaje práctico:** (1) corre la visión 3 veces, porque una discrepancia grande significa una mala medida; (2) lee los avisos de `r2s.py foto` ("más ancho que la pinza", "posiciones reducidas"); (3) prueba en el peor caso y en la escena más chica plausible; (4) elige primero el modelo de visión, después el esfuerzo, y en el plan usa el predeterminado (`medium`); (5) prueba los dos órdenes de pasos; (6) una cinta métrica vale más que cambiar de modelo. **Lata acostada (`--deitar`):** en la bandeja de 18×22 los dos órdenes de plan aprueban el peor caso (19/20); en la de 18×18 uno empeora, y en la de 15×15 la lata casi no cabe. La prueba debe elegir entre de pie y acostada, escena por escena.
 
 ## Instalar y ejecutar
 

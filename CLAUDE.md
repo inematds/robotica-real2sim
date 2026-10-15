@@ -4,7 +4,7 @@ Foto da mesa → gêmeo MuJoCo (Franka Panda do Menagerie) → gerador de movime
 episódios com variação e anotação em 4 níveis → plano do Codex provado na simulação.
 
 - Rodar: `./instalar.sh` uma vez; depois `./r2s.py <comando>` (re-executa no `.venv` sozinho).
-  Teste: `python3 testes/rodar.py` (10 casos, ~1 min, sem rede). Sempre `MUJOCO_GL=egl` sem monitor.
+  Teste: `python3 testes/rodar.py` (12 casos, ~1 min, sem rede). Sempre `MUJOCO_GL=egl` sem monitor.
 - Modelo de visão e planejador = Codex CLI pela assinatura (`gpt-6-luna`). **Nunca** chamar a API do
   Gemini/Argon nem outra API paga sem autorização explícita do dono.
 - Números do README vêm de execuções reais em `resultados/`; ao mudar o gerador, rodar de novo

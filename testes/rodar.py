@@ -132,6 +132,17 @@ def _():
     assert bom["planos_completos"] >= 5
 
 
+@caso("lata alta em bandeja rasa vai deitada e fica dentro, ao lado da bola")
+def _():
+    from real2sim.provar import marcar_deitar, rodar_plano
+    cena = carregar_cena(RAIZ / "resultados/mesa-foto/claude/cena.json")
+    passos = marcar_deitar(cena, [{"pegar": "lata_azul", "destino": "bandeja_cinza"},
+                                  {"pegar": "bola_tenis", "destino": "bandeja_cinza"}])
+    assert passos[0].get("deitar") and not passos[1].get("deitar")
+    res = rodar_plano(cena, distribuir_vagas(cena, passos), None)
+    assert all(r["sucesso"] for r in res), res
+
+
 @caso("erro de medida: pior caso encolhe o recipiente 15% e não passa da garra")
 def _():
     from real2sim.episodios import variar

@@ -44,8 +44,9 @@ A linha "Medida" repete os resultados antigos de cada modelo (19, 16, 16 e 20 de
   porque a bandeja ainda fica maior que a real. Variar o tamanho protege contra erro pequeno de medida.
   Contra erro grande, só serve a **prova cruzada** (rodar na cena mais apertada entre os modelos) ou a
   **medida real** com fita métrica.
-- **Com erro de medida, quase nada se sustenta.** Só um dos oito pares passa nos três modos:
-  bola→lata na bandeja de 18×18. Duas coisas numa bandeja de 15–18 cm com 4 cm de borda, e uma delas
+- **Com erro de medida, quase nada se sustenta.** Só dois dos oito pares passam nos três modos:
+  lata→bola na cena inflada do Codex (que não vale, porque a bandeja dele é maior que a real) e
+  bola→lata na bandeja de 18×18. (Corrigido em 15/10: a primeira versão dizia "um dos oito".) Duas coisas numa bandeja de 15–18 cm com 4 cm de borda, e uma delas
   é uma lata de 12 cm em pé, deixam a tarefa no limite. A correção certa é física (deitar a lata,
   escolher a vaga pelo tamanho do objeto), não um número melhor.
 - **Os resultados não sobem nem descem em linha reta** (bola→lata na cena do Codex: 20 → 5 → 16).
@@ -110,6 +111,37 @@ igual: lata→bola. Números brutos: `resultados/mesa-foto/esforco/` (`matriz-mo
 - Falha nova pega no caminho: Astra e Sol às vezes devolvem dois objetos no campo `tarefa.pegar`, e a
   cena inteira era recusada. Agora vira aviso ([FALHAS.md](../FALHAS.md)).
 
+## Correção física: deitar a lata (15/10/2026)
+
+A lata de 12 cm em pé numa bandeja de 4 cm de borda tombava. Agora `provar --deitar` (e
+`matriz_prova.py --deitar`) faz o seguinte com um cilindro mais alto que o dobro da borda: depois de levar a
+lata até a bandeja, gira a garra 60° em torno do eixo dos dedos, desce até a parte de baixo da lata
+ficar a 1,5 cm do fundo (medindo a inclinação real a cada passo) e solta. As vagas passam a ser
+calculadas pela largura de cada objeto, lado a lado.
+
+Tentativas que não deram certo: girar 90° (o pulso fica baixo demais e o braço não alcança a bandeja)
+e virar a garra para a direção da bandeja (a lata gira entre os dedos e cai). Entre 60° e 75°, o 60°
+ganhou na matriz.
+
+| Cena (bandeja) | Plano | Em pé: medida / ±15% / pior | Deitada 60°: medida / ±15% / pior |
+|---|---|---|---|
+| Claude (18×22×4) | lata→bola | 20 / 17 / 1 | **20 / 20 / 19** |
+| Claude (18×22×4) | bola→lata | 16 / 2 / 8 | **20 / 19 / 19** |
+| Robotics-ER 2 (18×18×4) | lata→bola | 16 / 12 / 1 | 20 / 18 / 0 |
+| Robotics-ER 2 (18×18×4) | bola→lata | **20 / 20 / 20** | 17 / 15 / 10 |
+| Argon (15×15×4) | lata→bola | 2 / 1 / 0 | 5 / 3 / 0 |
+| Argon (15×15×4) | bola→lata | 20 / 17 / 0 | 18 / 16 / 1 |
+
+(Na cena do Codex a bandeja tem 6 cm de borda e a lata não é deitada; os números não mudam.) Brutos:
+`resultados/mesa-foto/deitar/matriz-60.json` e `matriz-75.json`.
+
+- **Na bandeja de 18×22, deitar resolve:** as duas ordens passam a aprovar, inclusive no pior caso.
+- **Não é bala de prata.** Na 18×18 a ordem bola→lata, que já passava em pé, piorou. Na 15×15 a
+  lata deitada (12 cm) quase não cabe: no pior caso a bandeja fica com 12,75 cm, menos 1,2 cm de parede.
+- **Pares que passam nos três modos:** de 2 para 3 em 8, e nas cenas fiéis de 1 para 2 em 6.
+- **A lição:** a mesma estratégia ajuda numa bandeja e atrapalha em outra. Quem escolhe entre "em pé" e
+  "deitada" deve ser a prova na simulação, cena por cena, e não uma regra fixa.
+
 ## Aprendizado prático
 
 1. **Não confie numa rodada só da visão.** Rode a foto 3 vezes (ou em 2 modelos). Discordância grande
@@ -123,7 +155,8 @@ igual: lata→bola. Números brutos: `resultados/mesa-foto/esforco/` (`matriz-mo
    e só custa tempo.
 5. **A física manda na ordem dos passos:** lata→bola e bola→lata trocam de vencedor conforme a
    bandeja. Teste as duas ordens.
-6. **Medida de verdade vence tudo:** uma foto com fita métrica (ou duas fotos de ângulos diferentes)
+6. **Prove as estratégias, não só a ordem:** em pé ou deitada, cada bandeja tem a sua vencedora.
+7. **Medida de verdade vence tudo:** uma foto com fita métrica (ou duas fotos de ângulos diferentes)
    vale mais que qualquer troca de modelo ou de esforço.
 
 ## Regra nova para mandar ao robô real

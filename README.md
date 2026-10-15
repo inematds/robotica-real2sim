@@ -45,27 +45,27 @@ foto.jpg ──(modelo de visão)──> cena.json ──> gêmeo MuJoCo (Panda 
 | Medida | Resultado |
 |---|---|
 | Foto → cena (Codex, `gpt-6-luna`) | 4 objetos em ~9 s, cubo à esquerda e bandeja à direita como na foto |
-| Episódios `mesa-foto` (cubo → bandeja, com variação) | **50/50** em 8,7 s |
-| Episódios `mesa-teste` | **50/50** em 8,4 s |
+| Episódios `mesa-foto` (cubo → bandeja, com variação) | **50/50** em 12,4 s (15/10) |
+| Episódios `mesa-teste` | **50/50** em 10,3 s (15/10) |
 | Cada objeto sozinho (cubo, lata, bola × 2 cenas, 20 variações) | **20/20** em todos |
 | Plano do Codex "tudo que é redondo vai para a bandeja", ingênuo | **4/20 (20%) → REPROVADO**: a bola cai em cima da lata |
 | Mesmo plano com uma vaga por objeto | **19/20 (95%) → APROVADO** |
 | Mesmo plano com a bandeja 15% menor (`--pior-caso`) | 19/20, mas a bandeja do Codex ainda fica maior que a real |
 | Plano do Codex na menor bandeja medida (15×15, Argon) | **2/20 → REPROVADO** |
-| Testes (`python3 testes/rodar.py`) | 10/10 |
+| Testes (`python3 testes/rodar.py`) | 12/12 |
 
 Arquivos: [resultados/](resultados/) (resumos, plano, provas e os 100 episódios).
 
 
 **Codex × Claude × Gemini:** a mesma foto e o mesmo pedido rodaram no Codex, no Claude (`--motor claude`), no Gemini Robotics-ER 2 (`--motor gemini`) e no Gemini 4 Argon pela OpenRouter (`--motor openrouter`). Claude, ER e Argon mediram a mesa com fidelidade; o Argon foi o único com cena fiel e plano aprovado (100%), em 7 s e por US$ 0,01. Detalhes em [docs/CODEX-VS-CLAUDE.md](docs/CODEX-VS-CLAUDE.md).
 
-**Erro de medida:** a prova agora também varia o tamanho (`--var-tamanho 0.15`, `--pior-caso`), e `ferramentas/matriz_prova.py` roda cada ordem de plano na cena de cada modelo. Só 1 dos 8 pares passa em todos os modos; regra nova: só vai ao robô o que passa no pior caso e na menor bandeja plausível. Detalhes em [docs/ERRO-DE-MEDIDA.md](docs/ERRO-DE-MEDIDA.md).
+**Erro de medida:** a prova agora também varia o tamanho (`--var-tamanho 0.15`, `--pior-caso`), e `ferramentas/matriz_prova.py` roda cada ordem de plano na cena de cada modelo. Só 2 dos 8 pares passam em todos os modos (um deles na cena inflada do Codex); regra nova: só vai ao robô o que passa no pior caso e na menor bandeja plausível. Detalhes em [docs/ERRO-DE-MEDIDA.md](docs/ERRO-DE-MEDIDA.md).
 
 **Esforço de raciocínio (`--esforco`):** o mesmo `gpt-6-luna`, 3 rodadas em cada faixa. Em esforço médio, ele infla tudo 1,6× nas 3 rodadas (cubo de 10 cm, maior que a garra; cubo–bandeja ~78 cm). Em alto, acerta o tamanho (cubo de 6 cm, bandeja de 20 cm), mas espreme as distâncias (~28 cm) e numa rodada esqueceu o cubo. O plano saiu igual nas 4 rodadas. Mais esforço troca o tipo de erro, não acaba com ele.
 
 **Astra, Sol e Fable (esforço alto, 3 rodadas cada):** os três acertaram a escala nas 9 rodadas (cubo–bandeja 45–47 cm). O Astra foi o mais estável na medida (bandeja de 16–17 cm, 35–48 s). O Fable passou lata→bola 20/20 nas 3 cenas, mas leva 2–3 min. Trocar de modelo pesou mais que trocar de esforço. Todos planejaram lata→bola, e nenhum passa no pior caso: falta física (deitar a lata), não modelo.
 
-**Aprendizado prático:** (1) rode a visão 3 vezes, porque discordância grande quer dizer medida ruim; (2) leia os avisos do `r2s.py foto` ("mais largo que a garra", "posições reduzidas"); (3) prove no pior caso e na menor cena plausível; (4) escolha primeiro o modelo da visão, depois o esforço, e no plano use o padrão (`medium`); (5) teste as duas ordens de passos; (6) fita métrica vale mais que trocar de modelo.
+**Aprendizado prático:** (1) rode a visão 3 vezes, porque discordância grande quer dizer medida ruim; (2) leia os avisos do `r2s.py foto` ("mais largo que a garra", "posições reduzidas"); (3) prove no pior caso e na menor cena plausível; (4) escolha primeiro o modelo da visão, depois o esforço, e no plano use o padrão (`medium`); (5) teste as duas ordens de passos; (6) fita métrica vale mais que trocar de modelo. **Lata deitada (`--deitar`):** na bandeja de 18×22, as duas ordens de plano passam a aprovar no pior caso (19/20); na de 18×18, uma piora, e na de 15×15 a lata quase não cabe. Quem escolhe entre em pé e deitada deve ser a prova, cena por cena.
 
 ## Instalar e rodar
 

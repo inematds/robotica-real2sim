@@ -75,7 +75,8 @@ def filmar(cena: dict, arquivo: str | Path, cameras=("geral",), largura=1280, al
 
     resultados = []
     for p in passos:
-        g = Gerador(m, d, p["pegar"], p["destino"], vaga=tuple(p.get("vaga", (0.0, 0.0))))
+        g = Gerador(m, d, p["pegar"], p["destino"], vaga=tuple(p.get("vaga", (0.0, 0.0))),
+                    deitar=bool(p.get("deitar")))
         res = g.executar(quadro)
         resultados.append(res)
         if not res.sucesso:

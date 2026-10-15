@@ -7,6 +7,7 @@ abrir, recuar. Cada fase vira um rótulo da anotação hierárquica.
 """
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass, field
 
 import mujoco
@@ -38,7 +39,8 @@ class Resultado:
 
 class Gerador:
     def __init__(self, modelo: mujoco.MjModel, dados: mujoco.MjData, pegar: str, destino: str,
-                 rng: np.random.Generator | None = None, vaga: tuple[float, float] = (0.0, 0.0)):
+                 rng: np.random.Generator | None = None, vaga: tuple[float, float] = (0.0, 0.0),
+                 deitar: bool = False):
         self.m, self.d = modelo, dados
         self.pegar, self.destino = pegar, destino
         self.rng = rng or np.random.default_rng()
@@ -56,6 +58,19 @@ class Gerador:
         self.geom_obj = geom.id
         self.q_cmd = dados.qpos[self.qadr].copy()
         self.topo_acima = 0.03  # quanto do objeto fica acima do ponto da garra
+        self.folga_deitar = 0.015  # altura de onde a lata deitada é solta
+        # graus de inclinação ao deitar: 60 ganhou de 75 e 90 na matriz (90 deixa o pulso baixo demais
+        # e o braço não desce até a bandeja); R2S_INCLINAR troca para testar
+        self.inclinar = float(os.environ.get("R2S_INCLINAR", 60.0))  # graus: 90 deixaria o pulso baixo demais para o braço alcançar
+        # deitar: objeto alto (lata) vai deitado para a bandeja rasa, em vez de em pé
+        self.deitar = deitar
+        self.raio = float(modelo.geom_aabb[geom.id][3])
+        self.meia_altura_eixo = self.meia_altura  # meia altura ao longo do eixo do cilindro
+        self.quat_alvo = QUAT_PARA_BAIXO
+        if deitar:
+            # cilindro: pega já virado para o destino (girar com a lata na mão faz ela escorregar)
+            mujoco.mj_forward(modelo, dados)
+            self.quat_alvo = quat_deitada(self.pos_destino(), 0.0)
 
     # ---------- percepção (no real: câmera + estimador de pose) ----------
     def pos_objeto(self) -> np.ndarray:
@@ -86,7 +101,7 @@ class Gerador:
         q_site = np.zeros(4)
         mujoco.mju_mat2Quat(q_site, d.site_xmat[self.tcp])
         q_inv = np.zeros(4); mujoco.mju_negQuat(q_inv, q_site)
-        q_err = np.zeros(4); mujoco.mju_mulQuat(q_err, QUAT_PARA_BAIXO, q_inv)
+        q_err = np.zeros(4); mujoco.mju_mulQuat(q_err, self.quat_alvo, q_inv)
         erro_r = np.zeros(3); mujoco.mju_quat2Vel(erro_r, q_err, 1.0)
         J = np.vstack([jp[:, self.dadr], jr[:, self.dadr]])
         e = np.concatenate([erro_p, 0.5 * erro_r])
@@ -101,6 +116,12 @@ class Gerador:
         self.q_cmd = q + np.clip(self.q_cmd + dq - q, -0.1, 0.1)
         self.q_cmd = np.clip(self.q_cmd, m.jnt_range[self.juntas, 0], m.jnt_range[self.juntas, 1])
         return self.q_cmd
+
+    def erro_orientacao(self) -> float:
+        """Ângulo (rad) entre a garra e a orientação pedida."""
+        q_site = np.zeros(4)
+        mujoco.mju_mat2Quat(q_site, self.d.site_xmat[self.tcp])
+        return 2 * np.arccos(min(1.0, abs(float(np.dot(q_site, self.quat_alvo)))))
 
     def mover_para(self, alvo_fn, garra: float, fase: Fase, tol: float, vel: float,
                    gravar, cond_extra=None) -> bool:
@@ -156,7 +177,9 @@ class Gerador:
         fases = {n: Fase(n, r, s, t) for n, r, s, t in plano}
         res.fases = list(fases.values())
 
-        alinhado = lambda: np.linalg.norm((pega() - self.d.site_xpos[self.tcp])[:2]) < 0.003
+        # o passo anterior pode ter deixado a garra deitada: só desce depois de voltar para baixo
+        alinhado = lambda: (np.linalg.norm((pega() - self.d.site_xpos[self.tcp])[:2]) < 0.003
+                            and self.erro_orientacao() < 0.05)
         ok = self.mover_para(lambda: pega() + acima, GARRA_ABERTA, fases["aproximar"], 0.008, 0.45, gravar,
                              cond_extra=alinhado)
         if not ok:
@@ -182,15 +205,36 @@ class Gerador:
         ok = self.mover_para(sobre, GARRA_FECHADA, fases["levar"], 0.015, 0.4, gravar)
         if not ok or self.tocando() < 1:
             res.motivo = "perdeu o objeto no transporte"; return self._fim(res)
-        baixo = lambda: self.pos_destino() + np.array([0, 0, self.folga_tcp + 0.008])
+        if self.deitar:
+            # gira a garra no ar, sobre o destino; depois a lata desce deitada
+            fixo = d.site_xpos[self.tcp].copy()
+            deitar = Fase("deitar", "deitar o objeto", "soltar", 4.0)
+            res.fases.insert(res.fases.index(fases["baixar"]), deitar)
+            self.quat_alvo = quat_deitada(self.pos_destino(), self.inclinar)
+            self.mover_para(lambda: fixo, GARRA_FECHADA, deitar, 0.015, 0.2, gravar,
+                            cond_extra=lambda: self.erro_orientacao() < 0.08)
+            if self.tocando() < 1:
+                res.motivo = "o objeto caiu ao deitar"; return self._fim(res)
+            # malha fechada: a cada passo mede onde está a lata e quanto ela pende na mão,
+            # e leva o ponto mais baixo dela até folga_deitar acima do fundo
+            def baixo():
+                az = abs(self.d.xmat[self.obj].reshape(3, 3)[2, 2])
+                h = self.raio * np.sqrt(max(1 - az * az, 0.0)) + self.meia_altura_eixo * az + self.folga_deitar
+                return self.pos_destino() + np.array([0, 0, h]) + (d.site_xpos[self.tcp] - self.pos_objeto())
+            fases["baixar"].max_s = 5.0
+        else:
+            baixo = lambda: self.pos_destino() + np.array([0, 0, self.folga_tcp + 0.008])
         self.mover_para(baixo, GARRA_FECHADA, fases["baixar"], 0.012, 0.15, gravar)
         self.esperar(0.6, GARRA_ABERTA, fases["abrir"], gravar)
         alto = d.site_xpos[self.tcp].copy() + np.array([0, 0, 0.15])
         # recua devagar nos primeiros centímetros para não arrastar o objeto junto
-        perto = d.site_xpos[self.tcp].copy() + np.array([0, 0, 0.03])
+        # (deitada, a garra sai para trás, ao longo da lata, antes de subir)
+        perto = d.site_xpos[self.tcp].copy() + (np.array([-0.05, 0, 0.01]) if self.deitar else np.array([0, 0, 0.03]))
         self.mover_para(lambda: perto, GARRA_ABERTA, fases["recuar"], 0.006, 0.05, gravar)
         inicio_recuo = fases["recuar"].inicio
-        self.mover_para(lambda: alto, GARRA_ABERTA, fases["recuar"], 0.02, 0.4, gravar)
+        self.quat_alvo = QUAT_PARA_BAIXO  # endireita a garra enquanto sobe
+        self.mover_para(lambda: alto, GARRA_ABERTA, fases["recuar"], 0.02, 0.4, gravar,
+                        cond_extra=lambda: self.erro_orientacao() < 0.05)
         fases["recuar"].inicio = inicio_recuo
         self.esperar(0.6, GARRA_ABERTA, Fase("assentar", "esperar assentar", "soltar", 0.6), gravar)
 
@@ -215,6 +259,22 @@ class Gerador:
     def _fim(self, res: Resultado) -> Resultado:
         res.duracao = round(self.d.time, 3)
         return res
+
+
+RADIAL = False  # virar a garra para o destino: testado, o braço não alcança a inclinação (15/10/2026)
+
+
+def quat_deitada(destino: np.ndarray, graus: float) -> np.ndarray:  # noqa: D103
+    """Garra inclinada `graus` em torno do eixo dos dedos e virada para longe da base (radial):
+    o braço alcança melhor que apontando sempre para +x."""
+    a = np.radians(graus)
+    incl = np.array([np.cos(a / 2), 0.0, -np.sin(a / 2), 0.0])
+    phi = float(np.arctan2(destino[1], destino[0])) if RADIAL else 0.0
+    giro = np.array([np.cos(phi / 2), 0.0, 0.0, np.sin(phi / 2)])
+    q1, q = np.zeros(4), np.zeros(4)
+    mujoco.mju_mulQuat(q1, incl, QUAT_PARA_BAIXO)
+    mujoco.mju_mulQuat(q, giro, q1)
+    return q
 
 
 def _tem_site(m, nome) -> bool:

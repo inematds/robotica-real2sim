@@ -1,0 +1,311 @@
+[
+ {
+  "cena": "codex",
+  "plano": "lata→bola",
+  "modo": "medida",
+  "completos": 19,
+  "taxa": 0.95,
+  "aprovado": true,
+  "falhas": {
+   "bola_tenis": {
+    "objeto caiu fora do destino": 1
+   }
+  }
+ },
+ {
+  "cena": "codex",
+  "plano": "lata→bola",
+  "modo": "tamanho ±15%",
+  "completos": 20,
+  "taxa": 1.0,
+  "aprovado": true,
+  "falhas": {}
+ },
+ {
+  "cena": "codex",
+  "plano": "lata→bola",
+  "modo": "pior caso",
+  "completos": 19,
+  "taxa": 0.95,
+  "aprovado": true,
+  "falhas": {
+   "bola_tenis": {
+    "objeto caiu fora do destino": 1
+   }
+  }
+ },
+ {
+  "cena": "codex",
+  "plano": "bola→lata",
+  "modo": "medida",
+  "completos": 20,
+  "taxa": 1.0,
+  "aprovado": true,
+  "falhas": {}
+ },
+ {
+  "cena": "codex",
+  "plano": "bola→lata",
+  "modo": "tamanho ±15%",
+  "completos": 5,
+  "taxa": 0.25,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 15
+   }
+  }
+ },
+ {
+  "cena": "codex",
+  "plano": "bola→lata",
+  "modo": "pior caso",
+  "completos": 16,
+  "taxa": 0.8,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 4
+   }
+  }
+ },
+ {
+  "cena": "claude",
+  "plano": "lata→bola",
+  "modo": "medida",
+  "completos": 20,
+  "taxa": 1.0,
+  "aprovado": true,
+  "falhas": {}
+ },
+ {
+  "cena": "claude",
+  "plano": "lata→bola",
+  "modo": "tamanho ±15%",
+  "completos": 20,
+  "taxa": 1.0,
+  "aprovado": true,
+  "falhas": {}
+ },
+ {
+  "cena": "claude",
+  "plano": "lata→bola",
+  "modo": "pior caso",
+  "completos": 19,
+  "taxa": 0.95,
+  "aprovado": true,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 1
+   }
+  }
+ },
+ {
+  "cena": "claude",
+  "plano": "bola→lata",
+  "modo": "medida",
+  "completos": 20,
+  "taxa": 1.0,
+  "aprovado": true,
+  "falhas": {}
+ },
+ {
+  "cena": "claude",
+  "plano": "bola→lata",
+  "modo": "tamanho ±15%",
+  "completos": 19,
+  "taxa": 0.95,
+  "aprovado": true,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 1
+   }
+  }
+ },
+ {
+  "cena": "claude",
+  "plano": "bola→lata",
+  "modo": "pior caso",
+  "completos": 19,
+  "taxa": 0.95,
+  "aprovado": true,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 1
+   }
+  }
+ },
+ {
+  "cena": "robotics-er-2",
+  "plano": "lata→bola",
+  "modo": "medida",
+  "completos": 20,
+  "taxa": 1.0,
+  "aprovado": true,
+  "falhas": {}
+ },
+ {
+  "cena": "robotics-er-2",
+  "plano": "lata→bola",
+  "modo": "tamanho ±15%",
+  "completos": 18,
+  "taxa": 0.9,
+  "aprovado": true,
+  "falhas": {
+   "bola_tenis": {
+    "objeto caiu fora do destino": 2
+   }
+  }
+ },
+ {
+  "cena": "robotics-er-2",
+  "plano": "lata→bola",
+  "modo": "pior caso",
+  "completos": 0,
+  "taxa": 0.0,
+  "aprovado": false,
+  "falhas": {
+   "bola_tenis": {
+    "objeto caiu fora do destino": 20
+   }
+  }
+ },
+ {
+  "cena": "robotics-er-2",
+  "plano": "bola→lata",
+  "modo": "medida",
+  "completos": 17,
+  "taxa": 0.85,
+  "aprovado": false,
+  "falhas": {
+   "bola_tenis": {
+    "saiu do destino num passo seguinte": 1
+   },
+   "lata_azul": {
+    "objeto caiu fora do destino": 2
+   }
+  }
+ },
+ {
+  "cena": "robotics-er-2",
+  "plano": "bola→lata",
+  "modo": "tamanho ±15%",
+  "completos": 15,
+  "taxa": 0.75,
+  "aprovado": false,
+  "falhas": {
+   "bola_tenis": {
+    "saiu do destino num passo seguinte": 1
+   },
+   "lata_azul": {
+    "objeto caiu fora do destino": 5
+   }
+  }
+ },
+ {
+  "cena": "robotics-er-2",
+  "plano": "bola→lata",
+  "modo": "pior caso",
+  "completos": 10,
+  "taxa": 0.5,
+  "aprovado": false,
+  "falhas": {
+   "bola_tenis": {
+    "saiu do destino num passo seguinte": 1
+   },
+   "lata_azul": {
+    "objeto caiu fora do destino": 9
+   }
+  }
+ },
+ {
+  "cena": "argon",
+  "plano": "lata→bola",
+  "modo": "medida",
+  "completos": 5,
+  "taxa": 0.25,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "saiu do destino num passo seguinte": 1
+   },
+   "bola_tenis": {
+    "objeto caiu fora do destino": 15
+   }
+  }
+ },
+ {
+  "cena": "argon",
+  "plano": "lata→bola",
+  "modo": "tamanho ±15%",
+  "completos": 3,
+  "taxa": 0.15,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 8
+   },
+   "bola_tenis": {
+    "objeto caiu fora do destino": 9
+   }
+  }
+ },
+ {
+  "cena": "argon",
+  "plano": "lata→bola",
+  "modo": "pior caso",
+  "completos": 0,
+  "taxa": 0.0,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 20
+   }
+  }
+ },
+ {
+  "cena": "argon",
+  "plano": "bola→lata",
+  "modo": "medida",
+  "completos": 18,
+  "taxa": 0.9,
+  "aprovado": true,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 2
+   }
+  }
+ },
+ {
+  "cena": "argon",
+  "plano": "bola→lata",
+  "modo": "tamanho ±15%",
+  "completos": 16,
+  "taxa": 0.8,
+  "aprovado": false,
+  "falhas": {
+   "bola_tenis": {
+    "saiu do destino num passo seguinte": 2
+   },
+   "lata_azul": {
+    "objeto caiu fora do destino": 2
+   }
+  }
+ },
+ {
+  "cena": "argon",
+  "plano": "bola→lata",
+  "modo": "pior caso",
+  "completos": 1,
+  "taxa": 0.05,
+  "aprovado": false,
+  "falhas": {
+   "bola_tenis": {
+    "saiu do destino num passo seguinte": 2
+   },
+   "lata_azul": {
+    "objeto caiu fora do destino": 19
+   }
+  }
+ }
+]

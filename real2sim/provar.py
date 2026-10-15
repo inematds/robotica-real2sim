@@ -67,8 +67,20 @@ def _conferir_plano(cena: dict, plano: dict, pedido: str) -> dict:
     return plano
 
 
+def marcar_deitar(cena: dict, passos: list[dict]) -> list[dict]:
+    """Cilindro mais alto que o dobro da borda do recipiente vai deitado (lata em bandeja rasa)."""
+    obj = {o["nome"]: o for o in cena["objetos"]}
+    novos = [dict(p) for p in passos]
+    for p in novos:
+        o, r = obj[p["pegar"]], obj[p["destino"]]
+        if o["tipo"] == "cilindro" and o["tamanho"][1] > 2 * r["tamanho"][2]:
+            p.setdefault("deitar", True)
+    return novos
+
+
 def distribuir_vagas(cena: dict, passos: list[dict]) -> list[dict]:
-    """Objetos que vão para o mesmo recipiente ganham lugares diferentes ao longo do lado maior."""
+    """Objetos que vão para o mesmo recipiente ganham lugares diferentes ao longo do lado maior.
+    Se algum vai deitado (ao longo de x), as vagas ficam lado a lado em y."""
     tam = {o["nome"]: o["tamanho"] for o in cena["objetos"]}
     por_destino: dict[str, list[dict]] = {}
     novos = [dict(p) for p in passos]
@@ -79,6 +91,17 @@ def distribuir_vagas(cena: dict, passos: list[dict]) -> list[dict]:
         if n == 1:
             continue
         lx, ly = tam[destino][0], tam[destino][1]
+        if any(p.get("deitar") for p in lista):
+            # vaga pelo tamanho: cada objeto ocupa a sua largura em y, com folgas iguais entre eles
+            interno = ly - 2 * 0.006
+            larg = [tam[p["pegar"]][0] if len(tam[p["pegar"]]) < 3 else tam[p["pegar"]][1] for p in lista]
+            folga = max((interno - sum(larg)) / (n + 1), 0.0)
+            y = -interno / 2
+            for p, w in zip(lista, larg):
+                y += folga + w / 2
+                p.setdefault("vaga", [0.0, round(y, 4)])
+                y += w / 2
+            continue
         eixo = 0 if lx >= ly else 1
         util = (lx if eixo == 0 else ly) - 0.07  # sobra das paredes e da garra
         for k, p in enumerate(lista):
@@ -97,7 +120,8 @@ def rodar_plano(cena: dict, passos: list[dict], rng: np.random.Generator | None,
         mujoco.mj_step(m, d)
     resultados = []
     for p in passos:
-        g = Gerador(m, d, p["pegar"], p["destino"], vaga=tuple(p.get("vaga", (0.0, 0.0))))
+        g = Gerador(m, d, p["pegar"], p["destino"], vaga=tuple(p.get("vaga", (0.0, 0.0))),
+                    deitar=bool(p.get("deitar")))
         r = g.executar()
         resultados.append({"passo": p, "sucesso": r.sucesso, "motivo": r.motivo})
         if not r.sucesso:
