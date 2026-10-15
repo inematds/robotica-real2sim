@@ -4,11 +4,11 @@ Foto da mesa → gêmeo MuJoCo (Franka Panda do Menagerie) → gerador de movime
 episódios com variação e anotação em 4 níveis → plano do Codex provado na simulação.
 
 - Rodar: `./instalar.sh` uma vez; depois `./r2s.py <comando>` (re-executa no `.venv` sozinho).
-  Teste: `python3 testes/rodar.py` (8 casos, ~11 s, sem rede). Sempre `MUJOCO_GL=egl` sem monitor.
+  Teste: `python3 testes/rodar.py` (10 casos, ~1 min, sem rede). Sempre `MUJOCO_GL=egl` sem monitor.
 - Modelo de visão e planejador = Codex CLI pela assinatura (`gpt-6-luna`). **Nunca** chamar a API do
   Gemini/Argon nem outra API paga sem autorização explícita do dono.
 - Números do README vêm de execuções reais em `resultados/`; ao mudar o gerador, rodar de novo
-  `episodios` (-n 50) e `provar` (com e sem `--sem-vagas`) e atualizar as tabelas (README PT/EN/ES e guia).
+  `episodios` (-n 50) e `provar` (com e sem `--sem-vagas`), mais `ferramentas/matriz_prova.py` (erro de medida) e atualizar as tabelas (README PT/EN/ES e guia).
 - `vendor/` (Menagerie) e `.venv/` não entram no git. MP4 de produção fica em `~/projetos/output/`.
 - Commits: autor `inematds <inematds@gmail.com>`.
 
@@ -24,3 +24,4 @@ When I correct you, or you catch yourself making a mistake: before continuing, a
 - A garra do Menagerie aperta ~3 N (a real faz 70 N): latas de 350 g escorregavam; rigidez 10x (~30 N). Antes de culpar o controle, medir a força da garra. (14/10/2026)
 - Torção baixa (`friction[1]` = 0,02) deixa objeto alto girar entre os dedos; 0,06 resolveu. Mexer em solref/solmix dos objetos piorou: não repetir. (14/10/2026)
 - Câmera no pulso: o eixo -z da câmera é a direção de visão; conferir um quadro antes de filmar (a primeira saiu preta). (14/10/2026)
+- Variar o tamanho em ±15% não pega erro de escala de 50% (o plano do Codex passou no pior caso da própria cena); para saber se a medida enganou, rodar a prova cruzada (`ferramentas/matriz_prova.py`) na menor cena plausível. (15/10/2026)

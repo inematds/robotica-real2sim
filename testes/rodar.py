@@ -121,6 +121,16 @@ def _():
     assert bom["planos_completos"] >= 5
 
 
+@caso("erro de medida: pior caso encolhe o recipiente 15% e não passa da garra")
+def _():
+    from real2sim.episodios import variar
+    c = variar(FOTO, np.random.default_rng(0), tamanho=0.15, pior_caso=True)
+    t = {o["nome"]: o["tamanho"] for o in c["objetos"]}
+    t0 = {o["nome"]: o["tamanho"] for o in FOTO["objetos"]}
+    assert abs(t["bandeja_cinza"][0] - 0.85 * t0["bandeja_cinza"][0]) < 1e-9
+    assert t["lata_azul"][0] > t0["lata_azul"][0] and max(t["cubo_vermelho"][:2]) <= 0.078 + 1e-9
+
+
 print()
 LEROBOT = RAIZ / ".venv-lerobot/bin/python"
 if not LEROBOT.exists():

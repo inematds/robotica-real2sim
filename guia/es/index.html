@@ -304,7 +304,25 @@
     <tr><th>Modelo</th><th>Acceso</th><th>Foto → escena: entrada / salida</th><th>Plan: entrada / salida</th><th>Costo</th><th>Cubo–bandeja</th><th>Prueba sin / con espacios</th></tr>
     <tr><td><strong>Codex</strong><br><small class='mut'>gpt-6-luna</small></td><td>codex exec</td><td>26.760 / 279</td><td>24.741 / 100</td><td>suscripción</td><td>78 cm</td><td>4/20 / <strong>19/20</strong></td></tr><tr><td><strong>Claude</strong><br><small class='mut'>claude-opus-5-5</small></td><td>claude -p</td><td>174.040 / 3.928<br><small class='mut'>111.596 caché</small></td><td>116.476 / 662<br><small class='mut'>20.936 caché</small></td><td>suscripción</td><td>48 cm</td><td>16/20 / <strong>16/20</strong></td></tr><tr><td><strong>Gemini Robotics-ER 2</strong><br><small class='mut'>gemini-robotics-er-2-preview</small></td><td>Gemini API</td><td>1.600 / 433<br><small class='mut'>+1.538 razonamiento</small></td><td>377 / 70<br><small class='mut'>+1.145 razonamiento</small></td><td>US$ 0 · gratis</td><td>45 cm</td><td>0/20 / <strong>16/20</strong></td></tr><tr><td><strong>Gemini 4 Argon</strong><br><small class='mut'>google/gemini-4-argon</small></td><td>OpenRouter</td><td>1.614 / 542</td><td>389 / 72</td><td>US$ 0,0101</td><td>41 cm</td><td>7/20 / <strong>20/20</strong></td></tr>
   </table></div>
-  <ul style="margin-top:22px;color:var(--mut)"><li><strong>Una escena generosa engaña:</strong> Codex solo pasó porque su bandeja salió 50% más grande y profunda que la real.</li><li><strong>Argon:</strong> escena fiel, plan aprobado (20/20), 7 s y US$ 0,0101 vía OpenRouter. Una sola corrida: puede ser variación.</li><li><strong>Robotics-ER 2</strong> (el modelo de robótica de Google) midió tan bien como Claude, en la mitad del tiempo y gratis.</li><li>Por la Gemini API directa Argon no corrió: la clave estaba en la capa gratuita, con cuota cero para él.</li><li>Los tokens de Codex y Claude incluyen las instrucciones del propio CLI; con suscripción no hay cobro por llamada.</li></ul>
+  <ul style="margin-top:22px;color:var(--mut)"><li><strong>Una escena generosa engaña:</strong> la bandeja de Codex salió 50% más grande y profunda que la real. Pero el orden también pesa: mira la prueba cruzada abajo.</li><li><strong>Argon:</strong> escena fiel, plan aprobado (20/20), 7 s y US$ 0,0101 vía OpenRouter. Una sola corrida: puede ser variación.</li><li><strong>Robotics-ER 2</strong> (el modelo de robótica de Google) midió tan bien como Claude, en la mitad del tiempo y gratis.</li><li>Por la Gemini API directa Argon no corrió: la clave estaba en la capa gratuita, con cuota cero para él.</li><li>Los tokens de Codex y Claude incluyen las instrucciones del propio CLI; con suscripción no hay cobro por llamada.</li></ul>
+</div></section>
+
+<section id="erro-medida"><div class="wrap">
+  <span class="chip">Error de medida</span>
+  <h2>Misma foto, ocho pruebas cruzadas</h2>
+  <p class="sub">La prueba sorteaba posición, giro y masa, nunca el tamaño. Si la visión se equivoca en la medida, la simulación aprueba el error. Ahora <code>--var-tamanho 0.15</code> y <code>--pior-caso</code> corren la física con la bandeja hasta 15% más chica y menos profunda, y cada orden de plan corrió en la escena de cada modelo. Informe completo (en portugués) en <a href="https://github.com/inematds/robotica-real2sim/blob/main/docs/ERRO-DE-MEDIDA.md">docs/ERRO-DE-MEDIDA.md</a>.</p>
+  <div class="tw"><table class="t">
+    <tr><th>Escena (bandeja)</th><th>Plan</th><th>Medida</th><th>Tamaño ±15%</th><th>Peor caso</th></tr>
+    <tr><td>Codex (27×22×6)</td><td>lata→bola</td><td>19/20</td><td>20/20</td><td>19/20</td></tr>
+    <tr><td>Codex (27×22×6)</td><td>bola→lata</td><td>20/20</td><td>5/20</td><td>16/20</td></tr>
+    <tr><td>Claude (18×22×4)</td><td>lata→bola</td><td><strong>20/20</strong></td><td>17/20</td><td>1/20</td></tr>
+    <tr><td>Claude (18×22×4)</td><td>bola→lata</td><td>16/20</td><td>2/20</td><td>8/20</td></tr>
+    <tr><td>Robotics-ER 2 (18×18×4)</td><td>lata→bola</td><td>16/20</td><td>12/20</td><td>1/20</td></tr>
+    <tr><td>Robotics-ER 2 (18×18×4)</td><td>bola→lata</td><td><strong>20/20</strong></td><td><strong>20/20</strong></td><td><strong>20/20</strong></td></tr>
+    <tr><td>Argon (15×15×4)</td><td>lata→bola</td><td>2/20</td><td>1/20</td><td>0/20</td></tr>
+    <tr><td>Argon (15×15×4)</td><td>bola→lata</td><td>20/20</td><td>17/20</td><td>0/20</td></tr>
+  </table></div>
+  <ul style="margin-top:22px;color:var(--mut)"><li><strong>El orden pesa tanto como el tamaño:</strong> el plan de Codex pasa 20/20 en la escena fiel de Claude, pero cae a 2/20 en la bandeja más chica plausible (15×15).</li><li><strong>Un 15% de margen no cubre un error del 50%:</strong> en su propia escena, el plan de Codex pasa incluso en el peor caso. Contra un error grande, solo sirven la prueba cruzada o la cinta métrica.</li><li><strong>Solo 1 de los 8 pares pasa los tres modos.</strong> Dos cosas en una bandeja de 15–18 cm, una de ellas una lata de 12 cm de pie, dejan la tarea al límite. Regla nueva: solo va al robot lo que pasa el peor caso y la bandeja más chica plausible.</li><li>20 intentos, una semilla: los números oscilan (20 → 5 → 16). Próximo paso: foto real con medidas de cinta métrica, cuando lleguen los brazos.</li></ul>
 </div></section>
 
 <section id="perguntas"><div class="wrap">

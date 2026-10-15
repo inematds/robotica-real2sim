@@ -1,0 +1,38 @@
+{
+ "tentativas": 20,
+ "planos_completos": 12,
+ "taxa": 0.6,
+ "minimo": 0.9,
+ "aprovado": false,
+ "var_tamanho": 0.15,
+ "pior_caso": false,
+ "por_passo": [
+  {
+   "passo": {
+    "pegar": "lata_azul",
+    "destino": "bandeja_cinza",
+    "vaga": [
+     -0.05499999999999999,
+     0.0
+    ]
+   },
+   "ok": 20,
+   "falhas": {}
+  },
+  {
+   "passo": {
+    "pegar": "bola_tenis",
+    "destino": "bandeja_cinza",
+    "vaga": [
+     0.05499999999999999,
+     0.0
+    ]
+   },
+   "ok": 12,
+   "falhas": {
+    "objeto caiu fora do destino": 8
+   }
+  }
+ ],
+ "vagas": true
+}

@@ -58,6 +58,8 @@ Números brutos em [`resultados/comparativo-motores.json`](../resultados/compara
 
 - **A cena mais generosa aprova plano que o mundo real reprovaria.** O Codex passou com uma bandeja
   50% maior e mais funda que a real. Nas cenas fiéis do Claude e do ER, a mesma tarefa fica em 80%.
+  (Revisto em 15/10: o plano do Codex também passa 20/20 na cena do Claude, então a ordem dos passos
+  pesa tanto quanto a bandeja; na menor bandeja, a do Argon, cai para 2/20. Ver [ERRO-DE-MEDIDA.md](ERRO-DE-MEDIDA.md).)
 - **O Argon foi o único com cena fiel e plano aprovado** (100% com vagas), o mais rápido (7 s) e
   custou US$ 0,01. Uma rodada só: a diferença para o 80% pode estar na variação, não no modelo.
 - O modelo do Google **feito para robótica** (ER 2) mediu tão bem quanto o Claude, na metade do tempo

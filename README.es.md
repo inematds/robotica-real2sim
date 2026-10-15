@@ -47,12 +47,16 @@ foto.jpg ──(modelo de visión)──> escena.json ──> gemelo MuJoCo (Pan
 | Cada objeto por separado (cubo, lata, pelota × 2 escenas, 20 variaciones) | **20/20** en todos |
 | Plan ingenuo de Codex «todo lo redondo va a la bandeja» | **4/20 (20%) → REPROBADO**: la pelota cae encima de la lata |
 | El mismo plan con un espacio por objeto | **19/20 (95%) → APROBADO** |
-| Pruebas (`python3 testes/rodar.py`) | 8/8 en 11 s |
+| El mismo plan con la bandeja 15% más chica (`--pior-caso`) | 19/20, pero la bandeja de Codex sigue siendo más grande que la real |
+| Plan de Codex en la bandeja medida más chica (15×15, Argon) | **2/20 → REPROBADO** |
+| Pruebas (`python3 testes/rodar.py`) | 10/10 |
 
 Archivos: [resultados/](resultados/) (resúmenes, plan, pruebas y los 100 episodios).
 
 
 **Codex × Claude × Gemini:** la misma foto y el mismo pedido corrieron en Codex, Claude (`--motor claude`), Gemini Robotics-ER 2 (`--motor gemini`) y Gemini 4 Argon vía OpenRouter (`--motor openrouter`). Claude, ER y Argon midieron la mesa con fidelidad; Argon fue el único con escena fiel y plan aprobado (100%), en 7 s y por US$ 0,01. Detalles en [docs/CODEX-VS-CLAUDE.md](docs/CODEX-VS-CLAUDE.md) (en portugués).
+
+**Error de medida:** la prueba ahora también varía el tamaño (`--var-tamanho 0.15`, `--pior-caso`), y `ferramentas/matriz_prova.py` corre cada orden de plan en la escena de cada modelo. Solo 1 de los 8 pares pasa todos los modos; regla nueva: solo va al robot lo que pasa el peor caso y la bandeja más chica plausible. Detalles en [docs/ERRO-DE-MEDIDA.md](docs/ERRO-DE-MEDIDA.md) (en portugués).
 
 ## Instalar y ejecutar
 

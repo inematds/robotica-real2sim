@@ -304,7 +304,25 @@
     <tr><th>Model</th><th>Access</th><th>Photo → scene: input / output</th><th>Plan: input / output</th><th>Cost</th><th>Cube–tray</th><th>Proof without / with slots</th></tr>
     <tr><td><strong>Codex</strong><br><small class='mut'>gpt-6-luna</small></td><td>codex exec</td><td>26,760 / 279</td><td>24,741 / 100</td><td>subscription</td><td>78 cm</td><td>4/20 / <strong>19/20</strong></td></tr><tr><td><strong>Claude</strong><br><small class='mut'>claude-opus-5-5</small></td><td>claude -p</td><td>174,040 / 3,928<br><small class='mut'>111,596 cache</small></td><td>116,476 / 662<br><small class='mut'>20,936 cache</small></td><td>subscription</td><td>48 cm</td><td>16/20 / <strong>16/20</strong></td></tr><tr><td><strong>Gemini Robotics-ER 2</strong><br><small class='mut'>gemini-robotics-er-2-preview</small></td><td>Gemini API</td><td>1,600 / 433<br><small class='mut'>+1,538 reasoning</small></td><td>377 / 70<br><small class='mut'>+1,145 reasoning</small></td><td>US$ 0 · free</td><td>45 cm</td><td>0/20 / <strong>16/20</strong></td></tr><tr><td><strong>Gemini 4 Argon</strong><br><small class='mut'>google/gemini-4-argon</small></td><td>OpenRouter</td><td>1,614 / 542</td><td>389 / 72</td><td>US$ 0.0101</td><td>41 cm</td><td>7/20 / <strong>20/20</strong></td></tr>
   </table></div>
-  <ul style="margin-top:22px;color:var(--mut)"><li><strong>A generous scene fools you:</strong> Codex only passed because its tray came out 50% bigger and deeper than the real one.</li><li><strong>Argon:</strong> faithful scene, approved plan (20/20), 7 s and US$ 0.0101 via OpenRouter. A single run: it may be variance.</li><li><strong>Robotics-ER 2</strong> (Google's robotics model) measured as well as Claude, in half the time and for free.</li><li>Through the Gemini API directly, Argon did not run: the key was on the free tier, with zero quota for it.</li><li>Codex and Claude tokens include the CLI's own instructions; on a subscription there is no per-call charge.</li></ul>
+  <ul style="margin-top:22px;color:var(--mut)"><li><strong>A generous scene fools you:</strong> the Codex tray came out 50% bigger and deeper than the real one. But order matters too: see the cross-check just below.</li><li><strong>Argon:</strong> faithful scene, approved plan (20/20), 7 s and US$ 0.0101 via OpenRouter. A single run: it may be variance.</li><li><strong>Robotics-ER 2</strong> (Google's robotics model) measured as well as Claude, in half the time and for free.</li><li>Through the Gemini API directly, Argon did not run: the key was on the free tier, with zero quota for it.</li><li>Codex and Claude tokens include the CLI's own instructions; on a subscription there is no per-call charge.</li></ul>
+</div></section>
+
+<section id="erro-medida"><div class="wrap">
+  <span class="chip">Measurement error</span>
+  <h2>Same photo, eight cross-checks</h2>
+  <p class="sub">The proof sampled position, rotation and mass, never size. If vision gets the measurement wrong, the simulation approves the mistake. Now <code>--var-tamanho 0.15</code> and <code>--pior-caso</code> run the physics with the tray up to 15% smaller and shallower, and each plan order ran in every model's scene. Full report (Portuguese) in <a href="https://github.com/inematds/robotica-real2sim/blob/main/docs/ERRO-DE-MEDIDA.md">docs/ERRO-DE-MEDIDA.md</a>.</p>
+  <div class="tw"><table class="t">
+    <tr><th>Scene (tray)</th><th>Plan</th><th>Measured</th><th>Size ±15%</th><th>Worst case</th></tr>
+    <tr><td>Codex (27×22×6)</td><td>lata→bola</td><td>19/20</td><td>20/20</td><td>19/20</td></tr>
+    <tr><td>Codex (27×22×6)</td><td>bola→lata</td><td>20/20</td><td>5/20</td><td>16/20</td></tr>
+    <tr><td>Claude (18×22×4)</td><td>lata→bola</td><td><strong>20/20</strong></td><td>17/20</td><td>1/20</td></tr>
+    <tr><td>Claude (18×22×4)</td><td>bola→lata</td><td>16/20</td><td>2/20</td><td>8/20</td></tr>
+    <tr><td>Robotics-ER 2 (18×18×4)</td><td>lata→bola</td><td>16/20</td><td>12/20</td><td>1/20</td></tr>
+    <tr><td>Robotics-ER 2 (18×18×4)</td><td>bola→lata</td><td><strong>20/20</strong></td><td><strong>20/20</strong></td><td><strong>20/20</strong></td></tr>
+    <tr><td>Argon (15×15×4)</td><td>lata→bola</td><td>2/20</td><td>1/20</td><td>0/20</td></tr>
+    <tr><td>Argon (15×15×4)</td><td>bola→lata</td><td>20/20</td><td>17/20</td><td>0/20</td></tr>
+  </table></div>
+  <ul style="margin-top:22px;color:var(--mut)"><li><strong>Order matters as much as size:</strong> the Codex plan passes 20/20 in Claude's faithful scene, but drops to 2/20 in the smallest plausible tray (15×15).</li><li><strong>A 15% margin does not cover a 50% error:</strong> in its own scene, the Codex plan passes even in the worst case. Against a large error, only the cross-check or a tape measure helps.</li><li><strong>Only 1 of the 8 pairs passes all three modes.</strong> Two items in a 15–18 cm tray, one of them a 12 cm upright can, keep the task on the edge. New rule: only what passes the worst case and the smallest plausible tray goes to the robot.</li><li>20 trials, one seed: the numbers swing (20 → 5 → 16). Next step: a real photo with tape-measured sizes, once the arms arrive.</li></ul>
 </div></section>
 
 <section id="perguntas"><div class="wrap">

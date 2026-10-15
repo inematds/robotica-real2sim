@@ -50,12 +50,16 @@ photo.jpg ──(vision model)──> scene.json ──> MuJoCo twin (Panda + ta
 | Each object alone (cube, can, ball × 2 scenes, 20 variations) | **20/20** for all |
 | Codex plan “put everything round in the tray,” naive | **4/20 (20%) → FAILED**: the ball falls on top of the can |
 | Same plan with one slot per object | **19/20 (95%) → PASSED** |
-| Tests (`python3 testes/rodar.py`) | 8/8 in 11 s |
+| Same plan with the tray 15% smaller (`--pior-caso`) | 19/20, but the Codex tray is still bigger than the real one |
+| Codex plan in the smallest measured tray (15×15, Argon) | **2/20 → FAILED** |
+| Tests (`python3 testes/rodar.py`) | 10/10 |
 
 Files: [resultados/](resultados/) (summaries, plan, proofs, and the 100 episodes).
 
 
 **Codex × Claude × Gemini:** the same photo and request ran on Codex, Claude (`--motor claude`), Gemini Robotics-ER 2 (`--motor gemini`) and Gemini 4 Argon via OpenRouter (`--motor openrouter`). Claude, ER and Argon measured the table faithfully; Argon was the only one with a faithful scene and an approved plan (100%), in 7 s for US$ 0.01. Details in [docs/CODEX-VS-CLAUDE.md](docs/CODEX-VS-CLAUDE.md) (in Portuguese).
+
+**Measurement error:** the proof now also varies size (`--var-tamanho 0.15`, `--pior-caso`), and `ferramentas/matriz_prova.py` runs each plan order in every model's scene. Only 1 of the 8 pairs passes every mode; new rule: only what passes the worst case and the smallest plausible tray goes to the robot. Details in [docs/ERRO-DE-MEDIDA.md](docs/ERRO-DE-MEDIDA.md) (in Portuguese).
 
 ## Install and run
 

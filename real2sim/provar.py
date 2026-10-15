@@ -86,8 +86,9 @@ def distribuir_vagas(cena: dict, passos: list[dict]) -> list[dict]:
     return novos
 
 
-def rodar_plano(cena: dict, passos: list[dict], rng: np.random.Generator | None, forca: float = 1.0) -> list:
-    c = variar(cena, rng, forca) if rng is not None else copy.deepcopy(cena)
+def rodar_plano(cena: dict, passos: list[dict], rng: np.random.Generator | None, forca: float = 1.0,
+                tamanho: float = 0.0, pior_caso: bool = False) -> list:
+    c = variar(cena, rng, forca, tamanho, pior_caso) if rng is not None else copy.deepcopy(cena)
     m, _ = compilar(c)
     d = mujoco.MjData(m)
     ir_para_casa(m, d)
@@ -110,12 +111,14 @@ def rodar_plano(cena: dict, passos: list[dict], rng: np.random.Generator | None,
 
 
 def provar(cena: dict, passos: list[dict], n: int = 20, minimo: float = 0.9, semente: int = 0,
-           log=print) -> dict:
+           log=print, tamanho: float = 0.0, pior_caso: bool = False) -> dict:
+    """tamanho > 0: a física roda com objetos de tamanho diferente do medido (as vagas continuam
+    calculadas sobre a medida), como acontece quando a visão erra a escala."""
     rng = np.random.default_rng(semente)
     por_passo = [{"passo": p, "ok": 0, "falhas": {}} for p in passos]
     completos = 0
     for i in range(n):
-        res = rodar_plano(cena, passos, rng)
+        res = rodar_plano(cena, passos, rng, tamanho=tamanho, pior_caso=pior_caso)
         tudo = len(res) == len(passos) and all(r["sucesso"] for r in res)
         completos += tudo
         for j, r in enumerate(res):
@@ -127,4 +130,4 @@ def provar(cena: dict, passos: list[dict], n: int = 20, minimo: float = 0.9, sem
         log(f"  tentativa {i + 1:3d}/{n}: {'plano completo' if tudo else 'falhou no passo ' + str(len(res))}")
     taxa = completos / max(n, 1)
     return {"tentativas": n, "planos_completos": completos, "taxa": round(taxa, 3), "minimo": minimo,
-            "aprovado": taxa >= minimo, "por_passo": por_passo}
+            "aprovado": taxa >= minimo, "var_tamanho": tamanho, "pior_caso": pior_caso, "por_passo": por_passo}

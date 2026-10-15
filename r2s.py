@@ -7,7 +7,7 @@
   r2s.py filmar    <cena.json> <saida.mp4> [--cameras geral,cima,pulso] [--plano p.json] [--sem-vagas]
   r2s.py episodios <cena.json> <pasta> [-n 50] [--imagens] [--semente 0]
   r2s.py planejar  <cena.json> "<pedido em português>" <plano.json> [--motor codex|claude|gemini|openrouter]
-  r2s.py provar    <cena.json> <plano.json> [-n 20] [--minimo 0.9] [--sem-vagas]
+  r2s.py provar    <cena.json> <plano.json> [-n 20] [--minimo 0.9] [--sem-vagas] [--var-tamanho 0.15] [--pior-caso]
   r2s.py tudo      <foto.jpg> <pasta> [--pedido "..."] [-n 50]
   r2s.py exportar  <pasta-episodios> <saida> [--com-falhas] [--sobrescrever]   (dataset LeRobot)
 """
@@ -114,9 +114,10 @@ def cmd_provar(a):
     plano = json.loads(Path(a.plano).read_text(encoding="utf-8"))
     cena = carregar_cena(a.cena)
     passos = plano["passos"] if a.sem_vagas else distribuir_vagas(cena, plano["passos"])
-    r = provar(cena, passos, a.n, a.minimo, a.semente)
+    tam = a.var_tamanho if a.var_tamanho is not None else (0.15 if a.pior_caso else 0.0)
+    r = provar(cena, passos, a.n, a.minimo, a.semente, tamanho=tam, pior_caso=a.pior_caso)
     r["vagas"] = not a.sem_vagas
-    sufixo = ".prova-sem-vagas.json" if a.sem_vagas else ".prova.json"
+    sufixo = ".prova" + "-sem-vagas" * a.sem_vagas + "-pior" * a.pior_caso + "-tamanho" * (tam > 0 and not a.pior_caso) + ".json"
     salvar(r, Path(a.plano).with_suffix(sufixo))
     print(f"plano completo em {r['planos_completos']}/{r['tentativas']} ({r['taxa']:.0%}); "
           f"mínimo {a.minimo:.0%} -> {'APROVADO para o robô real' if r['aprovado'] else 'REPROVADO: não mande ao robô'}")
@@ -169,6 +170,9 @@ def main():
     x.add_argument("-n", type=int, default=20); x.add_argument("--minimo", type=float, default=0.9)
     x.add_argument("--semente", type=int, default=0)
     x.add_argument("--sem-vagas", action="store_true", help="todos no centro do recipiente (mostra o erro)")
+    x.add_argument("--var-tamanho", type=float, default=None,
+                   help="erro de medida da visão, ex.: 0.15 (recipiente até 15%% menor, objetos ±7,5%%)")
+    x.add_argument("--pior-caso", action="store_true", help="recipiente 15%% menor e objetos 7,5%% maiores")
     x.set_defaults(f=cmd_provar)
 
     x = s.add_parser("tudo"); x.add_argument("foto"); x.add_argument("pasta")

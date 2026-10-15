@@ -24,9 +24,32 @@ from .gerador import Gerador, ir_para_casa
 FASES = ["aproximar", "descer", "fechar", "subir", "levar", "baixar", "abrir", "recuar", "assentar"]
 
 
-def variar(cena: dict, rng: np.random.Generator, forca: float = 1.0) -> dict:
+GARRA_MAX = 0.078  # abertura útil da garra do Panda (8 cm menos folga)
+
+
+def variar_tamanho(o: dict, fator: float) -> None:
+    """Escala o objeto; o que a garra pega nunca passa da abertura máxima."""
+    tam = [t * fator for t in o["tamanho"]]
+    if o.get("tipo") != "recipiente":
+        horiz = min(tam[:2]) if o.get("tipo") == "caixa" else tam[0]
+        if horiz > GARRA_MAX:
+            tam = [t * GARRA_MAX / horiz for t in tam]
+    o["tamanho"] = tam
+
+
+def variar(cena: dict, rng: np.random.Generator, forca: float = 1.0, tamanho: float = 0.0,
+           pior_caso: bool = False) -> dict:
+    """tamanho: erro de medida da visão (0,15 = 15%). O recipiente sai de 0 a 15% menor e mais raso,
+    os objetos ±7,5%. pior_caso: recipiente 15% menor e objetos 7,5% maiores, sempre."""
     c = copy.deepcopy(cena)
     for o in c["objetos"]:
+        if tamanho > 0:
+            rec = o.get("tipo") == "recipiente"
+            if pior_caso:
+                fator = 1 - tamanho if rec else 1 + tamanho / 2
+            else:
+                fator = rng.uniform(1 - tamanho, 1) if rec else rng.uniform(1 - tamanho / 2, 1 + tamanho / 2)
+            variar_tamanho(o, fator)
         if o.get("tipo") == "recipiente":
             o["pos"] = [o["pos"][0] + rng.uniform(-0.02, 0.02) * forca, o["pos"][1] + rng.uniform(-0.02, 0.02) * forca]
             continue
