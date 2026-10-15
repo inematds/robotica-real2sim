@@ -1,0 +1,4 @@
+aviso: objetos perto da borda: a cena foi empurrada 8 cm para frente
+cena: 4 objetos -> resultados/mesa-foto/esforco/fable-high-3/cena.json
+tarefa: Pegar a bola de tênis e colocar dentro da bandeja cinza (a lata azul, também redonda, vai em seguida)
+incerteza declarada pelo modelo: Borda da mesa mais próxima não aparece na foto: a origem foi colocada na borda inferior da imagem, então todos os x podem ter deslocamento de alguns cm. Tamanho da mesa é chute (ela sai do enquadramento). Dimensões da bandeja (14x16x4) e altura do cubo (5-5,5 cm) estimadas pela perspectiva da folha A4; lata e bola assumidas com medidas padrão (330 ml e bola de tênis). Massa da lata assume lata cheia. Sinal do yaw: positivo = giro anti-horário visto de cima.

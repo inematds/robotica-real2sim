@@ -63,7 +63,9 @@ Arquivos: [resultados/](resultados/) (resumos, plano, provas e os 100 episódios
 
 **Esforço de raciocínio (`--esforco`):** o mesmo `gpt-6-luna`, 3 rodadas em cada faixa. Em esforço médio, ele infla tudo 1,6× nas 3 rodadas (cubo de 10 cm, maior que a garra; cubo–bandeja ~78 cm). Em alto, acerta o tamanho (cubo de 6 cm, bandeja de 20 cm), mas espreme as distâncias (~28 cm) e numa rodada esqueceu o cubo. O plano saiu igual nas 4 rodadas. Mais esforço troca o tipo de erro, não acaba com ele.
 
-**Aprendizado prático:** (1) rode a visão 3 vezes, porque discordância grande quer dizer medida ruim; (2) leia os avisos do `r2s.py foto` ("mais largo que a garra", "posições reduzidas"); (3) prove no pior caso e na menor cena plausível; (4) use esforço alto na visão e normal no plano; (5) teste as duas ordens de passos; (6) fita métrica vale mais que trocar de modelo.
+**Astra, Sol e Fable (esforço alto, 3 rodadas cada):** os três acertaram a escala nas 9 rodadas (cubo–bandeja 45–47 cm). O Astra foi o mais estável na medida (bandeja de 16–17 cm, 35–48 s). O Fable passou lata→bola 20/20 nas 3 cenas, mas leva 2–3 min. Trocar de modelo pesou mais que trocar de esforço. Todos planejaram lata→bola, e nenhum passa no pior caso: falta física (deitar a lata), não modelo.
+
+**Aprendizado prático:** (1) rode a visão 3 vezes, porque discordância grande quer dizer medida ruim; (2) leia os avisos do `r2s.py foto` ("mais largo que a garra", "posições reduzidas"); (3) prove no pior caso e na menor cena plausível; (4) escolha primeiro o modelo da visão, depois o esforço, e no plano use o padrão (`medium`); (5) teste as duas ordens de passos; (6) fita métrica vale mais que trocar de modelo.
 
 ## Instalar e rodar
 

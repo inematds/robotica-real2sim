@@ -78,6 +78,17 @@ def _():
     assert any("empurrada" in a for a in avisos)
 
 
+@caso("tarefa com dois objetos no 'pegar' vira aviso, não derruba a cena")
+def _():
+    bruta = {"objetos": [{"nome": "bola", "tipo": "esfera", "tamanho": [6], "pos_cm": [40, 0]},
+                         {"nome": "bandeja", "tipo": "recipiente", "tamanho": [20, 20, 4], "pos_cm": [40, -25]}],
+             "tarefa": {"pegar": "lata, bola", "destino": "bandeja"}}
+    cena, avisos = para_referencial_do_robo(bruta)
+    validar_cena(cena)
+    assert "pegar" not in cena["tarefa"] and cena["tarefa"]["destino"] == "bandeja"
+    assert any("descartado" in a for a in avisos)
+
+
 @caso("cada objeto das duas cenas vai para o recipiente (5 variações cada)")
 def _():
     for c in (FOTO, TESTE):

@@ -72,7 +72,9 @@ Arquivos: `resultados/mesa-foto/claude/`, `resultados/mesa-foto/gemini-robotics-
 `resultados/mesa-foto/gemini-4-argon/`
 (cena, plano, provas, 50 episódios e `*.uso.json` com os tokens).
 
-## Próximo teste (pendente, pedido em 14/10/2026)
+## Teste com Fable, Astra e Sol (pedido em 14/10, feito em 15/10/2026)
+
+Resultado em [ERRO-DE-MEDIDA.md](ERRO-DE-MEDIDA.md#quatro-modelos-em-esforço-alto-15102026): os três acertaram a escala nas 9 rodadas; nenhum passa no pior caso.
 
 Rodar a mesma foto e o mesmo pedido em mais dois modelos, **pela assinatura**, com **esforço alto**:
 

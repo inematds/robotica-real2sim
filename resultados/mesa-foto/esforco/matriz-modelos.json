@@ -1,0 +1,720 @@
+[
+ {
+  "cena": "astra-high-1",
+  "plano": "lata→bola",
+  "modo": "medida",
+  "completos": 7,
+  "taxa": 0.35,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "saiu do destino num passo seguinte": 1
+   },
+   "bola_tenis": {
+    "objeto caiu fora do destino": 13
+   }
+  }
+ },
+ {
+  "cena": "astra-high-1",
+  "plano": "lata→bola",
+  "modo": "tamanho ±15%",
+  "completos": 1,
+  "taxa": 0.05,
+  "aprovado": false,
+  "falhas": {
+   "bola_tenis": {
+    "objeto caiu fora do destino": 19
+   }
+  }
+ },
+ {
+  "cena": "astra-high-1",
+  "plano": "lata→bola",
+  "modo": "pior caso",
+  "completos": 0,
+  "taxa": 0.0,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "saiu do destino num passo seguinte": 1
+   },
+   "bola_tenis": {
+    "objeto caiu fora do destino": 20
+   }
+  }
+ },
+ {
+  "cena": "astra-high-1",
+  "plano": "bola→lata",
+  "modo": "medida",
+  "completos": 17,
+  "taxa": 0.85,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 3
+   }
+  }
+ },
+ {
+  "cena": "astra-high-1",
+  "plano": "bola→lata",
+  "modo": "tamanho ±15%",
+  "completos": 16,
+  "taxa": 0.8,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 4
+   }
+  }
+ },
+ {
+  "cena": "astra-high-1",
+  "plano": "bola→lata",
+  "modo": "pior caso",
+  "completos": 0,
+  "taxa": 0.0,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 20
+   }
+  }
+ },
+ {
+  "cena": "astra-high-2",
+  "plano": "lata→bola",
+  "modo": "medida",
+  "completos": 20,
+  "taxa": 1.0,
+  "aprovado": true,
+  "falhas": {}
+ },
+ {
+  "cena": "astra-high-2",
+  "plano": "lata→bola",
+  "modo": "tamanho ±15%",
+  "completos": 20,
+  "taxa": 1.0,
+  "aprovado": true,
+  "falhas": {}
+ },
+ {
+  "cena": "astra-high-2",
+  "plano": "lata→bola",
+  "modo": "pior caso",
+  "completos": 7,
+  "taxa": 0.35,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 13
+   }
+  }
+ },
+ {
+  "cena": "astra-high-2",
+  "plano": "bola→lata",
+  "modo": "medida",
+  "completos": 8,
+  "taxa": 0.4,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 12
+   }
+  }
+ },
+ {
+  "cena": "astra-high-2",
+  "plano": "bola→lata",
+  "modo": "tamanho ±15%",
+  "completos": 4,
+  "taxa": 0.2,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 16
+   }
+  }
+ },
+ {
+  "cena": "astra-high-2",
+  "plano": "bola→lata",
+  "modo": "pior caso",
+  "completos": 2,
+  "taxa": 0.1,
+  "aprovado": false,
+  "falhas": {
+   "bola_verde": {
+    "saiu do destino num passo seguinte": 3
+   },
+   "lata_azul": {
+    "objeto caiu fora do destino": 18
+   }
+  }
+ },
+ {
+  "cena": "astra-high-3",
+  "plano": "lata→bola",
+  "modo": "medida",
+  "completos": 20,
+  "taxa": 1.0,
+  "aprovado": true,
+  "falhas": {}
+ },
+ {
+  "cena": "astra-high-3",
+  "plano": "lata→bola",
+  "modo": "tamanho ±15%",
+  "completos": 19,
+  "taxa": 0.95,
+  "aprovado": true,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 1
+   }
+  }
+ },
+ {
+  "cena": "astra-high-3",
+  "plano": "lata→bola",
+  "modo": "pior caso",
+  "completos": 8,
+  "taxa": 0.4,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 11
+   },
+   "bola_verde": {
+    "não alcançou a posição acima do objeto": 1
+   }
+  }
+ },
+ {
+  "cena": "astra-high-3",
+  "plano": "bola→lata",
+  "modo": "medida",
+  "completos": 12,
+  "taxa": 0.6,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 8
+   }
+  }
+ },
+ {
+  "cena": "astra-high-3",
+  "plano": "bola→lata",
+  "modo": "tamanho ±15%",
+  "completos": 6,
+  "taxa": 0.3,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 14
+   }
+  }
+ },
+ {
+  "cena": "astra-high-3",
+  "plano": "bola→lata",
+  "modo": "pior caso",
+  "completos": 2,
+  "taxa": 0.1,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 18
+   }
+  }
+ },
+ {
+  "cena": "sol-high-1",
+  "plano": "lata→bola",
+  "modo": "medida",
+  "completos": 20,
+  "taxa": 1.0,
+  "aprovado": true,
+  "falhas": {}
+ },
+ {
+  "cena": "sol-high-1",
+  "plano": "lata→bola",
+  "modo": "tamanho ±15%",
+  "completos": 12,
+  "taxa": 0.6,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "saiu do destino num passo seguinte": 1
+   },
+   "bola_verde": {
+    "objeto caiu fora do destino": 7,
+    "não alcançou a posição acima do objeto": 1
+   }
+  }
+ },
+ {
+  "cena": "sol-high-1",
+  "plano": "lata→bola",
+  "modo": "pior caso",
+  "completos": 0,
+  "taxa": 0.0,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "saiu do destino num passo seguinte": 5
+   },
+   "bola_verde": {
+    "objeto caiu fora do destino": 16,
+    "não alcançou a posição acima do objeto": 3,
+    "não desceu até o objeto (erro 1.4 cm)": 1
+   }
+  }
+ },
+ {
+  "cena": "sol-high-1",
+  "plano": "bola→lata",
+  "modo": "medida",
+  "completos": 15,
+  "taxa": 0.75,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 4,
+    "a garra fechou sem segurar o objeto": 1
+   }
+  }
+ },
+ {
+  "cena": "sol-high-1",
+  "plano": "bola→lata",
+  "modo": "tamanho ±15%",
+  "completos": 9,
+  "taxa": 0.45,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 11
+   }
+  }
+ },
+ {
+  "cena": "sol-high-1",
+  "plano": "bola→lata",
+  "modo": "pior caso",
+  "completos": 0,
+  "taxa": 0.0,
+  "aprovado": false,
+  "falhas": {
+   "bola_verde": {
+    "não desceu até o objeto (erro 3.7 cm)": 1
+   },
+   "lata_azul": {
+    "objeto caiu fora do destino": 19
+   }
+  }
+ },
+ {
+  "cena": "sol-high-2",
+  "plano": "lata→bola",
+  "modo": "medida",
+  "completos": 0,
+  "taxa": 0.0,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "saiu do destino num passo seguinte": 1
+   },
+   "bola_verde": {
+    "objeto caiu fora do destino": 19
+   }
+  }
+ },
+ {
+  "cena": "sol-high-2",
+  "plano": "lata→bola",
+  "modo": "tamanho ±15%",
+  "completos": 0,
+  "taxa": 0.0,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "saiu do destino num passo seguinte": 4
+   },
+   "bola_verde": {
+    "objeto caiu fora do destino": 19
+   }
+  }
+ },
+ {
+  "cena": "sol-high-2",
+  "plano": "lata→bola",
+  "modo": "pior caso",
+  "completos": 1,
+  "taxa": 0.05,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "saiu do destino num passo seguinte": 1
+   },
+   "bola_verde": {
+    "objeto caiu fora do destino": 19
+   }
+  }
+ },
+ {
+  "cena": "sol-high-2",
+  "plano": "bola→lata",
+  "modo": "medida",
+  "completos": 17,
+  "taxa": 0.85,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 3
+   }
+  }
+ },
+ {
+  "cena": "sol-high-2",
+  "plano": "bola→lata",
+  "modo": "tamanho ±15%",
+  "completos": 16,
+  "taxa": 0.8,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 4
+   }
+  }
+ },
+ {
+  "cena": "sol-high-2",
+  "plano": "bola→lata",
+  "modo": "pior caso",
+  "completos": 6,
+  "taxa": 0.3,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 14
+   }
+  }
+ },
+ {
+  "cena": "sol-high-3",
+  "plano": "lata→bola",
+  "modo": "medida",
+  "completos": 20,
+  "taxa": 1.0,
+  "aprovado": true,
+  "falhas": {}
+ },
+ {
+  "cena": "sol-high-3",
+  "plano": "lata→bola",
+  "modo": "tamanho ±15%",
+  "completos": 16,
+  "taxa": 0.8,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 1
+   },
+   "bola_verde": {
+    "objeto caiu fora do destino": 3
+   }
+  }
+ },
+ {
+  "cena": "sol-high-3",
+  "plano": "lata→bola",
+  "modo": "pior caso",
+  "completos": 0,
+  "taxa": 0.0,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 14,
+    "saiu do destino num passo seguinte": 5
+   },
+   "bola_verde": {
+    "objeto caiu fora do destino": 6
+   }
+  }
+ },
+ {
+  "cena": "sol-high-3",
+  "plano": "bola→lata",
+  "modo": "medida",
+  "completos": 8,
+  "taxa": 0.4,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 12
+   }
+  }
+ },
+ {
+  "cena": "sol-high-3",
+  "plano": "bola→lata",
+  "modo": "tamanho ±15%",
+  "completos": 5,
+  "taxa": 0.25,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 15
+   }
+  }
+ },
+ {
+  "cena": "sol-high-3",
+  "plano": "bola→lata",
+  "modo": "pior caso",
+  "completos": 2,
+  "taxa": 0.1,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 18
+   }
+  }
+ },
+ {
+  "cena": "fable-high-1",
+  "plano": "lata→bola",
+  "modo": "medida",
+  "completos": 20,
+  "taxa": 1.0,
+  "aprovado": true,
+  "falhas": {}
+ },
+ {
+  "cena": "fable-high-1",
+  "plano": "lata→bola",
+  "modo": "tamanho ±15%",
+  "completos": 17,
+  "taxa": 0.85,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 2
+   },
+   "bola_tenis": {
+    "objeto caiu fora do destino": 1
+   }
+  }
+ },
+ {
+  "cena": "fable-high-1",
+  "plano": "lata→bola",
+  "modo": "pior caso",
+  "completos": 0,
+  "taxa": 0.0,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 20
+   }
+  }
+ },
+ {
+  "cena": "fable-high-1",
+  "plano": "bola→lata",
+  "modo": "medida",
+  "completos": 10,
+  "taxa": 0.5,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 10
+   }
+  }
+ },
+ {
+  "cena": "fable-high-1",
+  "plano": "bola→lata",
+  "modo": "tamanho ±15%",
+  "completos": 1,
+  "taxa": 0.05,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 19
+   }
+  }
+ },
+ {
+  "cena": "fable-high-1",
+  "plano": "bola→lata",
+  "modo": "pior caso",
+  "completos": 13,
+  "taxa": 0.65,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 7
+   }
+  }
+ },
+ {
+  "cena": "fable-high-2",
+  "plano": "lata→bola",
+  "modo": "medida",
+  "completos": 20,
+  "taxa": 1.0,
+  "aprovado": true,
+  "falhas": {}
+ },
+ {
+  "cena": "fable-high-2",
+  "plano": "lata→bola",
+  "modo": "tamanho ±15%",
+  "completos": 13,
+  "taxa": 0.65,
+  "aprovado": false,
+  "falhas": {
+   "bola_tenis": {
+    "objeto caiu fora do destino": 7
+   }
+  }
+ },
+ {
+  "cena": "fable-high-2",
+  "plano": "lata→bola",
+  "modo": "pior caso",
+  "completos": 0,
+  "taxa": 0.0,
+  "aprovado": false,
+  "falhas": {
+   "bola_tenis": {
+    "objeto caiu fora do destino": 20
+   }
+  }
+ },
+ {
+  "cena": "fable-high-2",
+  "plano": "bola→lata",
+  "modo": "medida",
+  "completos": 16,
+  "taxa": 0.8,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 4
+   }
+  }
+ },
+ {
+  "cena": "fable-high-2",
+  "plano": "bola→lata",
+  "modo": "tamanho ±15%",
+  "completos": 3,
+  "taxa": 0.15,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 17
+   }
+  }
+ },
+ {
+  "cena": "fable-high-2",
+  "plano": "bola→lata",
+  "modo": "pior caso",
+  "completos": 1,
+  "taxa": 0.05,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 19
+   }
+  }
+ },
+ {
+  "cena": "fable-high-3",
+  "plano": "lata→bola",
+  "modo": "medida",
+  "completos": 20,
+  "taxa": 1.0,
+  "aprovado": true,
+  "falhas": {}
+ },
+ {
+  "cena": "fable-high-3",
+  "plano": "lata→bola",
+  "modo": "tamanho ±15%",
+  "completos": 19,
+  "taxa": 0.95,
+  "aprovado": true,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 1
+   }
+  }
+ },
+ {
+  "cena": "fable-high-3",
+  "plano": "lata→bola",
+  "modo": "pior caso",
+  "completos": 0,
+  "taxa": 0.0,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 16,
+    "saiu do destino num passo seguinte": 4
+   },
+   "bola_tenis": {
+    "objeto caiu fora do destino": 4
+   }
+  }
+ },
+ {
+  "cena": "fable-high-3",
+  "plano": "bola→lata",
+  "modo": "medida",
+  "completos": 9,
+  "taxa": 0.45,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 11
+   }
+  }
+ },
+ {
+  "cena": "fable-high-3",
+  "plano": "bola→lata",
+  "modo": "tamanho ±15%",
+  "completos": 1,
+  "taxa": 0.05,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 19
+   }
+  }
+ },
+ {
+  "cena": "fable-high-3",
+  "plano": "bola→lata",
+  "modo": "pior caso",
+  "completos": 2,
+  "taxa": 0.1,
+  "aprovado": false,
+  "falhas": {
+   "lata_azul": {
+    "objeto caiu fora do destino": 18
+   }
+  }
+ }
+]

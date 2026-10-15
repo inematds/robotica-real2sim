@@ -191,6 +191,14 @@ def para_referencial_do_robo(bruta: dict) -> tuple[dict, list[str]]:
         o["pos"] = [round(o["pos"][0], 3), round(o["pos"][1], 3)]
         if o["tipo"] != "recipiente" and min(o["tamanho"][:2] if o["tipo"] == "caixa" else o["tamanho"][:1]) > 0.075:
             avisos.append(f"{o['nome']}: mais largo que a garra (8 cm); só pode ser empurrado")
+    # a tarefa é só sugestão: "pegar": "lata_azul, bola_tenis" (dois objetos) não derruba a cena
+    tarefa = dict(bruta.get("tarefa") or {})
+    nomes = {o["nome"] for o in objs}
+    for chave in ("pegar", "destino"):
+        if tarefa.get(chave) and tarefa[chave] not in nomes:
+            avisos.append(f"tarefa.{chave} = {tarefa[chave]!r} não é um objeto da cena: descartado")
+            tarefa.pop(chave)
+    bruta = {**bruta, "tarefa": tarefa}
     mesa = bruta.get("mesa", {})
     cena = {"fonte": "foto", "mesa": {"largura": max(mesa.get("largura_cm", 120) / 100, 0.9),
                                       "profundidade": max(mesa.get("profundidade_cm", 80) / 100, 0.7),

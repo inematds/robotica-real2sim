@@ -1,0 +1,77 @@
+{
+ "fonte": "foto",
+ "mesa": {
+  "largura": 0.9,
+  "profundidade": 0.7,
+  "centro_x": 0.5,
+  "cor": "bege"
+ },
+ "objetos": [
+  {
+   "nome": "cubo_vermelho",
+   "tipo": "caixa",
+   "tamanho": [
+    0.07,
+    0.07,
+    0.07
+   ],
+   "pos": [
+    0.33,
+    0.22
+   ],
+   "yaw": 0.436,
+   "cor": "vermelho",
+   "massa": 0.16
+  },
+  {
+   "nome": "lata_azul",
+   "tipo": "cilindro",
+   "tamanho": [
+    0.065,
+    0.125
+   ],
+   "pos": [
+    0.38,
+    0.08
+   ],
+   "yaw": 0.0,
+   "cor": "azul",
+   "massa": 0.35
+  },
+  {
+   "nome": "bola_verde",
+   "tipo": "esfera",
+   "tamanho": [
+    0.067
+   ],
+   "pos": [
+    0.38,
+    -0.06
+   ],
+   "yaw": 0.0,
+   "cor": "verde",
+   "massa": 0.058
+  },
+  {
+   "nome": "bandeja_cinza",
+   "tipo": "recipiente",
+   "tamanho": [
+    0.16,
+    0.17,
+    0.03
+   ],
+   "pos": [
+    0.35,
+    -0.23
+   ],
+   "yaw": 0.262,
+   "cor": "cinza",
+   "massa": 0.25
+  }
+ ],
+ "tarefa": {
+  "destino": "bandeja_cinza",
+  "descricao": "Colocar a lata azul e a bola verde dentro da bandeja."
+ },
+ "confianca": "Dimensões aproximadas pela folha A4 em orientação paisagem. As bordas da mesa não aparecem: tamanho da mesa e origem são assumidos, tornando as posições provisórias. Alturas, giros e massas são estimativas visuais; a massa da lata pressupõe que esteja cheia. O campo pegar enumera os dois objetos redondos."
+}

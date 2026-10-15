@@ -1,0 +1,15 @@
+{
+ "passos": [
+  {
+   "pegar": "lata_azul",
+   "destino": "bandeja_cinza"
+  },
+  {
+   "pegar": "bola_tenis",
+   "destino": "bandeja_cinza"
+  }
+ ],
+ "obs": "Os dois objetos redondos cabem na bandeja e podem ser pegos pela garra de 8 cm.",
+ "pedido": "arrume a mesa: tudo que é redondo vai para a bandeja",
+ "motor": "codex"
+}

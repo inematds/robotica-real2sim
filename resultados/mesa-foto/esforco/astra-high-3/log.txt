@@ -1,0 +1,4 @@
+aviso: objetos perto da borda: a cena foi empurrada 4 cm para frente
+cena: 4 objetos -> resultados/mesa-foto/esforco/astra-high-3/cena.json
+tarefa: Colocar a lata_azul e depois a bola_verde na bandeja_cinza.
+incerteza declarada pelo modelo: Dimensões aproximadas pela folha A4, assumida em paisagem. As bordas da mesa não aparecem: tamanho da mesa e origem são hipóteses, usando o centro inferior da imagem como origem provisória; posições absolutas precisam de calibração. Alturas, giros e massas são estimados; a massa da lata pressupõe que esteja cheia. O campo pegar indica o primeiro objeto; a tarefa inclui os dois objetos redondos.

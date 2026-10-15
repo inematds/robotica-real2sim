@@ -1,0 +1,4 @@
+aviso: objetos perto da borda: a cena foi empurrada 5 cm para frente
+cena: 4 objetos -> resultados/mesa-foto/esforco/fable-high-2/cena.json
+tarefa: Colocar a bola de tênis na bandeja e, em seguida, a lata azul (os dois objetos redondos)
+incerteza declarada pelo modelo: A borda da mesa mais próxima da câmera não aparece na foto; assumi que ela fica ~6 cm abaixo da borda inferior da imagem, então todos os x podem estar deslocados em alguns cm. Dimensões da mesa são chute (só ~60 cm de largura visíveis). A perspectiva da foto não é consistente (lata parece alta demais para o ângulo da câmera), então usei a folha A4 para posições e tamanhos conhecidos (bola de tênis, lata 350 ml) para dimensões. Tamanho e yaw da bandeja são aproximados (lado longo ao longo de y, girada ~25° em sentido horário). Massa da lata assume lata cheia (vazia seria ~15 g). A tarefa tem dois objetos redondos (bola e lata), mas o campo pegar aceita só um; a lata vai na segunda etapa.

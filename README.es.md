@@ -60,7 +60,9 @@ Archivos: [resultados/](resultados/) (resúmenes, plan, pruebas y los 100 episod
 
 **Esfuerzo de razonamiento (`--esforco`):** el mismo `gpt-6-luna`, 3 corridas en cada nivel. En esfuerzo medio infla todo 1,6× en las 3 corridas (cubo de 10 cm, más grande que la pinza; cubo–bandeja ~78 cm). En alto acierta el tamaño (cubo de 6 cm, bandeja de 20 cm), pero aprieta las distancias (~28 cm) y en una corrida olvidó el cubo. El plan salió igual en las 4 corridas. Más esfuerzo cambia el tipo de error, no lo elimina.
 
-**Aprendizaje práctico:** (1) corre la visión 3 veces, porque una discrepancia grande significa una mala medida; (2) lee los avisos de `r2s.py foto` ("más ancho que la pinza", "posiciones reducidas"); (3) prueba en el peor caso y en la escena más chica plausible; (4) usa esfuerzo alto en la visión y normal en el plan; (5) prueba los dos órdenes de pasos; (6) una cinta métrica vale más que cambiar de modelo.
+**Astra, Sol y Fable (esfuerzo alto, 3 corridas cada uno):** los tres acertaron la escala en las 9 corridas (cubo–bandeja 45–47 cm). Astra fue la medida más estable (bandeja de 16–17 cm, 35–48 s). Fable pasó lata→pelota 20/20 en las 3 escenas, pero tarda 2–3 min. Cambiar de modelo pesó más que cambiar de esfuerzo. Todos planearon lata→pelota y ninguno pasa el peor caso: falta física (acostar la lata), no modelo.
+
+**Aprendizaje práctico:** (1) corre la visión 3 veces, porque una discrepancia grande significa una mala medida; (2) lee los avisos de `r2s.py foto` ("más ancho que la pinza", "posiciones reducidas"); (3) prueba en el peor caso y en la escena más chica plausible; (4) elige primero el modelo de visión, después el esfuerzo, y en el plan usa el predeterminado (`medium`); (5) prueba los dos órdenes de pasos; (6) una cinta métrica vale más que cambiar de modelo.
 
 ## Instalar y ejecutar
 

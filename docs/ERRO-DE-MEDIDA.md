@@ -83,6 +83,33 @@ Números brutos: [`resultados/mesa-foto/esforco/`](../resultados/mesa-foto/esfor
   ponto fraco de qualquer modelo. Rodar 3 vezes mostra o tamanho da dúvida: se as rodadas discordam
   muito, a cena não serve para aprovar nada.
 
+## Quatro modelos em esforço alto (15/10/2026)
+
+Mesma foto, mesmo pedido, `--esforco high`, 3 rodadas por modelo, pela assinatura. Referência: régua A4
+(cubo–bandeja 45–55 cm) e as cenas de Claude/ER/Argon (bandeja 15–18 cm).
+
+| Modelo | Tempo | Cubo | Bandeja (cm) | Cubo–bandeja | lata→bola na própria cena | Melhor pior caso |
+|---|---|---|---|---|---|---|
+| `gpt-6-luna` | 17–27 s | 6 cm (1 rodada esqueceu) | 20×16 a 27×24 | **27–29 cm** | 5, 20, 3 de 20 | 1, 12, 0 |
+| `gpt-6-astra` | 35–48 s | 6,5–7,5 cm | **16–17 × 17 × 3** | 45–46 cm | 7, 20, 20 | 0, 7, 8 |
+| `gpt-6.1-sol` | 46–48 s | 7–7,5 cm | 16–18 × 16–22 × 3–4 | 45–47 cm | 20, 0, 20 | 0, 6, 2 |
+| `claude-fable-5-1` | 107–164 s | 5–7 cm | 12–18 × 16–24 × 4 | **47 cm nas 3** | **20, 20, 20** | 13, 1, 2 |
+
+"Melhor pior caso" é o maior número entre as duas ordens de plano, em cada rodada. Os quatro planejaram
+igual: lata→bola. Números brutos: `resultados/mesa-foto/esforco/` (`matriz-modelos.json`, cenas,
+`plano-astra/sol/fable.json`).
+
+- **Astra, Sol e Fable acertaram a escala nas 9 rodadas** (45–47 cm), e o luna errou nas 6 (médio
+  infla, alto espreme). **Trocar de modelo pesou mais que trocar de esforço.**
+- **Astra é o mais estável na medida:** bandeja de 16–17 cm nas 3 rodadas, em 35–48 s.
+- **Fable é o que mais acerta a física na própria cena** (lata→bola 20/20 nas 3), mas a bandeja variou
+  de 12 a 18 cm entre rodadas e leva 2–3 min por foto.
+- **Sol aumenta a lata:** 13,5–16,5 cm de altura (a lata tem ~12).
+- **Nenhum passa no pior caso** (o melhor foi 13/20). A tarefa (lata alta + bola numa bandeja de
+  3–4 cm de borda) está no limite com qualquer medida; o que falta é física (deitar a lata), não modelo.
+- Falha nova pega no caminho: Astra e Sol às vezes devolvem dois objetos no campo `tarefa.pegar`, e a
+  cena inteira era recusada. Agora vira aviso ([FALHAS.md](../FALHAS.md)).
+
 ## Aprendizado prático
 
 1. **Não confie numa rodada só da visão.** Rode a foto 3 vezes (ou em 2 modelos). Discordância grande
@@ -91,8 +118,9 @@ Números brutos: [`resultados/mesa-foto/esforco/`](../resultados/mesa-foto/esfor
    garra" e "posições reduzidas" apareceram nas 3 rodadas de esforço médio, e as 3 estavam infladas. O
    objeto cabe na garra (≤ 8 cm)? O recipiente tem tamanho plausível? A distância bate com a régua?
 3. **Prove no pior caso**, não na medida: `--pior-caso`, e a prova cruzada na menor cena plausível.
-4. **Esforço alto na visão, esforço normal no plano.** Na visão ele melhora o tamanho, mas não resolve
-   a escala; no plano não muda nada e só custa tempo.
+4. **Escolha bem o modelo da visão, e só depois o esforço.** Astra, Sol e Fable acertaram a escala;
+   o luna errou em médio e em alto. No plano, use o esforço padrão (`medium`): o alto não mudou nada
+   e só custa tempo.
 5. **A física manda na ordem dos passos:** lata→bola e bola→lata trocam de vencedor conforme a
    bandeja. Teste as duas ordens.
 6. **Medida de verdade vence tudo:** uma foto com fita métrica (ou duas fotos de ângulos diferentes)

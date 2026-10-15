@@ -1,0 +1,4 @@
+aviso: objetos perto da borda: a cena foi empurrada 7 cm para frente
+cena: 4 objetos -> resultados/mesa-foto/esforco/sol-high-2/cena.json
+tarefa: Colocar a bola verde e a lata azul na bandeja cinza.
+incerteza declarada pelo modelo: Escala aproximada pela folha A4 em paisagem. Bordas da mesa fora da imagem: dimensões e origem presumidas, com a borda próxima junto ao limite inferior da foto. Posições, giros e massas estimados; conteúdo da lata desconhecido. O campo pegar indica o primeiro objeto; a tarefa inclui também a lata.

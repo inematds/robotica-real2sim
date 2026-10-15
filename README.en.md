@@ -63,7 +63,9 @@ Files: [resultados/](resultados/) (summaries, plan, proofs, and the 100 episodes
 
 **Reasoning effort (`--esforco`):** the same `gpt-6-luna`, 3 runs at each level. At medium effort it inflates everything 1.6× in all 3 runs (10 cm cube, bigger than the gripper; cube–tray ~78 cm). At high it gets sizes right (6 cm cube, 20 cm tray) but squeezes distances (~28 cm), and in one run it forgot the cube. The plan was the same in all 4 runs. More effort changes the kind of error, it does not remove it.
 
-**Practical lessons:** (1) run vision 3 times, because large disagreement means a bad measurement; (2) read the `r2s.py foto` warnings ("wider than the gripper", "positions reduced"); (3) prove in the worst case and in the smallest plausible scene; (4) use high effort for vision and normal effort for the plan; (5) test both step orders; (6) a tape measure is worth more than switching models.
+**Astra, Sol and Fable (high effort, 3 runs each):** all three got the scale right in all 9 runs (cube–tray 45–47 cm). Astra was the most stable measurement (16–17 cm tray, 35–48 s). Fable passed can→ball 20/20 in all 3 scenes, but takes 2–3 min. Switching model mattered more than switching effort. All of them planned can→ball, and none passes the worst case: what is missing is physics (lay the can down), not a model.
+
+**Practical lessons:** (1) run vision 3 times, because large disagreement means a bad measurement; (2) read the `r2s.py foto` warnings ("wider than the gripper", "positions reduced"); (3) prove in the worst case and in the smallest plausible scene; (4) pick the vision model first, then the effort, and keep the default (`medium`) for the plan; (5) test both step orders; (6) a tape measure is worth more than switching models.
 
 ## Install and run
 

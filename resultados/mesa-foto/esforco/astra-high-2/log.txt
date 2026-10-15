@@ -1,0 +1,5 @@
+aviso: objetos perto da borda: a cena foi empurrada 3 cm para frente
+aviso: tarefa.pegar = 'lata_azul, bola_verde' não é um objeto da cena: descartado
+cena: 4 objetos -> resultados/mesa-foto/esforco/astra-high-2/cena.json
+tarefa: Colocar a lata azul e a bola verde dentro da bandeja.
+incerteza declarada pelo modelo: Dimensões aproximadas pela folha A4 em orientação paisagem. As bordas da mesa não aparecem: tamanho da mesa e origem são assumidos, tornando as posições provisórias. Alturas, giros e massas são estimativas visuais; a massa da lata pressupõe que esteja cheia. O campo pegar enumera os dois objetos redondos.

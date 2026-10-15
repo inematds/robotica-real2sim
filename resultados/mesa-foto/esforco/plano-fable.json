@@ -1,0 +1,15 @@
+{
+ "passos": [
+  {
+   "pegar": "lata_azul",
+   "destino": "bandeja_cinza"
+  },
+  {
+   "pegar": "bola_tenis",
+   "destino": "bandeja_cinza"
+  }
+ ],
+ "obs": "Redondos: lata_azul (cilindro) e bola_tenis (esfera); cubo_vermelho é caixa e fica. Tamanhos lidos como diâmetro: lata 6,6 cm e bola 6,7 cm, ambos abaixo da abertura de 8 cm da garra. Os dois cabem lado a lado na bandeja_cinza (12 x 17 cm, soma ~13,3 cm no eixo maior); a lata fica mais alta que a borda de 4 cm, o que não impede a colocação. Único recipiente disponível: bandeja_cinza.",
+ "pedido": "arrume a mesa: tudo que é redondo vai para a bandeja",
+ "motor": "claude"
+}

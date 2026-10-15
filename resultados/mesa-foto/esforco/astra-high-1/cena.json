@@ -1,0 +1,78 @@
+{
+ "fonte": "foto",
+ "mesa": {
+  "largura": 0.9,
+  "profundidade": 0.7,
+  "centro_x": 0.5,
+  "cor": "bege"
+ },
+ "objetos": [
+  {
+   "nome": "cubo_vermelho",
+   "tipo": "caixa",
+   "tamanho": [
+    0.065,
+    0.065,
+    0.065
+   ],
+   "pos": [
+    0.33,
+    0.23
+   ],
+   "yaw": -0.611,
+   "cor": "vermelho",
+   "massa": 0.14
+  },
+  {
+   "nome": "lata_azul",
+   "tipo": "cilindro",
+   "tamanho": [
+    0.066,
+    0.13
+   ],
+   "pos": [
+    0.39,
+    0.09
+   ],
+   "yaw": 0.0,
+   "cor": "azul",
+   "massa": 0.37
+  },
+  {
+   "nome": "bola_tenis",
+   "tipo": "esfera",
+   "tamanho": [
+    0.067
+   ],
+   "pos": [
+    0.39,
+    -0.05
+   ],
+   "yaw": 0.0,
+   "cor": "verde",
+   "massa": 0.058
+  },
+  {
+   "nome": "bandeja_cinza",
+   "tipo": "recipiente",
+   "tamanho": [
+    0.17,
+    0.17,
+    0.03
+   ],
+   "pos": [
+    0.39,
+    -0.23
+   ],
+   "yaw": -0.262,
+   "cor": "cinza",
+   "massa": 0.25
+  }
+ ],
+ "tarefa": {
+  "pegar": "bola_tenis",
+  "destino": "bandeja_cinza",
+  "descricao": "Colocar a bola de tênis e depois a lata azul na bandeja."
+ },
+ "confianca": "Dimensões aproximadas pela folha A4 em paisagem. As bordas da mesa não aparecem: tamanho da mesa é hipotético, e as posições assumem a origem no centro da borda inferior da imagem. Alturas, giros e massas são estimados; a massa da lata pressupõe que esteja cheia. O campo pegar indica o primeiro objeto da sequência."
+}
